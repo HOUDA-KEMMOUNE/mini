@@ -92,5 +92,5 @@ void    parsing(char *input, t_token **token)
 	}
 	ft_echo(token);
 	// nkhadmo 3la cd ::)
-	ft_cd(token);
+	//ft_cd(token);
 }
