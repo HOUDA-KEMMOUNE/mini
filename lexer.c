@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void add_token(t_token **head, char *value, t_token_type type)
+void	add_token(t_token **head, char *value, t_token_type type)
 {
 	t_token *new;
 
@@ -35,7 +35,7 @@ void add_token(t_token **head, char *value, t_token_type type)
 	}
 }
 
-void word_case(char *input, int *i, t_token **token_list)
+void	word_case(char *input, int *i, t_token **token_list)
 {
 	int start;
 	char *word;

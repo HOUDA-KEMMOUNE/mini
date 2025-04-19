@@ -39,11 +39,19 @@ typedef struct s_token
 }	t_token;
 
 
-/*-------------errors-------------*/
-
+/*-------------------errors-------------------*/
 int		is_quote_closed(char *input, char quote, int start);
 void	print_error(char *msg);
 void	print_error_command(void);
 void	print_echo_error(void);
+
+/*-------------------Lexer-------------------*/
+t_token	*lexer(char *input);
+void	word_case(char *input, int *i, t_token **token_list);
+void	add_token(t_token **head, char *value, t_token_type type);
+
+/*-------------------Parsing-------------------*/
+void    parsing(char *input, t_token **token);
+void	ft_echo(t_token **token);
 
 # endif
