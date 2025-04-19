@@ -18,10 +18,10 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <readline/readline.h>
-#include "libft.h"
+#include "./libft/libft.h"
 // #include <readline/history.h>
 
-typedef enum e_token_type
+typedef enum	e_token_type
 {
 	WORD,
 	PIPE,
@@ -29,20 +29,26 @@ typedef enum e_token_type
 	REDIR_OUT,
 	HEREDOC,
 	APPEND,
-}	t_token_type;
+}				t_token_type;
 
-typedef struct s_token
+typedef struct	s_token
 {
 	char *value;
 	t_token_type type;
 	struct s_token *next;
-}	t_token;
+}				t_token;
 
+typedef struct	s_echo
+{
+	int	fd;
+	char	*file;
+	char	*input;
+}				t_echo;
 
 /*-------------------errors-------------------*/
 int		is_quote_closed(char *input, char quote, int start);
 void	print_error(char *msg);
-void	print_error_command(void);
+void	print_error_command(t_token **token);
 void	print_echo_error(void);
 
 /*-------------------Lexer-------------------*/
