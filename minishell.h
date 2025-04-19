@@ -40,7 +40,7 @@ typedef struct s_token
 
 /*-------------errors-------------*/
 
-int is_quote_closed(char *input, char quote, int start);
-void print_error(char *msg);
-
+int		is_quote_closed(char *input, char quote, int start);
+void	print_error(char *msg);
+void	print_error_command(void);
 # endif
