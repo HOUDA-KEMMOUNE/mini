@@ -12,49 +12,50 @@
 
 #include "minishell.h"
 
-void	ft_data_init(void)
+void	ft_data_init(t_echo	*echo_struct)
 {
 	t_echo	echo_struct;
 
-	echo_struct.fd = 1;
-	echo_struct.file = NULL;
-	echo_struct.input = NULL;
+	echo_struct->fd = 1;
+	echo_struct->file = NULL;
+	echo_struct->input = NULL;
 }
 
-static void	ft_echo_helper(t_token **token, t_echo	echo_struct)
+static void	ft_echo_helper(t_token **token, t_echo	*echo_struct)
 {
 	char	*s;
+	t_token	*token_tmp;
 
-	*token = (*token)->next;
-	if (((*token)->next->type == APPEND) && ((*token)->next->type == WORD))
+	token_tmp = *token;
+	token_tmp = (token_tmp)->next;
+	if (((token_tmp)->next->type == APPEND) && ((token_tmp)->next->type == WORD))
 	{
-		echo_struct.file = (*token)->next->value;
-		echo_struct.fd = open(echo_struct.file, O_RDWR);
+		echo_struct->file = (token_tmp)->next->value;
+		echo_struct->fd = open(echo_struct->file, O_RDWR);
 	}
-	if ((*token)->type == WORD)
+	// token_tmp = token_tmp;
+	while ((token_tmp))
 	{
-		echo_struct.input = (*token)->value;
-		s = echo_struct.input;
-		while (*s)
+		if ((token_tmp)->type == WORD)
 		{
-			write(echo_struct.fd, s, 1);
-			s++;
+			echo_struct->input = (token_tmp)->value;
+			s = echo_struct->input;
+			while (*s)
+			{
+				write(echo_struct->fd, s, 1);
+				s++;
+			}
 		}
 	}
-	else
-		print_error_command(token);
+	// else
+	// 	print_error_command(token);
 }
 
 void	ft_echo(t_token **token)
 {
 	t_echo	echo_struct;
-
 	char	*s;
-	// int		fd;
-	// char	*file;
 	
-	// file = NULL;
-	// fd = 1;
 	if ((*token)->type == WORD)
 	{
 		if (ft_strncmp((*token)->value, "echo", 4) == 0)
@@ -63,7 +64,7 @@ void	ft_echo(t_token **token)
 			if ((*token)->type != WORD)
 				print_echo_error();
 			if (ft_strncmp((*token)->value, "-n", 2) == 0)
-				ft_echo_helper(token, echo_struct);
+				ft_echo_helper(token, &echo_struct);
 			// hna fin wsalt hahhahahahahahahahahahahahahahahaha
 			else if ((*token)->type == WORD)
 			{
@@ -101,6 +102,7 @@ void	ft_echo(t_token **token)
 void    parsing(char *input, t_token **token)
 {
 	char	*s;
+	t_echo	echo_struct;
 
 	if (!input || !token)
 		return ;
@@ -119,7 +121,7 @@ void    parsing(char *input, t_token **token)
 		write(1, "minishell: parse error near `\''", ft_strlen("minishell: unclosed parenthesis `('"));
 		exit (1);
 	}
-	ft_data_init();
+	ft_data_init(&echo_struct);
 	ft_echo(token);
 	// nkhadmo 3la cd ::)
 	//ft_cd(token);

@@ -58,6 +58,7 @@ void	add_token(t_token **head, char *value, t_token_type type);
 
 /*-------------------Parsing-------------------*/
 void    parsing(char *input, t_token **token);
+void	ft_data_init(t_echo	*echo_struct);
 void	ft_echo(t_token **token);
 
 # endif
