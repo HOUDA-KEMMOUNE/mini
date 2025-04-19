@@ -17,3 +17,9 @@ void	print_error_command(void)
 	write(1, "ERROR: This is not a command :/-\n", ft_strlen("ERROR: This is not a command :/-\n"));
 	exit (1);
 }
+
+void	print_echo_error(void)
+{
+	write(1, "minishell: syntax error near unexpected token `newline'\n", ft_strlen("minishell: syntax error near unexpected token `newline'\n"));
+	exit (1);
+}

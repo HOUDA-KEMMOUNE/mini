@@ -16,6 +16,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <fcntl.h>
 #include <readline/readline.h>
 #include "libft.h"
 // #include <readline/history.h>
@@ -43,4 +44,6 @@ typedef struct s_token
 int		is_quote_closed(char *input, char quote, int start);
 void	print_error(char *msg);
 void	print_error_command(void);
+void	print_echo_error(void);
+
 # endif

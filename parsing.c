@@ -12,15 +12,20 @@
 
 #include "minishell.h"
 
-static void	ft_echo_helper(t_token **token, char *s)
+static void	ft_echo_helper(t_token **token, char *s, int *fd, char *file)
 {
 	*token = (*token)->next;
+	if (((*token)->next->type == APPEND) && ((*token)->next->type == WORD))
+	{
+		file = (*token)->next->value;
+		*fd = open(file, O_RDWR);
+	}
 	if ((*token)->type == WORD)
 	{
 		s = (*token)->value;
 		while (*s)
 		{
-			write(1, s, 1);
+			write(*fd, s, 1);
 			s++;
 		}
 	}
@@ -31,14 +36,19 @@ static void	ft_echo_helper(t_token **token, char *s)
 void	ft_echo(t_token **token)
 {
 	char	*s;
-
+	int		fd;
+	char	*file;
+	
 	if ((*token)->type == WORD)
 	{
 		if (ft_strncmp((*token)->value, "echo", 4) == 0)
 		{
 			*token = (*token)->next;
+			if ((*token)->type != WORD)
+				print_echo_error();
 			if (ft_strncmp((*token)->value, "-n", 2) == 0)
-				ft_echo_helper(token, &s);
+				ft_echo_helper(token, &s, &fd, file);
+			// hna fin wsalt hahhahahahahahahahahahahahahahahaha
 			else if ((*token)->type == WORD)
 			{
 				s = (*token)->value;
@@ -48,6 +58,8 @@ void	ft_echo(t_token **token)
 					s++;
 				}
 				write(1, "\n", 1);
+				*token = (*token)->next;
+				// if ()
 			}
 			else
 				print_error_command();
@@ -55,19 +67,20 @@ void	ft_echo(t_token **token)
 	}
 }
 
-void	ft_cd(t_token **token)
-{
-	char	*s;
+// void	ft_cd(t_token **token)
+// {
+// 	char	*s;
 
-	if ((*token)->type == WORD)
-	{
-		if (ft_strncmp((*token)->value, "cd", 2) == 0)
-		{
-			*token = (*token)->next;
+// 	if ((*token)->type == WORD)
+// 	{
+// 		if (ft_strncmp((*token)->value, "cd", 2) == 0)
+// 		{
+// 			*token = (*token)->next;
+// 			if 
 			
-		}
-	}
-}
+// 		}
+// 	}
+// }
 
 void    parsing(char *input, t_token **token)
 {
