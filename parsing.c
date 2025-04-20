@@ -28,7 +28,7 @@ static void	ft_echo_helper(t_token **token, t_echo	*echo_struct)
 
 	token_tmp = *token;
 	token_tmp = (token_tmp)->next;
-	if (((token_tmp)->next->type == APPEND) && ((token_tmp)->next->type == WORD))
+	if (((token_tmp)->next->type == REDIR_OUT) && ((token_tmp)->next->type == WORD))
 	{
 		echo_struct->file = (token_tmp)->next->value;
 		echo_struct->fd = open(echo_struct->file, O_RDWR);
@@ -69,32 +69,55 @@ static void	ft_echo_helper(t_token **token, t_echo	*echo_struct)
 	else
 		print_error_command(token);
 }
+static int	redir_out_count(t_token **token)
+{
+	int		count_redir_out;
+	t_token	*token_tmp;
+	
+	if (!token)
+		return ;
+	count_redir_out = 0;
+	while (token_tmp)
+	{
+		if (token_tmp->type == REDIR_OUT)
+		{
+			count_redir_out++;
+		}
+		if (count_redir_out == 2)
+			return (count_redir_out);
+		token_tmp = token_tmp->next;
+	}
+	return (count_redir_out);
+}
 
 void	ft_echo(t_token **token)
 {
 	t_echo	echo_struct;
 	char	*s;
-	
-	if ((*token)->type == WORD)
+	t_token	*token_tmp;
+
+	if (!token)
+		return ;
+	token_tmp = (*token);
+	if (token_tmp->type == WORD)
 	{
-		if (ft_strncmp((*token)->value, "echo", 4) == 0)
+		if (ft_strncmp(token_tmp->value, "echo", 4) == 0)
 		{
-			*token = (*token)->next;
-			if ((*token)->type != WORD)
+			*token = token_tmp->next;
+			if (token_tmp->type != WORD)
 				print_echo_error();
-			if (ft_strncmp((*token)->value, "-n", 2) == 0)
+			if (ft_strncmp(token_tmp->value, "-n", 2) == 0)
 				ft_echo_helper(token, &echo_struct);
-			// hna fin wsalt hahhahahahahahahahahahahahahahahaha
-			else if ((*token)->type == WORD)
+			else if (token_tmp->type == WORD)
 			{
-				s = (*token)->value;
+				s = token_tmp->value;
 				while (*s)
 				{
 					write(1, s, 1);
 					s++;
 				}
 				write(1, "\n", 1);
-				*token = (*token)->next;
+				*token = token_tmp->next;
 				// if ()
 			}
 			else
