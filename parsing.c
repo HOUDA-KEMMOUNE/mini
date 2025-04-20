@@ -32,10 +32,6 @@ static void	ft_echo_helper(t_token **token, t_echo	*echo_struct)
 	{
 		echo_struct->file = (token_tmp)->next->value;
 		echo_struct->fd = open(echo_struct->file, O_RDWR);
-	}
-	// token_tmp = token_tmp;
-	while ((token_tmp))
-	{
 		if ((token_tmp)->type == WORD)
 		{
 			echo_struct->input = (token_tmp)->value;
@@ -46,9 +42,32 @@ static void	ft_echo_helper(t_token **token, t_echo	*echo_struct)
 				s++;
 			}
 		}
+		else
+			print_error_command(token);
+		while ((token_tmp) && (token_tmp->type == WORD))
+		{
+			echo_struct->input = (token_tmp)->value;
+			s = echo_struct->input;
+			while (*s)
+			{
+				write(echo_struct->fd, s, 1);
+				s++;
+			}
+		}
 	}
-	// else
-	// 	print_error_command(token);
+	// token_tmp = token_tmp;
+	if ((token_tmp)->type == WORD)
+	{
+		echo_struct->input = (token_tmp)->value;
+		s = echo_struct->input;
+		while (*s)
+		{
+			write(echo_struct->fd, s, 1);
+			s++;
+		}
+	}
+	else
+		print_error_command(token);
 }
 
 void	ft_echo(t_token **token)
