@@ -1,20 +1,36 @@
 NAME = minishell
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
-SRC = error_msg.c lexer.c lexer_errors.c minishell.c minishell.h parsing.c\
-	./libft/ft_strdup ./libft/ft_substr ./libft/ft_putstr_fd ./libft/ft_putchar_fd
-	./libft/ft_strncmp
+
+# Source files
+SRC = minishell.c lexer.c lexer_errors.c error_msg.c parsing.c
+
+# Object files
 OBJ = $(SRC:.c=.o)
+
+# Libft path
+LIBFT_DIR = ./libft
+LIBFT = $(LIBFT_DIR)/libft.a
+
+# Include directory if needed
+INCLUDES = -I.
 
 all: $(NAME)
 
-$(NAME): $(SRC) $(OBJ)
-	$(CC) $(SRC) $(CFLAGS) -o $@
+# Rule to build minishell
+$(NAME): $(OBJ) $(LIBFT)
+	$(CC) $(CFLAGS) $(OBJ) $(LIBFT) -o $(NAME)
+
+# Rule to build libft
+$(LIBFT):
+	$(MAKE) -C $(LIBFT_DIR)
 
 clean:
-	rm -rf $(OBJ)
+	rm -f $(OBJ)
+	$(MAKE) -C $(LIBFT_DIR) clean
 
 fclean: clean
-	rm -rf $(NAME)
+	rm -f $(NAME)
+	$(MAKE) -C $(LIBFT_DIR) fclean
 
 re: fclean all
