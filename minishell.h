@@ -33,9 +33,9 @@ typedef enum	e_token_type
 
 typedef struct	s_token
 {
-	char *value;
-	t_token_type type;
-	struct s_token *next;
+	char			*value;
+	t_token_type	type;
+	struct s_token	*next;
 }				t_token;
 
 typedef struct	s_echo
@@ -43,6 +43,7 @@ typedef struct	s_echo
 	int	fd;
 	char	*file;
 	char	*input;
+	char	**msg;
 }				t_echo;
 
 /*-------------------errors-------------------*/

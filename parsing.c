@@ -19,6 +19,7 @@ void	ft_data_init(t_echo	*echo_struct)
 	echo_struct->fd = 1;
 	echo_struct->file = NULL;
 	echo_struct->input = NULL;
+	echo_struct->msg = NULL;
 }
 
 static void	ft_echo_helper(t_token **token, t_echo	*echo_struct)
@@ -69,32 +70,43 @@ static void	ft_echo_helper(t_token **token, t_echo	*echo_struct)
 	else
 		print_error_command(token);
 }
-static int	redir_out_count(t_token **token)
+static int	redir_out_count(t_token **token, t_echo	*echo_struct)
 {
-	int		count_redir_out;
 	t_token	*token_tmp;
+	t_echo	*echo_struct_tmp;
+	char	**msg_tmp;
+	int		count_redir_out;
+	int		i;
 	
 	if (!token)
 		return ;
+	token_tmp = (*token);
+	echo_struct_tmp = echo_struct;
 	count_redir_out = 0;
+	i = 0;
+	msg_tmp = echo_struct_tmp->msg;
 	while (token_tmp)
 	{
 		if (token_tmp->type == REDIR_OUT)
-		{
 			count_redir_out++;
+		else if ((token_tmp->type == WORD))
+		{
+			msg_tmp[i] = token_tmp->value;
+			i++;
 		}
-		if (count_redir_out == 2)
-			return (count_redir_out);
+		// if (count_redir_out == 2)
+		// 	return (count_redir_out);
 		token_tmp = token_tmp->next;
 	}
+	echo_struct_tmp->msg = msg_tmp;
 	return (count_redir_out);
 }
 
 void	ft_echo(t_token **token)
 {
 	t_echo	echo_struct;
-	char	*s;
 	t_token	*token_tmp;
+	char	*s;
 
 	if (!token)
 		return ;
@@ -126,21 +138,6 @@ void	ft_echo(t_token **token)
 	}
 }
 
-// void	ft_cd(t_token **token)
-// {
-// 	char	*s;
-
-// 	if ((*token)->type == WORD)
-// 	{
-// 		if (ft_strncmp((*token)->value, "cd", 2) == 0)
-// 		{
-// 			*token = (*token)->next;
-// 			if 
-			
-// 		}
-// 	}
-// }
-
 void    parsing(char *input, t_token **token)
 {
 	char	*s;
@@ -165,6 +162,4 @@ void    parsing(char *input, t_token **token)
 	}
 	ft_data_init(&echo_struct);
 	ft_echo(token);
-	// nkhadmo 3la cd ::)
-	//ft_cd(token);
 }
