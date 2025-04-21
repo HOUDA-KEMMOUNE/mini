@@ -55,67 +55,50 @@ static void	redir_out_count(t_token **token, t_echo	*echo_struct)
 	echo_struct_tmp->msg = msg_tmp;
 }
 
-static void	ft_echo_helper(t_token **token, t_echo	*echo_struct)
+static void	ft_echo_helper(t_token **token, t_echo *echo_struct)
 {
 	char	*s;
 	t_token	*token_tmp;
+	t_echo	*echo_struct_tmp;
 
 	token_tmp = *token;
+	echo_struct_tmp = echo_struct;
 	token_tmp = (token_tmp)->next;
-
-	// redir_out_count(token, echo_struct);
-	if (((token_tmp)->next->type == REDIR_OUT) && ((token_tmp)->next->type == WORD))
+	// redir_out_count(token, echo_struct_tmp);
+	if ((token_tmp->type == WORD) || (token_tmp->type == REDIR_OUT))
 	{
-		echo_struct->file = (token_tmp)->next->value;
-		echo_struct->fd = open(echo_struct->file, O_RDWR);
-		if ((token_tmp)->type == WORD)
-		{
-			echo_struct->input = (token_tmp)->value;
-			s = echo_struct->input;
-			while (*s)
-			{
-				write(echo_struct->fd, s, 1);
-				s++;
-			}
-		}
+		if (token_tmp->type == REDIR_OUT)
+			token_tmp = token_tmp->next->next;
 		else
-			print_error_command(token);
-		while ((token_tmp) && (token_tmp->type == WORD))
 		{
-			echo_struct->input = (token_tmp)->value;
-			s = echo_struct->input;
+			s = token_tmp->value;
 			while (*s)
 			{
-				write(echo_struct->fd, s, 1);
+				write(echo_struct_tmp->fd, s, 1);
 				s++;
 			}
-		}
-	}
-	// token_tmp = token_tmp;
-	if ((token_tmp)->type == WORD)
-	{
-		echo_struct->input = (token_tmp)->value;
-		s = echo_struct->input;
-		while (*s)
-		{
-			write(echo_struct->fd, s, 1);
-			s++;
+			write(echo_struct_tmp->fd, "\n", 1);
+			*token = token_tmp->next;
 		}
 	}
 	else
 		print_error_command(token);
 }
 
-void	ft_echo(t_token **token)
+void	ft_echo(t_token **token, t_echo *echo_struct)
 {
-	t_echo	*echo_struct;
+	t_echo	*echo_struct_tmp;
 	t_token	*token_tmp;
 	char	*s;
+	// char	**msg_tmp;
+	// int		i;
 
 	if (!token)
 		return ;
 	token_tmp = (*token);
+	echo_struct_tmp = echo_struct;
 	redir_out_count(token, echo_struct);
+	// msg_tmp = echo_struct_tmp->msg;
 	if (token_tmp->type == WORD)
 	{
 		if (ft_strncmp(token_tmp->value, "echo", 4) == 0)
@@ -125,16 +108,21 @@ void	ft_echo(t_token **token)
 				print_echo_error();
 			if (ft_strncmp(token_tmp->value, "-n", 2) == 0)
 				ft_echo_helper(token, &echo_struct);
-			else if (token_tmp->type == WORD)
+			else if ((token_tmp->type == WORD) || (token_tmp->type == REDIR_OUT))
 			{
-				s = token_tmp->value;
-				while (*s)
+				if (token_tmp->type == REDIR_OUT)
+					token_tmp = token_tmp->next->next;
+				else
 				{
-					write(echo_struct->fd, s, 1);
-					s++;
+					s = token_tmp->value;
+					while (*s)
+					{
+						write(echo_struct_tmp->fd, s, 1);
+						s++;
+					}
+					write(echo_struct_tmp->fd, "\n", 1);
+					*token = token_tmp->next;
 				}
-				write(echo_struct->fd, "\n", 1);
-				*token = token_tmp->next;
 			}
 			else
 				print_error_command(token);
@@ -165,5 +153,5 @@ void    parsing(char *input, t_token **token)
 		exit (1);
 	}
 	ft_data_init(&echo_struct);
-	ft_echo(token);
+	ft_echo(token, &echo_struct);
 }
