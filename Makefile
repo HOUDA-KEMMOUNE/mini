@@ -3,7 +3,7 @@ CC = cc
 CFLAGS = -Wall -Wextra -Werror
 
 # Source files
-SRC = minishell.c lexer.c lexer_errors.c error_msg.c parsing.c
+SRC = minishell.c lexer.c lexer_errors.c error_msg.c parsing.c expander.c
 
 # Object files
 OBJ = $(SRC:.c=.o)

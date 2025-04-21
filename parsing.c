@@ -63,7 +63,7 @@ static void	ft_echo_helper(t_token **token, t_echo	*echo_struct)
 	token_tmp = *token;
 	token_tmp = (token_tmp)->next;
 
-	redir_out_count(token, echo_struct);
+	// redir_out_count(token, echo_struct);
 	if (((token_tmp)->next->type == REDIR_OUT) && ((token_tmp)->next->type == WORD))
 	{
 		echo_struct->file = (token_tmp)->next->value;
@@ -108,13 +108,14 @@ static void	ft_echo_helper(t_token **token, t_echo	*echo_struct)
 
 void	ft_echo(t_token **token)
 {
-	t_echo	echo_struct;
+	t_echo	*echo_struct;
 	t_token	*token_tmp;
 	char	*s;
 
 	if (!token)
 		return ;
 	token_tmp = (*token);
+	redir_out_count(token, echo_struct);
 	if (token_tmp->type == WORD)
 	{
 		if (ft_strncmp(token_tmp->value, "echo", 4) == 0)
@@ -129,12 +130,11 @@ void	ft_echo(t_token **token)
 				s = token_tmp->value;
 				while (*s)
 				{
-					write(1, s, 1);
+					write(echo_struct->fd, s, 1);
 					s++;
 				}
-				write(1, "\n", 1);
+				write(echo_struct->fd, "\n", 1);
 				*token = token_tmp->next;
-				// if ()
 			}
 			else
 				print_error_command(token);
