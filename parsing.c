@@ -22,6 +22,39 @@ void	ft_data_init(t_echo	*echo_struct)
 	echo_struct->msg = NULL;
 }
 
+static void	redir_out_count(t_token **token, t_echo	*echo_struct)
+{
+	t_token	*token_tmp;
+	t_echo	*echo_struct_tmp;
+	char	**msg_tmp;
+	int		count_redir_out;
+	int		i;
+	
+	if (!token)
+		return ;
+	token_tmp = (*token);
+	echo_struct_tmp = echo_struct;
+	count_redir_out = 0;
+	i = 0;
+	msg_tmp = echo_struct_tmp->msg;
+	while (token_tmp)
+	{
+		if (token_tmp->type == REDIR_OUT)
+		{
+			token_tmp = token_tmp->next;
+			echo_struct->fd = open(token_tmp->value, O_RDWR);
+			count_redir_out++;
+		}
+		else if ((token_tmp->type == WORD))
+		{
+			msg_tmp[i] = token_tmp->value;
+			i++;
+		}
+		token_tmp = token_tmp->next;
+	}
+	echo_struct_tmp->msg = msg_tmp;
+}
+
 static void	ft_echo_helper(t_token **token, t_echo	*echo_struct)
 {
 	char	*s;
@@ -29,6 +62,8 @@ static void	ft_echo_helper(t_token **token, t_echo	*echo_struct)
 
 	token_tmp = *token;
 	token_tmp = (token_tmp)->next;
+
+	redir_out_count(token, echo_struct);
 	if (((token_tmp)->next->type == REDIR_OUT) && ((token_tmp)->next->type == WORD))
 	{
 		echo_struct->file = (token_tmp)->next->value;
@@ -69,37 +104,6 @@ static void	ft_echo_helper(t_token **token, t_echo	*echo_struct)
 	}
 	else
 		print_error_command(token);
-}
-static int	redir_out_count(t_token **token, t_echo	*echo_struct)
-{
-	t_token	*token_tmp;
-	t_echo	*echo_struct_tmp;
-	char	**msg_tmp;
-	int		count_redir_out;
-	int		i;
-	
-	if (!token)
-		return ;
-	token_tmp = (*token);
-	echo_struct_tmp = echo_struct;
-	count_redir_out = 0;
-	i = 0;
-	msg_tmp = echo_struct_tmp->msg;
-	while (token_tmp)
-	{
-		if (token_tmp->type == REDIR_OUT)
-			count_redir_out++;
-		else if ((token_tmp->type == WORD))
-		{
-			msg_tmp[i] = token_tmp->value;
-			i++;
-		}
-		// if (count_redir_out == 2)
-		// 	return (count_redir_out);
-		token_tmp = token_tmp->next;
-	}
-	echo_struct_tmp->msg = msg_tmp;
-	return (count_redir_out);
 }
 
 void	ft_echo(t_token **token)
