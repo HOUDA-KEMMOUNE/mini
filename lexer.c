@@ -6,13 +6,13 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 19:32:00 by akemmoun          #+#    #+#             */
-/*   Updated: 2025/04/13 17:19:14 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/04/23 17:12:37 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	add_token(t_token **head, char *value, t_token_type type)
+void	add_token(t_token **head, char *value, t_token_type type, char quote)
 {
 	t_token *new;
 
@@ -22,6 +22,7 @@ void	add_token(t_token **head, char *value, t_token_type type)
 	
 	new->value = ft_strdup(value);
 	new->type = type;
+	new->quote = quote;
 	new->next = NULL;
 
 	if (*head == NULL)
@@ -41,6 +42,7 @@ void	word_case(char *input, int *i, t_token **token_list)
 	char *word;
 	char quote;
 
+	quote = 0;
 	if (input[*i] == '"' || input[*i] == '\'')
 	{
 		quote = input[*i];
@@ -54,7 +56,7 @@ void	word_case(char *input, int *i, t_token **token_list)
 		while (input[*i] && input[*i] != quote)
 			(*i)++;
 		word = ft_substr(input, start, *i - start);
-		add_token(token_list, word, WORD);
+		add_token(token_list, word, WORD, quote);
 		free(word);
 		if (input[*i] == quote)
 			(*i)++;
@@ -66,9 +68,9 @@ void	word_case(char *input, int *i, t_token **token_list)
 		input[*i] !='|' && input[*i] != '>' && input[*i] != '<')
 			(*i)++;
 		word = ft_substr(input, start, *i - start);
-		add_token(token_list, word, WORD);
+		add_token(token_list, word, WORD, 0);
 		free(word);
-	}		
+	}
 }
 
 t_token *lexer(char *input)
@@ -82,17 +84,17 @@ t_token *lexer(char *input)
 		while (input[i] == ' ' || input[i] == '\t')
 			i++;
 		if (input[i] == '|')
-			add_token(&token_list, "|", PIPE);
+			add_token(&token_list, "|", PIPE, 0);
 		else if (input[i] == '>')
 		{
 			if (input[i+1] == '>')
 			{
-				add_token(&token_list, ">>", APPEND);
+				add_token(&token_list, ">>", APPEND, 0);
 				i += 2;
 			}
 			else 
 			{
-				add_token(&token_list, ">", REDIR_OUT);
+				add_token(&token_list, ">", REDIR_OUT, 0);
 				i++;
 			}
 		}
@@ -100,12 +102,12 @@ t_token *lexer(char *input)
 		{
 			if (input[i+1] == '<')
 			{
-				add_token(&token_list, "<<", HEREDOC);
+				add_token(&token_list, "<<", HEREDOC, 0);
 				i += 2;
 			}
 			else 
 			{
-				add_token(&token_list, "<", REDIR_IN);
+				add_token(&token_list, "<", REDIR_IN, 0);
 				i++;
 			}
 		}
