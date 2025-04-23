@@ -90,7 +90,7 @@ void	ft_echo(t_token **token, t_echo *echo_struct)
 	t_token	*token_tmp;
 	char	*s;
 
-	if (!token)
+	if ((!token) || (ft_strncmp((*token)->value, "echo", 4) != 0))
 		return ;
 	token_tmp = (*token);
 	echo_struct_tmp = echo_struct;
@@ -150,4 +150,5 @@ void    parsing(char *input, t_token **token)
 	}
 	ft_data_init(&echo_struct);
 	ft_echo(token, &echo_struct);
+	ft_cd(token);
 }
