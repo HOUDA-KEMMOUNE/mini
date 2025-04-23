@@ -25,25 +25,20 @@ void	ft_data_init(t_echo	*echo_struct)
 static void	redir_out_count(t_token **token, t_echo	*echo_struct)
 {
 	t_token	*token_tmp;
-	t_echo	*echo_struct_tmp;
 	char	**msg_tmp;
-	int		count_redir_out;
 	int		i;
 	
 	if (!token)
 		return ;
 	token_tmp = (*token);
-	echo_struct_tmp = echo_struct;
-	count_redir_out = 0;
 	i = 0;
-	msg_tmp = echo_struct_tmp->msg;
+	msg_tmp = echo_struct->msg;
 	while (token_tmp)
 	{
 		if (token_tmp->type == REDIR_OUT)
 		{
 			token_tmp = token_tmp->next;
 			echo_struct->fd = open(token_tmp->value, O_RDWR);
-			count_redir_out++;
 		}
 		else if ((token_tmp->type == WORD))
 		{
@@ -52,7 +47,7 @@ static void	redir_out_count(t_token **token, t_echo	*echo_struct)
 		}
 		token_tmp = token_tmp->next;
 	}
-	echo_struct_tmp->msg = msg_tmp;
+	echo_struct->msg = msg_tmp;
 }
 
 static void	ft_echo_helper(t_token **token, t_echo *echo_struct)
@@ -64,25 +59,29 @@ static void	ft_echo_helper(t_token **token, t_echo *echo_struct)
 	token_tmp = *token;
 	echo_struct_tmp = echo_struct;
 	token_tmp = (token_tmp)->next;
-	// redir_out_count(token, echo_struct_tmp);
-	if ((token_tmp->type == WORD) || (token_tmp->type == REDIR_OUT))
+	while (token_tmp != NULL)
 	{
-		if (token_tmp->type == REDIR_OUT)
-			token_tmp = token_tmp->next->next;
-		else
+		if ((token_tmp->type == WORD) || (token_tmp->type == REDIR_OUT))
 		{
-			s = token_tmp->value;
-			while (*s)
+			if (token_tmp->type == REDIR_OUT)
+				token_tmp = token_tmp->next->next;
+			else if ((ft_strncmp(token_tmp->value, "echo", 4) == 0)
+				|| (ft_strncmp(token_tmp->value, "-n", 2) == 0))
+				token_tmp = token_tmp->next;
+			else
 			{
-				write(echo_struct_tmp->fd, s, 1);
-				s++;
+				s = token_tmp->value;
+				while (*s)
+				{
+					write(echo_struct_tmp->fd, s, 1);
+					s++;
+				}
 			}
-			write(echo_struct_tmp->fd, "\n", 1);
-			*token = token_tmp->next;
 		}
+		else
+			print_error_command(token);
+		token_tmp = token_tmp->next;
 	}
-	else
-		print_error_command(token);
 }
 
 void	ft_echo(t_token **token, t_echo *echo_struct)
@@ -90,15 +89,12 @@ void	ft_echo(t_token **token, t_echo *echo_struct)
 	t_echo	*echo_struct_tmp;
 	t_token	*token_tmp;
 	char	*s;
-	// char	**msg_tmp;
-	// int		i;
 
 	if (!token)
 		return ;
 	token_tmp = (*token);
 	echo_struct_tmp = echo_struct;
 	redir_out_count(token, echo_struct);
-	// msg_tmp = echo_struct_tmp->msg;
 	if (token_tmp->type == WORD)
 	{
 		if (ft_strncmp(token_tmp->value, "echo", 4) == 0)
