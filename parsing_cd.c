@@ -1,16 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parsing2.c                                         :+:      :+:    :+:   */
+/*   parsing_cd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hkemmoun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/23 18:49:59 by hkemmoun          #+#    #+#             */
-/*   Updated: 2025/04/23 18:50:00 by hkemmoun         ###   ########.fr       */
+/*   Created: 2025/04/24 10:04:13 by hkemmoun          #+#    #+#             */
+/*   Updated: 2025/04/24 10:04:16 by hkemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static void	ft_count(char *s, int *count)
+{
+	while (*s)
+	{
+		if (*s == '.')
+			*count++;
+		else
+			return ;
+		s++;
+	}
+}
 
 static void	ft_count_dotes(t_token **token)
 {
@@ -26,13 +38,7 @@ static void	ft_count_dotes(t_token **token)
 	if (token_tmp->type == WORD)
 	{
 		s = token_tmp;
-		while (*s)
-		{
-			if (*s == '.')
-				count++;
-			else
-				break ;
-		}
+		ft_count(s, &count);
 	}
 	else
 		return ;
