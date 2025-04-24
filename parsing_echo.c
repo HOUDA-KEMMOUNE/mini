@@ -12,16 +12,6 @@
 
 #include "minishell.h"
 
-void	ft_data_init(t_echo	*echo_struct)
-{
-	t_echo	echo_struct;
-
-	echo_struct->fd = 1;
-	echo_struct->file = NULL;
-	echo_struct->input = NULL;
-	echo_struct->msg = NULL;
-}
-
 static void	redir_out_count(t_token **token, t_echo	*echo_struct)
 {
 	t_token	*token_tmp;
@@ -124,31 +114,4 @@ void	ft_echo(t_token **token, t_echo *echo_struct)
 				print_error_command(token);
 		}
 	}
-}
-
-void    parsing(char *input, t_token **token)
-{
-	char	*s;
-	t_echo	echo_struct;
-
-	if (!input || !token)
-		return ;
-	if (*input == '|')
-	{
-		write(1, "minishell: parse error near `|'", ft_strlen("minishell: parse error near `|'"));
-		exit (1);
-	}
-	else if (*input == '(')
-	{
-		write(1, "minishell: unclosed parenthesis `('", ft_strlen("minishell: unclosed parenthesis `('"));
-		exit (1);
-	}
-	else if (*input == 39)
-	{
-		write(1, "minishell: parse error near `\''", ft_strlen("minishell: unclosed parenthesis `('"));
-		exit (1);
-	}
-	ft_data_init(&echo_struct);
-	ft_echo(token, &echo_struct);
-	ft_cd(token);
 }
