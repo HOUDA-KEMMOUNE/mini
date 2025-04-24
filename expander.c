@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 10:50:59 by akemmoun          #+#    #+#             */
-/*   Updated: 2025/04/23 20:19:17 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/04/24 10:30:38 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,16 @@ char *expand_variable(char *value)
 
     dollar = ft_strchr(value, '$');
     if (!dollar)
+	{
         return (ft_strdup(value));
-
+	}
 	prefix_len = dollar - value;
     var_name = dollar + 1;
     var_len = 0;
     while (var_name[var_len] && (ft_isalnum(var_name[var_len]) || var_name[var_len] == '_'))
+	{
         var_len++;
-
+	}
 	env_value = getenv(var_name);
 	if (!env_value)
 		env_value = "";
