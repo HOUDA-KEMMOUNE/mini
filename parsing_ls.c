@@ -17,7 +17,7 @@ static void	ft_count(char *s, int *count)
 	while (*s)
 	{
 		if (*s == '.')
-			*count++;
+            *count = *count + 1;
 		else
 			return ;
 		s++;
@@ -37,7 +37,7 @@ static void	ft_count_dotes(t_token **token)
 	token_tmp = token_tmp->next;
 	if (token_tmp->type == WORD)
 	{
-		s = token_tmp;
+		s = token_tmp->value;
 		ft_count(s, &count);
 	}
 	else
@@ -45,7 +45,7 @@ static void	ft_count_dotes(t_token **token)
 	if (count > 2)
 	{
 		ft_putstr_fd("ls: ", 1);
-		ft_putstr_fd(token_tmp, 1);
+		ft_putstr_fd(s, 1);
 		ft_putstr_fd(": No such file or directory\n", 1);
 		exit (1);
 	}
