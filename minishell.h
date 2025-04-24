@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 19:32:00 by akemmoun          #+#    #+#             */
-/*   Updated: 2025/04/23 17:06:35 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/04/24 11:22:07 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,5 +63,9 @@ void    parsing(char *input, t_token **token);
 void	ft_data_init(t_echo	*echo_struct);
 void	ft_echo(t_token **token, t_echo *echo_struct);
 void	ft_cd(t_token **token);
+
+/*-------------------expander-------------------*/
+t_token *expander(t_token *token_list);
+char *expand_variable(char *value);
 
 # endif

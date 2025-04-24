@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 19:32:00 by akemmoun          #+#    #+#             */
-/*   Updated: 2025/04/20 12:02:46 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/04/24 11:23:09 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void print_tokens(t_token *tokens)
 {
 	while (tokens)
 	{
-		printf("Token: %-10s | Type: %d\n", tokens->value, tokens->type);
+		printf("%s\n", tokens->value);
 		tokens = tokens->next;
 	}
 }
@@ -40,6 +40,7 @@ int main(void)
 		tokens = lexer(input);
 		if (tokens)
 		{
+			tokens = expander(tokens);
 			print_tokens(tokens);
 			// Free token list here if needed
 		}
