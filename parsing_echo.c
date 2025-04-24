@@ -30,7 +30,7 @@ static void	redir_out_count(t_token **token, t_echo	*echo_struct)
 			token_tmp = token_tmp->next;
 			echo_struct->fd = open(token_tmp->value, O_RDWR);
 		}
-		else if ((token_tmp->type == WORD))
+		else if (token_tmp->type == WORD)
 		{
 			msg_tmp[i] = token_tmp->value;
 			i++;
@@ -93,7 +93,7 @@ void	ft_echo(t_token **token, t_echo *echo_struct)
 			if (token_tmp->type != WORD)
 				print_echo_error();
 			if (ft_strncmp(token_tmp->value, "-n", 2) == 0)
-				ft_echo_helper(token, &echo_struct);
+				ft_echo_helper(token, echo_struct);
 			else if ((token_tmp->type == WORD) || (token_tmp->type == REDIR_OUT))
 			{
 				if (token_tmp->type == REDIR_OUT)
