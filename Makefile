@@ -4,7 +4,7 @@ CFLAGS = -Wall -Wextra -Werror
 
 # Source files
 SRC = minishell.c lexer.c lexer_errors.c error_msg.c parsing_cd.c expander.c \
-	parsing_echo.c
+	parsing_echo.c execution.c 
 
 # Object files
 OBJ = $(SRC:.c=.o)
