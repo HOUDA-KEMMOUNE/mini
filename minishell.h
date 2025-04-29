@@ -63,6 +63,7 @@ void    parsing(char *input, t_token **token);
 void	ft_data_init(t_echo	*echo_struct);
 void	ft_echo(t_token **token, t_echo *echo_struct);
 void	ft_cd(t_token **token);
+void	ft_export(t_token **token);
 
 /*-------------------expander-------------------*/
 t_token *expander(t_token *token_list);

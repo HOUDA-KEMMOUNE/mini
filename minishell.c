@@ -41,6 +41,7 @@ int main(void)
 		if (tokens)
 		{
 			tokens = expander(tokens);
+			parsing(input, tokens);
 			print_tokens(tokens);
 			// Free token list here if needed
 		}
