@@ -1,29 +1,5 @@
 #include "minishell.h"
 
-static int	is_num(char *s)
-{
-	while (*s)
-	{
-		if (*s >= '0' && *s <= '9')
-			s++;
-		else
-			return (0);
-	}
-	return (1);
-}
-
-static int	is_alpha(char *s)
-{
-	while (*s)
-	{
-		if ((*s >= 'a' && *s <= 'z') || (*s >= 'A' && *s <= 'Z'))
-			s++;
-		else
-			return (0);
-	}
-	return (1);
-}
-
 static int	is_notForbidden_char(char c)
 {
 	if ((c >= '0' && c <= '9') || (c >= 'a' && c <= 'z')
