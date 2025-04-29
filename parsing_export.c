@@ -9,7 +9,7 @@ static int	is_notForbidden_char(char c)
 		return (0); // forbidden character ❌
 }
 
-void    check_var(t_token **token)
+static void    check_var(t_token **token)
 {
 	char	*var;
 	int		i;
@@ -23,6 +23,7 @@ void    check_var(t_token **token)
 	{
 		ft_putstr_fd("export: not an identifier: ", 1);
 		ft_putstr_fd(var, 1);
+		ft_putstr_fd("\n", 1);
 		exit (1);
 	}
 	while (var[i])
@@ -31,6 +32,7 @@ void    check_var(t_token **token)
 		{
 			ft_putstr_fd("export: not an identifier: ", 1);
 			ft_putstr_fd(var, 1);
+			ft_putstr_fd("\n", 1);
 			exit (1);
 		}
 		i++;
@@ -50,6 +52,7 @@ void    check_equal_sign(t_token **token, char *var)
 	{
 		ft_putstr_fd("export: not an identifier: ", 1);
 		ft_putstr_fd(var, 1);
+		ft_putstr_fd("\n", 1);
 		exit (1);
 	}
 }
@@ -67,4 +70,5 @@ void	ft_export(t_token **token)
 	var = token_tmp->value;
 	token_tmp = token_tmp->next;
 	check_equal_sign(&token_tmp, var);
+	token_tmp = token_tmp->next->next;
 }

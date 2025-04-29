@@ -1,0 +1,99 @@
+#include "minishell.h"
+
+static void	after_dollar(char *var)
+{
+	int		i;
+
+	i = 0;
+	while (var[i])
+	{
+		if ((var[i] >= 'a' && var[i] <= 'z') || (var[i] >= 'A' && var[i] <= 'Z')
+		|| (var[i] >= '0' && var[i] <= '9'))
+			i++;
+		else if (var[i] == '(' || var[i] == ')')
+		{
+			if (var[i] == ')')
+			{
+				ft_putstr_fd("syntax error near unexpected token `)'\n", 1);
+				exit (1);
+			}
+			else
+			{
+				ft_putstr_fd("syntax error near unexpected token `('\n", 1);
+				exit (1);
+			}
+		}
+		else
+		{
+			ft_putstr_fd("unset: `", 1);
+			ft_putstr_fd(var, 1);
+			ft_putstr_fd("': not a valid identifier\n", 1);
+			exit (1);
+		}
+	}
+}
+
+static void	check_var(t_token **token)
+{
+	char	*var;
+	int		i;
+
+	var = (*token)->value;
+	i = 0;
+	if (var[i] == '_')
+		i++;
+	else if (var[i] == '$')
+		after_dollar(&var[i]);
+	else if ((var[i] >= '0' && var[i] <= '9') || (!(var[i] >= 'a' && var[i] <= 'z'))
+		|| (!(var[i] >= 'A' && var[i] <= 'Z')))
+	{
+		ft_putstr_fd("export: not an identifier: ", 1);
+		ft_putstr_fd(var, 1);
+		ft_putstr_fd("\n", 1);
+		exit (1);
+	}
+	while (var[i])
+	{
+		if (is_notForbidden_char(var[i]) == 0)
+		{
+			ft_putstr_fd("export: not an identifier: ", 1);
+			ft_putstr_fd(var, 1);
+			ft_putstr_fd("\n", 1);
+			exit (1);
+		}
+		i++;
+	}
+}
+
+static void	is_there_equal(t_token **token, char *var)
+{
+	char	*equal;
+	int		i;
+
+	equal = (*token)->value;
+	i = 0;
+	while (equal[i])
+	{
+		if (equal[i] == '=')
+		{
+			ft_putstr_fd("unset: `=': not a valid identifier\n", 1);
+			exit (1);
+		}
+		i++;
+	}
+}
+
+void	ft_unset(t_token **token)
+{
+	t_token	*token_tmp;
+	char	*var;
+
+	if ((!token) || (ft_strncmp((*token)->value, "unset", 5) != 0))
+		return ;
+	token_tmp = (*token);
+	token_tmp = token_tmp->next;
+	check_var(&token_tmp);
+	var = token_tmp->value;
+	token_tmp = token_tmp->next;
+	check_equal_sign(&token_tmp, var);
+}

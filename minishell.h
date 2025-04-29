@@ -64,6 +64,8 @@ void	ft_data_init(t_echo	*echo_struct);
 void	ft_echo(t_token **token, t_echo *echo_struct);
 void	ft_cd(t_token **token);
 void	ft_export(t_token **token);
+int		is_notForbidden_char(char c);
+void    check_equal_sign(t_token **token, char *var);
 
 /*-------------------expander-------------------*/
 t_token *expander(t_token *token_list);
