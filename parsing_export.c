@@ -3,7 +3,7 @@
 static int	is_notForbidden_char(char c)
 {
 	if ((c >= '0' && c <= '9') || (c >= 'a' && c <= 'z')
-		|| (c >= 'A' && c <= 'Z'))
+		|| (c >= 'A' && c <= 'Z') || (c == '_'))
 		return (1); // l2omore ta7t saytara ✅
 	else
 		return (0); // forbidden character ❌
