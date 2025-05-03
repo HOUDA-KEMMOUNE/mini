@@ -51,9 +51,44 @@ static void	ft_count_dotes(t_token **token)
 	}
 }
 
+int	check_commande(char *input)
+{
+	if (ft_strncmp(input, "ls", 2) == 0)
+		return (0);
+	else if (ft_strncmp(input, "echo", 4) == 0)
+		return (0);
+	else if (ft_strncmp(input, "cd", 2) == 0)
+		return (0);
+	else if (ft_strncmp(input, "pwd", 3) == 0)
+		return (0);
+	else if (ft_strncmp(input, "export", 6) == 0)
+		return (0);
+	else if (ft_strncmp(input, "unset", 5) == 0)
+		return (0);
+	else if (ft_strncmp(input, "env", 3) == 0)
+		return (0);
+	else if (ft_strncmp(input, "exit", 4) == 0)
+		return (0);
+	else
+		return (1);
+}
+
 void	ft_ls(t_token **token)
 {
+	t_token	*token_tmp;
+
 	if ((!token) || (ft_strncmp((*token)->value, "ls", 2) != 0))
 		return ;
+	token_tmp = (*token);
+	if (token_tmp->next == NULL)
+		exit (0);
+	token_tmp = token_tmp->next;
+	if (check_commande(token_tmp->value) == 0)
+	{
+		ft_putstr_fd("ls: cannot access '", 1);
+		ft_putstr_fd(token_tmp->value, 1);
+		ft_putstr_fd("': No such file or directory\n", 1);
+		exit(1);
+	}
 	ft_count_dotes(token);
 }

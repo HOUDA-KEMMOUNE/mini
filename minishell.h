@@ -66,7 +66,8 @@ void	ft_cd(t_token **token);
 void	ft_ls(t_token **token);
 void	ft_export(t_token **token);
 int		is_notForbidden_char(char c);
-void    check_equal_sign(t_token **token, char *var);
+int		check_commande(char *input);
+// void    check_equal_sign(t_token **token, char *var);
 void	ft_env(t_token **token);
 void	ft_exit(t_token **token);
 
