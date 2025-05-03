@@ -20,7 +20,6 @@ static void    check_var(t_token **token)
 		i++;
 	else
 	{
-		printf("btata\n");
 		ft_putstr_fd("export: not an identifier: ", 1);
 		ft_putstr_fd(var, 1);
 		ft_putstr_fd("\n", 1);
@@ -28,12 +27,13 @@ static void    check_var(t_token **token)
 	}
 	while (var[i])
 	{
-		printf("print --> %c ", var[i]);
 		if (var[i] == '=')
-			break ;
-		if (is_notForbidden_char(var[i]) == 0 || var[i] == ' ')
 		{
-			printf("tafa7a\n");
+			ft_putstr_fd("export: `=': not a valid identifier\n", 1);
+			exit (1);
+		}		
+		else if (is_notForbidden_char(var[i]) == 0)
+		{
 			ft_putstr_fd("export: not an identifier: ", 1);
 			ft_putstr_fd(var, 1);
 			ft_putstr_fd("\n", 1);
@@ -41,44 +41,7 @@ static void    check_var(t_token **token)
 		}
 		i++;
 	}
-	while (var[i])
-	{
-		printf("print --> %c ", var[i]);
-		i++;
-	}
-	printf("\n");
-	// if ( var[i] == '=')
-	// {
-	// 	printf("batbouta\n");
-	// 	i++;
-	// 	printf("var[i + 1] --> -%c-\n", var[i + 1]);
-	// 	if (var[i] == ' ')
-	// 	{
-	// 		ft_putstr_fd("export: not an identifier: ", 1);
-	// 		ft_putstr_fd(var, 1);
-	// 		ft_putstr_fd("\n", 1);
-	// 		exit (1);
-	// 	}
-	// }
-	// else
-	// 	return ;
 }
-
-// void    check_equal_sign(t_token **token, char *var)
-// {
-// 	char	*equal;
-// 	int		len;
-
-// 	equal = (*token)->value;
-// 	len = ft_strlen(equal);
-// 	if (len != 1 && equal[0] != '=')
-// 	{
-// 		ft_putstr_fd("export: not an identifier: ", 1);
-// 		ft_putstr_fd(var, 1);
-// 		ft_putstr_fd("\n", 1);
-// 		exit (1);
-// 	}
-// }
 
 void	ft_export(t_token **token)
 {
@@ -89,9 +52,10 @@ void	ft_export(t_token **token)
 		return ;
 	token_tmp = (*token);
 	token_tmp = token_tmp->next;
-	check_var(&token_tmp);
-	// var = token_tmp->value;
-	// token_tmp = token_tmp->next;
-	// check_equal_sign(&token_tmp, var);
-	// token_tmp = token_tmp->next->next;
+	while (token_tmp)
+	{
+		check_var(&token_tmp);
+		token_tmp = token_tmp->next;
+	}
+	return ;
 }

@@ -40,43 +40,33 @@ static void	check_var(t_token **token)
 
 	var = (*token)->value;
 	i = 0;
-	if (var[i] == '_')
+	if ((var[i] == '_') || (var[i] >= 'a' && var[i] <= 'z')
+	|| (var[i] >= 'A' && var[i] <= 'Z'))
 		i++;
 	else if (var[i] == '$')
-		after_dollar(&var[i]);
-	else if ((var[i] >= '0' && var[i] <= '9') || (!(var[i] >= 'a' && var[i] <= 'z'))
-		|| (!(var[i] >= 'A' && var[i] <= 'Z')))
 	{
-		ft_putstr_fd("export: not an identifier: ", 1);
+		after_dollar(&var[i]);
+		i++;
+	}
+	else
+	{
+		ft_putstr_fd("unset: not an identifier: ", 1);
 		ft_putstr_fd(var, 1);
 		ft_putstr_fd("\n", 1);
 		exit (1);
 	}
 	while (var[i])
 	{
-		if (is_notForbidden_char(var[i]) == 0)
-		{
-			ft_putstr_fd("export: not an identifier: ", 1);
-			ft_putstr_fd(var, 1);
-			ft_putstr_fd("\n", 1);
-			exit (1);
-		}
-		i++;
-	}
-}
-
-static void	is_there_equal(t_token **token)
-{
-	char	*equal;
-	int		i;
-
-	equal = (*token)->value;
-	i = 0;
-	while (equal[i])
-	{
-		if (equal[i] == '=')
+		if (var[i] == '=')
 		{
 			ft_putstr_fd("unset: `=': not a valid identifier\n", 1);
+			exit (1);
+		}
+		else if (is_notForbidden_char(var[i]) == 0)
+		{
+			ft_putstr_fd("unset: not an identifier: ", 1);
+			ft_putstr_fd(var, 1);
+			ft_putstr_fd("\n", 1);
 			exit (1);
 		}
 		i++;
@@ -86,15 +76,15 @@ static void	is_there_equal(t_token **token)
 void	ft_unset(t_token **token)
 {
 	t_token	*token_tmp;
-	// char	*var;
 
 	if ((!token) || (ft_strncmp((*token)->value, "unset", 5) != 0))
 		return ;
 	token_tmp = (*token);
 	token_tmp = token_tmp->next;
-	check_var(&token_tmp);
-	// var = token_tmp->value;
-	token_tmp = token_tmp->next;
-	// check_equal_sign(&token_tmp, var);
-	is_there_equal(&token_tmp);
+	while (token_tmp)
+	{
+		check_var(&token_tmp);
+		token_tmp = token_tmp->next;
+	}
+	return ;
 }

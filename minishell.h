@@ -65,6 +65,7 @@ void	ft_echo(t_token **token, t_echo *echo_struct);
 void	ft_cd(t_token **token);
 void	ft_ls(t_token **token);
 void	ft_export(t_token **token);
+void	ft_unset(t_token **token);
 int		is_notForbidden_char(char c);
 int		check_commande(char *input);
 // void    check_equal_sign(t_token **token, char *var);
