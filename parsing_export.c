@@ -16,7 +16,8 @@ static void    check_var(t_token **token)
 
 	var = (*token)->value;
 	i = 0;
-	if ((var[i] == '_') || (var[i] >= 'a' && var[i] <= 'z') || (var[i] >= 'A' && var[i] <= 'Z'))
+	if ((var[i] == '_') || (var[i] >= 'a' && var[i] <= 'z')
+		|| (var[i] >= 'A' && var[i] <= 'Z'))
 		i++;
 	else
 	{
@@ -52,6 +53,8 @@ void	ft_export(t_token **token)
 		return ;
 	token_tmp = (*token);
 	token_tmp = token_tmp->next;
+	if (token_tmp->next == NULL)
+		return ;
 	while (token_tmp)
 	{
 		check_var(&token_tmp);
