@@ -65,7 +65,7 @@ static void	check_var(t_token **token)
 	}
 }
 
-static void	is_there_equal(t_token **token, char *var)
+static void	is_there_equal(t_token **token)
 {
 	char	*equal;
 	int		i;
@@ -86,14 +86,15 @@ static void	is_there_equal(t_token **token, char *var)
 void	ft_unset(t_token **token)
 {
 	t_token	*token_tmp;
-	char	*var;
+	// char	*var;
 
 	if ((!token) || (ft_strncmp((*token)->value, "unset", 5) != 0))
 		return ;
 	token_tmp = (*token);
 	token_tmp = token_tmp->next;
 	check_var(&token_tmp);
-	var = token_tmp->value;
+	// var = token_tmp->value;
 	token_tmp = token_tmp->next;
-	check_equal_sign(&token_tmp, var);
+	// check_equal_sign(&token_tmp, var);
+	is_there_equal(&token_tmp);
 }

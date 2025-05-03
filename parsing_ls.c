@@ -51,7 +51,7 @@ static void	ft_count_dotes(t_token **token)
 	}
 }
 
-void	ft_cd(t_token **token)
+void	ft_ls(t_token **token)
 {
 	if ((!token) || (ft_strncmp((*token)->value, "ls", 2) != 0))
 		return ;

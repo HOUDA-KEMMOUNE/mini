@@ -14,8 +14,6 @@
 
 void	ft_data_init(t_echo	*echo_struct)
 {
-	t_echo	echo_struct;
-
 	echo_struct->fd = 1;
 	echo_struct->file = NULL;
 	echo_struct->input = NULL;
@@ -24,7 +22,7 @@ void	ft_data_init(t_echo	*echo_struct)
 
 void    parsing(char *input, t_token **token)
 {
-	char	*s;
+	// char	*s;
 	t_echo	echo_struct;
 
 	if (!input || !token)
@@ -52,4 +50,3 @@ void    parsing(char *input, t_token **token)
 	ft_env(token);
 	ft_exit(token);
 }
-
