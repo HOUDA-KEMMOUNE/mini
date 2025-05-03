@@ -57,4 +57,3 @@ void	ft_cd(t_token **token)
 		return ;
 	ft_count_dotes(token);
 }
-
