@@ -49,5 +49,6 @@ void    parsing(char *input, t_token **token)
 	ft_cd(token);
 	ft_ls(token);
 	ft_export(token);
+	ft_env(token);
 }
 
