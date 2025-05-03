@@ -9,5 +9,5 @@ void	ft_env(t_token **token)
 	token_tmp = (*token);
 	token_tmp = token_tmp->next;
 	if (token_tmp != NULL)
-		exit (0);
+		return ;
 }

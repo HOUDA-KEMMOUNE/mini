@@ -42,7 +42,7 @@ int main(void)
 		{
 			tokens = expander(tokens);
 			parsing(input, &tokens);
-			print_tokens(tokens);
+			// print_tokens(tokens);
 			// Free token list here if needed
 		}
 	}

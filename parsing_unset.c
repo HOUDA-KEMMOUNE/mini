@@ -15,12 +15,12 @@ static void	after_dollar(char *var)
 			if (var[i] == ')')
 			{
 				ft_putstr_fd("syntax error near unexpected token `)'\n", 1);
-				exit (1);
+				return ;
 			}
 			else
 			{
 				ft_putstr_fd("syntax error near unexpected token `('\n", 1);
-				exit (1);
+				return ;
 			}
 		}
 		else
@@ -28,7 +28,7 @@ static void	after_dollar(char *var)
 			ft_putstr_fd("unset: `", 1);
 			ft_putstr_fd(var, 1);
 			ft_putstr_fd("': not a valid identifier\n", 1);
-			exit (1);
+			return ;
 		}
 	}
 }
@@ -53,21 +53,21 @@ static void	check_var(t_token **token)
 		ft_putstr_fd("unset: not an identifier: ", 1);
 		ft_putstr_fd(var, 1);
 		ft_putstr_fd("\n", 1);
-		exit (1);
+		return ;
 	}
 	while (var[i])
 	{
 		if (var[i] == '=')
 		{
 			ft_putstr_fd("unset: `=': not a valid identifier\n", 1);
-			exit (1);
+			return ;
 		}
 		else if (is_notForbidden_char(var[i]) == 0)
 		{
 			ft_putstr_fd("unset: not an identifier: ", 1);
 			ft_putstr_fd(var, 1);
 			ft_putstr_fd("\n", 1);
-			exit (1);
+			return ;
 		}
 		i++;
 	}
