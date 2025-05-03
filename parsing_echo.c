@@ -40,15 +40,13 @@ static void	redir_out_count(t_token **token, t_echo	*echo_struct)
 	// echo_struct->msg = msg_tmp;
 }
 
-static void	ft_echo_helper(t_token **token_tmp, t_echo *echo_struct)
+static void	ft_echo_helper(t_token **token_tmp, t_echo *echo_struct, int *i)
 {
 	char	*s;
-	// t_token	*token_tmp;
+	// int		i;
 	t_echo	*echo_struct_tmp;
 
-	// if (!token || !(*token))
-	// 	return ;
-	// token_tmp = (*token);
+	// i = 0;
 	echo_struct_tmp = echo_struct;
 	(*token_tmp) = (*token_tmp)->next;
 	while (*token_tmp != NULL)
@@ -63,13 +61,15 @@ static void	ft_echo_helper(t_token **token_tmp, t_echo *echo_struct)
 			}
 			else if (ft_strncmp((*token_tmp)->value, "echo", 4) == 0)
 			{
-				if (ft_strncmp((*token_tmp)->value, "echo -n", 7) != 0)
-					write(echo_struct_tmp->fd, "echo -n ", 8);
+				if ((ft_strncmp((*token_tmp)->next->value, "-n", 2) == 0)
+				&& (*i > 0))
+					write(echo_struct_tmp->fd, " echo -n ", 9);
 				else
 				{
 					(*token_tmp) = (*token_tmp)->next;
-					write(echo_struct_tmp->fd, " ", 1);
+					// write(echo_struct_tmp->fd, " ", 1);
 				}
+				(*i)++;
 			}
 			if ((*token_tmp) != NULL)
 			{
@@ -80,14 +80,11 @@ static void	ft_echo_helper(t_token **token_tmp, t_echo *echo_struct)
 					s++;
 				}
 			}
-			if ((*token_tmp) == NULL)
-				return ;
 		}
 		else
 			print_error_command(token_tmp);
 		(*token_tmp) = (*token_tmp)->next;
 	}
-	return ;
 }
 
 void	ft_echo(t_token **token, t_echo *echo_struct)
@@ -95,7 +92,9 @@ void	ft_echo(t_token **token, t_echo *echo_struct)
 	t_echo	*echo_struct_tmp;
 	t_token	*token_tmp;
 	char	*s;
+	int		i;
 
+	i = 0;
 	if ((!token) || (ft_strncmp((*token)->value, "echo", 4) != 0))
 		return ;
 	token_tmp = (*token);
@@ -106,11 +105,21 @@ void	ft_echo(t_token **token, t_echo *echo_struct)
 		while (token_tmp)
 		{
 			if (ft_strncmp(token_tmp->value, "echo", 4) == 0)
-				token_tmp = token_tmp->next;
+			{
+				if ((ft_strncmp(token_tmp->next->value, "-n", 2) == 0)
+				&& (i > 0))
+					write(echo_struct_tmp->fd, " echo -n ", ft_strlen(" echo -n "));
+				else
+				{
+					token_tmp = token_tmp->next;
+					// write(echo_struct_tmp->fd, " ", 1);
+				}
+				i++;
+			}
 			if (token_tmp->type != WORD)
 				print_echo_error();
 			if (ft_strncmp(token_tmp->value, "-n", 2) == 0)
-				ft_echo_helper(&token_tmp, echo_struct);
+				ft_echo_helper(&token_tmp, echo_struct, &i);
 			else if ((token_tmp->type == WORD) || (token_tmp->type == REDIR_OUT))
 			{
 				if (token_tmp->type == REDIR_OUT)
