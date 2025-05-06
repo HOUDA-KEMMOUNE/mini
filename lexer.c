@@ -84,7 +84,10 @@ t_token *lexer(char *input)
 		while (input[i] == ' ' || input[i] == '\t')
 			i++;
 		if (input[i] == '|')
+		{
 			add_token(&token_list, "|", PIPE, 0);
+			write(1, "skibidi\n", ft_strlen("skibidi\n"));
+		}
 		else if (input[i] == '>')
 		{
 			if (input[i+1] == '>')

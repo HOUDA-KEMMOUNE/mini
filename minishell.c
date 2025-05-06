@@ -39,6 +39,7 @@ int main(void)
 			input[len - 1] = '\0';
 
 		tokens = lexer(input);
+		write(1, "ldhfdhjkghf\n", ft_strlen("ldhfdhjkghf\n"));
 		if (tokens)
 		{
 			tokens = expander(tokens);
