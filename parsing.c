@@ -12,18 +12,18 @@
 
 #include "minishell.h"
 
-void	ft_data_init(t_echo	*echo_struct)
+void	ft_data_init(t_echo	**echo_struct)
 {
-	echo_struct->fd = 1;
-	echo_struct->file = NULL;
-	echo_struct->input = NULL;
-	echo_struct->msg = NULL;
+	(*echo_struct)->fd = 1;
+	(*echo_struct)->file = NULL;
+	(*echo_struct)->input = NULL;
+	(*echo_struct)->msg = NULL;
 }
 
-void    parsing(char *input, t_token **token)
+void    parsing(char *input, t_token **token, t_echo **echo_struct)
 {
 	// char	*s;
-	t_echo	echo_struct;
+	// t_echo echo_struct;
 
 	if (!input || !token)
 		return ;
@@ -42,8 +42,8 @@ void    parsing(char *input, t_token **token)
 		write(1, "minishell: parse error near `\''", ft_strlen("minishell: unclosed parenthesis `('"));
 		exit (1);
 	}
-	ft_data_init(&echo_struct);
-	ft_echo(token, &echo_struct);
+	ft_data_init(echo_struct);
+	ft_echo(token, echo_struct);
 	ft_cd(token);
 	ft_ls(token);
 	ft_export(token);

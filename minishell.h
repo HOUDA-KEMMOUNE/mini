@@ -59,9 +59,9 @@ void	word_case(char *input, int *i, t_token **token_list);
 void	add_token(t_token **head, char *value, t_token_type type, char quote);
 
 /*-------------------Parsing-------------------*/
-void    parsing(char *input, t_token **token);
-void	ft_data_init(t_echo	*echo_struct);
-void	ft_echo(t_token **token, t_echo *echo_struct);
+void    parsing(char *input, t_token **token, t_echo **echo_struct);
+void	ft_data_init(t_echo	**echo_struct);
+void	ft_echo(t_token **token, t_echo **echo_struct);
 void	ft_cd(t_token **token);
 void	ft_ls(t_token **token);
 void	ft_export(t_token **token);

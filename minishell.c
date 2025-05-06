@@ -25,6 +25,7 @@ int main(void)
 {
 	char input[1024];
 	t_token *tokens;
+	t_echo	*echo_struct;
 
 	while (1)
 	{
@@ -41,7 +42,7 @@ int main(void)
 		if (tokens)
 		{
 			tokens = expander(tokens);
-			parsing(input, &tokens);
+			parsing(input, &tokens, &echo_struct);
 			// print_tokens(tokens);
 			// Free token list here if needed
 		}
