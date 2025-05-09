@@ -17,7 +17,6 @@ static void	redir_out_count(t_token **token, t_echo	**echo_struct)
 	t_token	*token_tmp;
 	// int		i;
 	
-	printf("lbatbouut\n");
 	if (!token || !(*token))
 		return ;
 	token_tmp = (*token);
@@ -28,6 +27,11 @@ static void	redir_out_count(t_token **token, t_echo	**echo_struct)
 		{
 			token_tmp = token_tmp->next;
 			(*echo_struct)->fd = open(token_tmp->value, O_RDWR);
+			if ((*echo_struct)->fd <= 0)
+			{
+				ft_putstr_fd("Sorry, We can't open this file :(\n", 1);
+				exit (1);
+			}
 			printf("fd --> %d\n", (*echo_struct)->fd);
 		}
 		// else if (token_tmp->type == WORD)
@@ -75,9 +79,7 @@ void	ft_echo(t_token **token, t_echo **echo_struct)
 		return ;
 	token_tmp = (*token);
 	echo_struct_tmp = (*echo_struct);
-	printf("msamn\n");
 	redir_out_count(token, &echo_struct_tmp);
-	printf("jaj 7amar\n");
 	if (token_tmp->type == WORD)
 	{
 		if (ft_strncmp(token_tmp->value, "echo", 4) == 0)

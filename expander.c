@@ -57,6 +57,7 @@ t_token *expander(t_token *token_list)
 	curr = token_list;
 	while (curr)
 	{
+		write(1, "sabat\n", ft_strlen("sabat\n"));
 		if (curr->type == WORD)
 		{
 			if ((curr->quote == 0 || curr->quote == '"') && ft_strchr(curr->value, '$'))

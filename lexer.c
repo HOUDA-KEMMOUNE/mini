@@ -86,7 +86,6 @@ t_token *lexer(char *input)
 		if (input[i] == '|')
 		{
 			add_token(&token_list, "|", PIPE, 0);
-			write(1, "skibidi\n", ft_strlen("skibidi\n"));
 		}
 		else if (input[i] == '>')
 		{
@@ -116,6 +115,7 @@ t_token *lexer(char *input)
 		}
 		else
 			word_case(input, &i, &token_list);
+		i++;
 	}
 	return (token_list);
 }
