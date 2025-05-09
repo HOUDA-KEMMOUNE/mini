@@ -26,7 +26,7 @@ static void	redir_out_count(t_token **token, t_echo	**echo_struct)
 		if (token_tmp->type == REDIR_OUT)
 		{
 			token_tmp = token_tmp->next;
-			(*echo_struct)->fd = open(token_tmp->value, O_RDWR);
+			(*echo_struct)->fd = open(token_tmp->value, O_CREAT | O_RDWR, 0640);
 			if ((*echo_struct)->fd <= 0)
 			{
 				ft_putstr_fd("Sorry, We can't open this file :(\n", 1);
