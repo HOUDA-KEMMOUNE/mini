@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <fcntl.h>
+#include <sys/wait.h>
 
 int	ft_strncmp(char *s1, char *s2, size_t n)
 {
@@ -50,24 +51,39 @@ char	*check_str(char *str)
 
 char	*our_input(char *str)
 {
-	char	tmp[1000];
+	//char	tmp[1000];
+	char	*tmp;
 	char	*input;
+	//int		i;
 
 	// tmp = NULL;
+	//i = 0;
 	while (*str)
 	{
 		if ((*str == ' ') || (*str == '\t'))
 		{
-			str++;
+			//str++;
 			break ;
 		}
-		*tmp = *str;
-		printf("klou\n");
+		//tmp[i] = *str;
+		//*tmp = *str;
+		//tmp++;
 		str++;
 	}
+	tmp = str;
+	printf("tmp--> %s\n", tmp);
 	if (ft_strncmp("echo", tmp, 4) == 0)
 	{
-		input = str;
+		//input = str;
+		//return (input);
+		while (*str)
+		{
+			if (*str == '<')
+				break ;
+			*input = *str;
+			str++;
+			input++;
+		}
 		return (input);
 	}
 	return (NULL);
@@ -76,7 +92,8 @@ char	*our_input(char *str)
 int	main()
 {
 	// int		fds[0];
-	int		fds[2];
+	//int		fds[2];
+	int		fd;
 	char	*str;
 	char	*input;
 	char	*file_name;
@@ -84,33 +101,34 @@ int	main()
 
 	str = "echo hhhhh >file.txt";
 	file_name = check_str(str);
-	printf("test\n");
 	input = our_input(str);
+	printf("%s\n", input);
 	pid = fork(); //pid == 0 for the child, pid >= 1 for the main or the parent
 	if (pid == 0)
 	{
-		fds[0] = open("text.txt", O_CREAT | O_RDWR, 0777);
-		if (fds[0] <= 0)
+		fd = open(file_name, O_CREAT | O_RDWR, 0777);
+		if (fd < 0)
 		{
 			printf("We cannot open the file, SORRY :/\n");
 			exit (1);
 		}
-		dup2(fds[0], 1);
+		dup2(fd, STDOUT_FILENO);
+		//printf("test\n");
 		printf("%s\n", input);
-		close (fds[1]);
+		close (fd);
+		//close (fds[1]);
 	}
 	else if (pid > 0)
 	{
-		fds[1] = 1;
-		printf("%s\n", input);
-		close (fds[0]);
+		//fd = 1;
+		//dup2(fd, STDOUT_FILENO);
+		//printf("%s\n", input);
+		//close (fd);
+		wait (NULL);
 	}
 	else
 	{
 		write(2, "ERROR :|\n", 9);
 		exit (1);
 	}
-	// dup2(fd, 1);
-	// printf("Hello world\n");
-	// close(fd);
 }
