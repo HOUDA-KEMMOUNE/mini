@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 19:32:00 by akemmoun          #+#    #+#             */
-/*   Updated: 2025/04/24 11:22:07 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/05/14 13:05:05 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ void	ft_export(t_token **token);
 void	ft_unset(t_token **token);
 int		is_notForbidden_char(char c);
 int		check_commande(char *input);
+
 // void    check_equal_sign(t_token **token, char *var);
 void	ft_env(t_token **token);
 void	ft_exit(t_token **token);
