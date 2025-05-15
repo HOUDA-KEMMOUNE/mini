@@ -6,7 +6,7 @@
 /*   By: hkemmoun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 10:08:45 by hkemmoun          #+#    #+#             */
-/*   Updated: 2025/04/24 10:08:46 by hkemmoun         ###   ########.fr       */
+/*   Updated: 2025/05/15 13:55:45 by hkemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,8 @@ int	check_commande(char *input)
 		return (0);
 	else if (ft_strncmp(input, "exit", 4) == 0)
 		return (0);
+	else if (ft_strchr(input, '$'))
+		return (4);
 	else
 		return (1);
 }
@@ -89,6 +91,12 @@ void	ft_ls(t_token **token)
 		ft_putstr_fd(token_tmp->value, 1);
 		ft_putstr_fd("': No such file or directory\n", 1);
 		return ;
+	}
+	else if (check_commande(token_tmp->value) == 4)
+	{
+		ft_putstr_fd("ls: cannot access '", 1);
+		expander(token_tmp);
+		ft_putstr_fd("': No such file or directory\n", 1);
 	}
 	ft_count_dotes(token);
 }

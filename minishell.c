@@ -45,7 +45,10 @@ int main(void)
 			parsing(input, &tokens, &echo_struct);
 			// Free token list here if needed
 			if (ft_strchr(tokens->value, '$'))
+			{
 				tokens = expander(tokens);
+				ft_putstr_fd("\n", 1);
+			}
 		}
 	}
 }

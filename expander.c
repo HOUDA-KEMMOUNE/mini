@@ -52,7 +52,7 @@ void print_tokens(t_token *tokens)
 {
 	while (tokens)
 	{
-		printf("%s\n", tokens->value);
+		ft_putstr_fd(tokens->value, 1);
 		tokens = tokens->next;
 	}
 }
