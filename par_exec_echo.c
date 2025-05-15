@@ -15,15 +15,17 @@
 static void	redir_out_count(t_token **token, t_echo	**echo_struct)
 {
 	t_token	*token_tmp;
-	// int		i;
+	char	*token_value;
+	char	c;
 	
 	if (!token || !(*token))
 		return ;
 	token_tmp = (*token);
-	// i = 0;
+	token_value = token_tmp->value;
+	c = token_value[0];
 	while (token_tmp)
 	{
-		if (token_tmp->type == REDIR_OUT)
+		if ((token_tmp->type == REDIR_OUT) || (c == '>'))
 		{
 			token_tmp = token_tmp->next;
 			(*echo_struct)->fd = open(token_tmp->value, O_CREAT | O_RDWR, 0640);
