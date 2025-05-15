@@ -26,7 +26,10 @@ static void	redir_out_append(t_token **token, t_echo **echo_struct)
 		if ((token_tmp->type == REDIR_OUT) || (token_tmp->type == APPEND))
 		{
 			token_tmp = token_tmp->next;
-			(*echo_struct)->fd = open(token_tmp->value, O_CREAT | O_RDWR, 0640);
+			if (token_tmp->type == REDIR_OUT)
+				(*echo_struct)->fd = open(token_tmp->value, O_CREAT | O_WRONLY, 0640);
+			else
+				(*echo_struct)->fd = open(token_tmp->value, O_CREAT | O_RDWR | O_APPEND, 0640);
 			if ((*echo_struct)->fd <= 0)
 			{
 				ft_putstr_fd("Sorry, We can't open this file :(\n", 1);
@@ -36,35 +39,6 @@ static void	redir_out_append(t_token **token, t_echo **echo_struct)
 		token_tmp = token_tmp->next;
 	}
 }
-
-// static void	ft_echo_helper(t_token **token_tmp, t_echo **echo_struct)
-// {
-// 	char	*s;
-	
-// 	(*token_tmp) = (*token_tmp)->next;
-// 	while ((*token_tmp) != NULL)
-// 	{
-// 		if (((*token_tmp)->type == WORD) || ((*token_tmp)->type == REDIR_OUT))
-// 		{
-// 			if ((*token_tmp)->type == REDIR_OUT)
-// 				(*token_tmp) = (*token_tmp)->next->next;
-// 			else
-// 			{
-// 				s = (*token_tmp)->value;
-// 				while (*s)
-// 				{
-// 					write((*echo_struct)->fd, s, 1);
-// 					s++;
-// 				}
-// 				if ((*token_tmp)->next != NULL)
-// 					write((*echo_struct)->fd, " ", 1);
-// 			}
-// 		}
-// 		else
-// 			print_error_command(token_tmp);
-// 		(*token_tmp) = (*token_tmp)->next;
-// 	}
-// }
 
 void	ft_echo(t_token **token, t_echo **echo_struct)
 {
