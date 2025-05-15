@@ -12,44 +12,6 @@
 
 #include "minishell.h"
 
-/*
-static void	redir_out_count(t_token **token, t_echo	**echo_struct)
-{
-	t_token	*token_tmp;
-	char	*token_value;
-	char	c;
-	
-	if (!token || !(*token))
-		return ;
-	token_tmp = (*token);
-	while (token_tmp)
-	{
-		token_value = token_tmp->value;
-		c = token_value[0];
-		printf("token_value --> %s\n", token_value);
-		if ((token_tmp->type == REDIR_OUT) || (c == '>'))
-		{
-			if (token_tmp->type == REDIR_OUT)
-			{
-				printf("j\n");
-				token_tmp = token_tmp->next;
-			}
-			else if (c == '>')
-				token_value++;
-			(*echo_struct)->fd = open(token_value, O_CREAT | O_RDWR, 0640);
-			if ((*echo_struct)->fd <= 0)
-			{
-				ft_putstr_fd("Sorry, We can't open this file :(\n", 1);
-				exit (1);
-			}
-			//printf("fd --> %d\n", (*echo_struct)->fd);
-		}
-		// else if (token_tmp->type == WORD)
-		// 	i++;
-		token_tmp = token_tmp->next;
-	}
-}
-*/
 static void	redir_out_count(t_token **token, t_echo	**echo_struct)
 {
 	t_token	*token_tmp;
@@ -73,8 +35,6 @@ static void	redir_out_count(t_token **token, t_echo	**echo_struct)
 				exit (1);
 			}
 		}
-		// else if (token_tmp->type == WORD)
-		// 	i++;
 		token_tmp = token_tmp->next;
 	}
 }

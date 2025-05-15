@@ -76,6 +76,7 @@ t_token *expander(t_token *token_list)
 			curr = curr->next;
 		}
 	}
-	print_tokens(token_list);
+	// if (ft_strchr(curr->value, '$'))
+		print_tokens(token_list);
 	return (token_list);
 }

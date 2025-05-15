@@ -44,7 +44,8 @@ int main(void)
 			// write(1, "saman\n", ft_strlen("saman\n"));
 			parsing(input, &tokens, &echo_struct);
 			// Free token list here if needed
-			tokens = expander(tokens);
+			if (ft_strchr(tokens->value, '$'))
+				tokens = expander(tokens);
 		}
 	}
 }
