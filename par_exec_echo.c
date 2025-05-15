@@ -32,7 +32,7 @@ static void	redir_out_count(t_token **token, t_echo	**echo_struct)
 				ft_putstr_fd("Sorry, We can't open this file :(\n", 1);
 				exit (1);
 			}
-			printf("fd --> %d\n", (*echo_struct)->fd);
+			//printf("fd --> %d\n", (*echo_struct)->fd);
 		}
 		// else if (token_tmp->type == WORD)
 		// 	i++;
@@ -74,6 +74,7 @@ void	ft_echo(t_token **token, t_echo **echo_struct)
 	t_echo	*echo_struct_tmp;
 	t_token	*token_tmp;
 	char	*s;
+	//int		red;
 
 	if ((!token) || (ft_strncmp((*token)->value, "echo", 4) != 0))
 		return ;
@@ -91,24 +92,24 @@ void	ft_echo(t_token **token, t_echo **echo_struct)
 				ft_echo_helper(&token_tmp, &echo_struct_tmp);
 			else if ((token_tmp->type == WORD) || (token_tmp->type == REDIR_OUT))
 			{
-				if (token_tmp->type == REDIR_OUT)
-					token_tmp = token_tmp->next->next;
-				else
+				while (token_tmp)
 				{
-					while (token_tmp)
+					s = token_tmp->value;
+					while (*s)
 					{
-						s = token_tmp->value;
-						while (*s)
-						{
-							write(echo_struct_tmp->fd, s, 1);
-							s++;
-						}
-						if ((token_tmp->next != NULL))
-							write(echo_struct_tmp->fd, " ", 1);
-						token_tmp = token_tmp->next;
+						if (ft_strncmp(s, ">", 1) == 0)
+							break ;
+						write(echo_struct_tmp->fd, s, 1);
+						s++;
 					}
-					write(echo_struct_tmp->fd, "\n", 1);
+					if ((token_tmp->next != NULL))
+						write(echo_struct_tmp->fd, " ", 1);
+					if (ft_strncmp(token_tmp->value, ">", 1) == 0)
+						token_tmp = token_tmp->next->next;
+					else
+					token_tmp = token_tmp->next;
 				}
+				write(echo_struct_tmp->fd, "\n", 1);
 			}
 			else
 				print_error_command(&token_tmp);
