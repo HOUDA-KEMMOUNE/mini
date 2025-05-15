@@ -25,11 +25,17 @@ static void	redir_out_append(t_token **token, t_echo **echo_struct)
 	{
 		if ((token_tmp->type == REDIR_OUT) || (token_tmp->type == APPEND))
 		{
-			token_tmp = token_tmp->next;
-			if (token_tmp->type == REDIR_OUT)
-				(*echo_struct)->fd = open(token_tmp->value, O_CREAT | O_WRONLY, 0640);
-			else
+			//token_tmp = token_tmp->next;
+			if (ft_strncmp(token_tmp->value, ">", 1) == 0)
+			{
+				printf("1\n");
+				(*echo_struct)->fd = open(token_tmp->value, O_CREAT | O_WRONLY | O_TRUNC, 0640);
+			}
+			else if (ft_strncmp(token_tmp->value, ">>", 2) == 0)
+			{
+				printf("2\n");
 				(*echo_struct)->fd = open(token_tmp->value, O_CREAT | O_RDWR | O_APPEND, 0640);
+			}
 			if ((*echo_struct)->fd <= 0)
 			{
 				ft_putstr_fd("Sorry, We can't open this file :(\n", 1);
