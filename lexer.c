@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 19:32:00 by akemmoun          #+#    #+#             */
-/*   Updated: 2025/04/23 17:12:37 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/05/15 13:51:32 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,8 +76,9 @@ void	word_case(char *input, int *i, t_token **token_list)
 t_token *lexer(char *input)
 {
 	t_token *token_list;
-	int i = 0;
+	int i;
 
+	i = 0;
 	token_list = NULL;
 	while (input[i])
 	{
@@ -86,6 +87,7 @@ t_token *lexer(char *input)
 		if (input[i] == '|')
 		{
 			add_token(&token_list, "|", PIPE, 0);
+			i++;
 		}
 		else if (input[i] == '>')
 		{
@@ -115,7 +117,6 @@ t_token *lexer(char *input)
 		}
 		else
 			word_case(input, &i, &token_list);
-		i++;
 	}
 	return (token_list);
 }

@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 10:50:59 by akemmoun          #+#    #+#             */
-/*   Updated: 2025/05/15 12:27:20 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/05/15 13:49:37 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,6 @@ t_token *expander(t_token *token_list)
 			curr = curr->next;
 		}
 	}
-	// if (ft_strchr(curr->value, '$'))
-		print_tokens(token_list);
+	print_tokens(token_list);
 	return (token_list);
 }
