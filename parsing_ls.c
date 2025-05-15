@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-static void	ft_count(char *s, int *count)
+void	ft_count(char *s, int *count)
 {
 	while (*s)
 	{
@@ -24,7 +24,7 @@ static void	ft_count(char *s, int *count)
 	}
 }
 
-static void	ft_count_dotes(t_token **token)
+void	ft_count_dotes(t_token **token)
 {
 	t_token *token_tmp;
 	char	*s;
