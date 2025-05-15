@@ -25,9 +25,7 @@ static void	redir_out_count(t_token **token, t_echo	**echo_struct)
 	{
 		if (token_tmp->type == REDIR_OUT)
 		{
-			printf("token_value --> %s\n", token_tmp->value);
 			token_tmp = token_tmp->next;
-			printf("token_value --> %s\n", token_tmp->value);
 			(*echo_struct)->fd = open(token_tmp->value, O_CREAT | O_RDWR, 0640);
 			if ((*echo_struct)->fd <= 0)
 			{
