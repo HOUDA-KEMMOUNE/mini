@@ -12,12 +12,6 @@
 
 #include "minishell.h"
 
-// static void	check_env_dotes(t_token **token_tmp)
-// {
-// 	ft_putstr_fd("env: ‘", 1);
-// 	ft_putstr_fd((*token_tmp)->value, 1);
-// 	ft_putstr_fd("’: Permission denied\n", 1);
-// }
 static void	ft_count_env(char *s, int *count)
 {
 	while (*s)

@@ -41,22 +41,22 @@ void	check_first_token(t_token **token)
 		if (tmp == '|')
 		{
 			write(1, "minishell: parse error near `|'\n", ft_strlen("minishell: parse error near `|'\n"));
-			exit (1);
+			return ;
 		}
 		else if (tmp == '(')
 		{
 			write(1, "minishell: unclosed parenthesis `('\n", ft_strlen("minishell: unclosed parenthesis `('\n"));
-			exit (1);
+			return ;
 		}
 		else if (tmp == ')')
 		{
 			write(1, "minishell: unclosed parenthesis `)'\n", ft_strlen("minishell: unclosed parenthesis `)'\n"));
-			exit (1);
+			return ;
 		}
 		else if (tmp == 39)
 		{
 			write(1, "minishell: parse error near `\''\n", ft_strlen("minishell: unclosed parenthesis `\''\n"));
-			exit (1);
+			return ;
 		}
 	}
 	else
