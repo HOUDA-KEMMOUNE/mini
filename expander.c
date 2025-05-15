@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 10:50:59 by akemmoun          #+#    #+#             */
-/*   Updated: 2025/04/24 10:30:38 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/05/15 12:27:20 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ char *expand_variable(char *value)
 	env_value = getenv(var_name);
 	if (!env_value)
 		env_value = "";
-    expanded_value = malloc(prefix_len + ft_strlen(env_value) + ft_strlen(var_name + var_len) + 1);
+	expanded_value = malloc(prefix_len + ft_strlen(env_value) + ft_strlen(dollar + var_len + 1) + 1);
 
     if (!expanded_value)
         return NULL;
@@ -44,10 +44,18 @@ char *expand_variable(char *value)
     ft_strlcpy(expanded_value, value, prefix_len + 1);
     ft_strlcat(expanded_value, env_value, prefix_len + ft_strlen(env_value) + 1);
     ft_strlcat(expanded_value, var_name + var_len, prefix_len + ft_strlen(env_value) + ft_strlen(var_name + var_len) + 1);
-    
+
     return (expanded_value);
 }
 
+void print_tokens(t_token *tokens)
+{
+	while (tokens)
+	{
+		printf("%s\n", tokens->value);
+		tokens = tokens->next;
+	}
+}
 
 t_token *expander(t_token *token_list)
 {
@@ -68,5 +76,6 @@ t_token *expander(t_token *token_list)
 			curr = curr->next;
 		}
 	}
+	print_tokens(token_list);
 	return (token_list);
 }

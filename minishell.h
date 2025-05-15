@@ -6,12 +6,13 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 19:32:00 by akemmoun          #+#    #+#             */
-/*   Updated: 2025/05/14 13:05:05 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/05/15 12:24:30 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # ifndef MINISHELL_H
 # define MINISHELL_H
+
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -76,5 +77,6 @@ void	ft_exit(t_token **token);
 /*-------------------expander-------------------*/
 t_token *expander(t_token *token_list);
 char *expand_variable(char *value);
+
 
 # endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkemmoun <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 10:09:26 by hkemmoun          #+#    #+#             */
-/*   Updated: 2025/04/24 10:09:27 by hkemmoun         ###   ########.fr       */
+/*   Updated: 2025/05/15 11:08:52 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,9 @@
 
 void	ft_data_init(t_echo	**echo_struct)
 {
+	*echo_struct = malloc(sizeof(t_echo));
+	if (!echo_struct)
+		return ;
 	(*echo_struct)->fd = 1;
 	(*echo_struct)->file = NULL;
 	(*echo_struct)->input = NULL;

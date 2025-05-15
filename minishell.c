@@ -6,20 +6,20 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 19:32:00 by akemmoun          #+#    #+#             */
-/*   Updated: 2025/04/24 11:23:09 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/05/15 12:25:42 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void print_tokens(t_token *tokens)
-{
-	while (tokens)
-	{
-		printf("%s\n", tokens->value);
-		tokens = tokens->next;
-	}
-}
+// void print_tokens(t_token *tokens)
+// {
+// 	while (tokens)
+// 	{
+// 		printf("%s\n", tokens->value);
+// 		tokens = tokens->next;
+// 	}
+// }
 
 int main(void)
 {
@@ -41,11 +41,10 @@ int main(void)
 		tokens = lexer(input);
 		if (tokens)
 		{
-			// tokens = expander(tokens);
 			// write(1, "saman\n", ft_strlen("saman\n"));
 			parsing(input, &tokens, &echo_struct);
-			// print_tokens(tokens);
 			// Free token list here if needed
+			tokens = expander(tokens);
 		}
 	}
 }
