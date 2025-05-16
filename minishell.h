@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 19:32:00 by akemmoun          #+#    #+#             */
-/*   Updated: 2025/05/15 12:24:30 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/05/16 10:15:57 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,14 @@ typedef struct	s_echo
 	char	**msg;
 }				t_echo;
 
+typedef struct	s_env
+{
+	char			*key;
+	char			*value;
+	struct s_env	next;
+}				t_env;
+
+
 /*-------------------errors-------------------*/
 int		is_quote_closed(char *input, char quote, int start);
 void	print_error(char *msg);
@@ -77,6 +85,9 @@ void	ft_exit(t_token **token);
 /*-------------------expander-------------------*/
 t_token *expander(t_token *token_list);
 char *expand_variable(char *value);
+
+/*-------------------execution-------------------*/
+t_env	*create_env_list(char **envp);
 
 
 # endif

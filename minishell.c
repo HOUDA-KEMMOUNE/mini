@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 19:32:00 by akemmoun          #+#    #+#             */
-/*   Updated: 2025/05/15 12:25:42 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/05/16 10:16:08 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,13 @@
 // 	}
 // }
 
-int main(void)
+int main(int argc, char **argv, char **envp)
 {
 	char input[1024];
 	t_token *tokens;
 	t_echo	*echo_struct;
 
+	t_env *env_list = create_env_list(envp);
 	while (1)
 	{
 		printf("minishell> ");

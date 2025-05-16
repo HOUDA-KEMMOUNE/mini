@@ -1,39 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   execution.c                                        :+:      :+:    :+:   */
+/*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 11:34:35 by akemmoun          #+#    #+#             */
-/*   Updated: 2025/04/25 10:02:26 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/05/16 10:13:41 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// char **prepare_argv(t_token *token_list)
-// {
-// 	t_token *curr;
-// 	int argc;
-// 	char **argv;
-// 	int i;
+t_env	*create_env_list(char **envp)
+{
+	t_env	*env_list;
+	t_env	*new;
+	char	*equal_sign;
 
-// 	curr = token_list;
-// 	argc = 0;
-// 	while (curr)
-// 	{
-// 		if (curr->type == WORD)
-// 			argc++;
-// 		curr = curr->next;
-// 	}
-// 	argv = malloc((argc + 1) * sizeof(char* ));
-// 	if (!argv)
-// 		return (NULL);
-// 	curr = token_list;
-// 	i = 0;
-// 	while (curr)
-// 	{
-// 		if ()
-// 	}
-// }
+	env_list = NULL;
+	while (*envp)
+	{
+		equal_sign = ft_strchr(*envp, '=');
+		if (equal_sign)
+		{
+			new = malloc(sizeof(t_env));
+			if (!new)
+				return (NULL);
+			new->key = ft_substr(*envp, 0, equal_sign - *envp);
+			new->value = ft_strdup(equal_sign + 1);
+			new->next = NULL;
+			ft_lstadd_back(&env_list, new);
+		}
+		envp++;
+	}
+	return (env_list);
+}
