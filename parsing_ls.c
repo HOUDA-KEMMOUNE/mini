@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_ls.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkemmoun <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 10:08:45 by hkemmoun          #+#    #+#             */
-/*   Updated: 2025/05/15 13:55:45 by hkemmoun         ###   ########.fr       */
+/*   Updated: 2025/05/17 10:47:11 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ int	check_commande(char *input)
 		return (1);
 }
 
-void	ft_ls(t_token **token)
+void	ft_ls(t_token **token, t_env *env_list)
 {
 	t_token	*token_tmp;
 
@@ -95,7 +95,7 @@ void	ft_ls(t_token **token)
 	else if (check_commande(token_tmp->value) == 4)
 	{
 		ft_putstr_fd("ls: cannot access '", 1);
-		expander(token_tmp);
+		expander(token_tmp, env_list);
 		ft_putstr_fd("': No such file or directory\n", 1);
 	}
 	ft_count_dotes(token);

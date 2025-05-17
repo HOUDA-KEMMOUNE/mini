@@ -6,18 +6,19 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 10:50:59 by akemmoun          #+#    #+#             */
-/*   Updated: 2025/05/15 13:49:37 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/05/16 14:05:14 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char *expand_variable(char *value)
+char *expand_variable(char *value, t_env *env_list)
 {
     char *dollar;
     char *var_name;
     char *env_value;
     char *expanded_value;
+	char *key;
     size_t prefix_len;
 	size_t var_len;
 
@@ -33,9 +34,9 @@ char *expand_variable(char *value)
 	{
         var_len++;
 	}
-	env_value = getenv(var_name);
-	if (!env_value)
-		env_value = "";
+	key = ft_substr(var_name, 0, var_len);
+	env_value = get_env_value(env_list, key);
+	free(key);
 	expanded_value = malloc(prefix_len + ft_strlen(env_value) + ft_strlen(dollar + var_len + 1) + 1);
 
     if (!expanded_value)
@@ -57,7 +58,7 @@ void print_tokens(t_token *tokens)
 	}
 }
 
-t_token *expander(t_token *token_list)
+t_token *expander(t_token *token_list, t_env *env_list)
 {
 	t_token *curr;
 	char *expanded;
@@ -69,7 +70,7 @@ t_token *expander(t_token *token_list)
 		{
 			if ((curr->quote == 0 || curr->quote == '"') && ft_strchr(curr->value, '$'))
 			{
-				expanded = expand_variable(curr->value);
+				expanded = expand_variable(curr->value, env_list);
 				free(curr->value);
 				curr->value = expanded;
 			}

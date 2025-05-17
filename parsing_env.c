@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 13:11:54 by akemmoun          #+#    #+#             */
-/*   Updated: 2025/05/14 13:11:57 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/05/17 10:39:35 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,14 +58,16 @@ static void	ft_count_dotes_env(t_token **token)
 	}
 }
 
-void	ft_env(t_token **token)
+void	ft_env(t_token **token, t_env *env_list)
 {
 	t_token	*token_tmp;
 
 	if ((!token) || (ft_strncmp((*token)->value, "env", 3) != 0))
 		return ;
-	token_tmp = (*token);
-	token_tmp = token_tmp->next;
+
+	token_tmp = (*token)->next;
+	if (!token_tmp)
+		return ;
 	if (ft_strncmp(token_tmp->value, "cd", 2) == 0)
 	{
 
@@ -76,10 +78,10 @@ void	ft_env(t_token **token)
 	else if (check_commande(token_tmp->value) == 4)
 	{
 		ft_putstr_fd("cd: cannot access '", 1);
-		expander(token_tmp);
+		expander(token_tmp, env_list);
 		ft_putstr_fd("': No such file or directory\n", 1);
 	}
 	ft_count_dotes_env(token);
-	if (token_tmp != NULL)
-		return ;
+	// if (token_tmp != NULL)
+	// 	return ;
 }

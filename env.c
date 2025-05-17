@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 11:34:35 by akemmoun          #+#    #+#             */
-/*   Updated: 2025/05/16 10:13:41 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/05/17 10:25:59 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,20 @@ t_env	*create_env_list(char **envp)
 			new->key = ft_substr(*envp, 0, equal_sign - *envp);
 			new->value = ft_strdup(equal_sign + 1);
 			new->next = NULL;
-			ft_lstadd_back(&env_list, new);
+			ft_envadd_back(&env_list, new);
 		}
 		envp++;
 	}
 	return (env_list);
+}
+
+char *get_env_value(t_env *env, char *key)
+{
+	while (env)
+	{
+		if (ft_strcmp(env->key, key) == 0)
+			return (env->value);
+		env = env->next;
+	}
+	return (NULL);
 }

@@ -6,28 +6,22 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 19:32:00 by akemmoun          #+#    #+#             */
-/*   Updated: 2025/05/16 10:16:08 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/05/17 10:44:28 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// void print_tokens(t_token *tokens)
-// {
-// 	while (tokens)
-// 	{
-// 		printf("%s\n", tokens->value);
-// 		tokens = tokens->next;
-// 	}
-// }
-
 int main(int argc, char **argv, char **envp)
 {
 	char input[1024];
+	t_env *env_list;
 	t_token *tokens;
 	t_echo	*echo_struct;
 
-	t_env *env_list = create_env_list(envp);
+	(void)argc;
+	(void)argv;
+	env_list = create_env_list(envp);
 	while (1)
 	{
 		printf("minishell> ");
@@ -42,12 +36,11 @@ int main(int argc, char **argv, char **envp)
 		tokens = lexer(input);
 		if (tokens)
 		{
-			// write(1, "saman\n", ft_strlen("saman\n"));
-			parsing(input, &tokens, &echo_struct);
+			parsing(input, &tokens, &echo_struct, env_list);
 			// Free token list here if needed
 			if (ft_strchr(tokens->value, '$'))
 			{
-				tokens = expander(tokens);
+				tokens = expander(tokens, env_list);
 				ft_putstr_fd("\n", 1);
 			}
 		}

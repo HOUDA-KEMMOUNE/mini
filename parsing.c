@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 10:09:26 by hkemmoun          #+#    #+#             */
-/*   Updated: 2025/05/15 11:08:52 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/05/17 10:48:39 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,17 +63,17 @@ void	check_first_token(t_token **token)
 		return ;
 }	
 
-void    parsing(char *input, t_token **token, t_echo **echo_struct)
+void    parsing(char *input, t_token **token, t_echo **echo_struct, t_env *env_list)
 {
 	if (!input || !token)
 		return ;
 	check_first_token(token);
 	ft_data_init(echo_struct);
 	ft_echo(token, echo_struct);
-	ft_cd(token);
-	ft_ls(token);
+	ft_cd(token, env_list);
+	ft_ls(token, env_list);
 	ft_export(token);
 	ft_unset(token);
-	ft_env(token);
+	ft_env(token, env_list);
 	ft_exit(token);
 }
