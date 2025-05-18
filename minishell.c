@@ -25,14 +25,17 @@ int main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		printf("minishell> ");
+		signal(SIGINT, handler_sigint);
+		signal(SIGQUIT, SIG_IGN); //to ignore CTRL+'\'
+		disable_sig();
 		if (!fgets(input, sizeof(input), stdin))
-			break;
-
+		break;
+		
 		// Remove trailing newline if any
 		size_t len = strlen(input);
 		if (len > 0 && input[len - 1] == '\n')
-			input[len - 1] = '\0';
-
+		input[len - 1] = '\0';
+		
 		tokens = lexer(input);
 		if (tokens)
 		{

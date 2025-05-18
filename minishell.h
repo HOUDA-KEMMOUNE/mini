@@ -17,6 +17,9 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <signal.h> 
+#include <sys/wait.h>
+#include <termios.h>
 #include <readline/readline.h>
 #include "./libft/libft.h"
 // #include <readline/history.h>
@@ -92,5 +95,10 @@ char	*get_env_value(t_env *env, char *key);
 /*-------------------helpers-------------------*/
 int	ft_strcmp(const char *s1, const char *s2);
 void	ft_envadd_back(t_env **lst, t_env *new);
+
+/*-------------------signals-------------------*/
+void	handler_sigint(int sig_num);
+void	disable_sig(void);
+// int		ft_signals(void);
 
 # endif
