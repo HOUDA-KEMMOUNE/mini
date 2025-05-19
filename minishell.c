@@ -18,13 +18,14 @@ int main(int argc, char **argv, char **envp)
 	t_env *env_list;
 	t_token *tokens;
 	t_echo	*echo_struct;
+	// char	*line;
 
 	(void)argc;
 	(void)argv;
 	env_list = create_env_list(envp);
 	while (1)
 	{
-		printf("minishell> ");
+		ft_putstr_fd("minishell> ", 1);
 		signal(SIGINT, handler_sigint);
 		signal(SIGQUIT, SIG_IGN); //to ignore CTRL+'\'
 		disable_sig();
@@ -41,6 +42,12 @@ int main(int argc, char **argv, char **envp)
 		{
 			parsing(input, &tokens, &echo_struct, env_list);
 			// Free token list here if needed
+			// line = get_next_line(0);
+			// if (line == NULL)
+			// {
+			// 	ft_putstr_fd("exit", 1);
+			// 	exit(0);
+			// }
 			if (ft_strchr(tokens->value, '$'))
 			{
 				tokens = expander(tokens, env_list);

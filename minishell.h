@@ -22,6 +22,11 @@
 #include <termios.h>
 #include <readline/readline.h>
 #include "./libft/libft.h"
+// #include "./get_next_line/get_next_line.h"
+
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 10
+# endif
 // #include <readline/history.h>
 
 typedef enum	e_token_type
@@ -99,6 +104,11 @@ void	ft_envadd_back(t_env **lst, t_env *new);
 /*-------------------signals-------------------*/
 void	handler_sigint(int sig_num);
 void	disable_sig(void);
+
+/*-------------------signals-------------------*/
+char	*get_next_line(int fd);
+char	*rest_char(char *line);
+char	*get_line(char *buffer, char *rest, int fd);
 // int		ft_signals(void);
 
 # endif
