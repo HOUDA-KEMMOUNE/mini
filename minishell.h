@@ -100,12 +100,13 @@ char	*get_env_value(t_env *env, char *key);
 /*-------------------helpers-------------------*/
 int	ft_strcmp(const char *s1, const char *s2);
 void	ft_envadd_back(t_env **lst, t_env *new);
+void	ft_append(t_token **token);
 
 /*-------------------signals-------------------*/
 void	handler_sigint(int sig_num);
 void	disable_sig(void);
 
-/*-------------------signals-------------------*/
+/*----------------get_next_line-----------------*/
 char	*get_next_line(int fd);
 char	*rest_char(char *line);
 char	*get_line(char *buffer, char *rest, int fd);
