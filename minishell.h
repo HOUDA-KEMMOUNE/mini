@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 19:32:00 by akemmoun          #+#    #+#             */
-/*   Updated: 2025/05/17 10:48:08 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/05/22 10:21:19 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,7 @@ char	*expand_variable(char *value, t_env *env_list);
 /*-------------------execution-------------------*/
 t_env	*create_env_list(char **envp);
 char	*get_env_value(t_env *env, char *key);
+void get_env(t_env *env_list);
 
 /*-------------------helpers-------------------*/
 int	ft_strcmp(const char *s1, const char *s2);

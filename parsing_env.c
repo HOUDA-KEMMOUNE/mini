@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 13:11:54 by akemmoun          #+#    #+#             */
-/*   Updated: 2025/05/17 10:39:35 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/05/22 10:21:01 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,10 @@ void	ft_env(t_token **token, t_env *env_list)
 
 	token_tmp = (*token)->next;
 	if (!token_tmp)
+	{
+		get_env(env_list);
 		return ;
+	}
 	if (ft_strncmp(token_tmp->value, "cd", 2) == 0)
 	{
 

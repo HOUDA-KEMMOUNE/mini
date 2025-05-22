@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 11:34:35 by akemmoun          #+#    #+#             */
-/*   Updated: 2025/05/17 10:25:59 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/05/22 10:18:53 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,4 +46,20 @@ char *get_env_value(t_env *env, char *key)
 		env = env->next;
 	}
 	return (NULL);
+}
+
+void get_env(t_env *env_list)
+{
+    t_env *tmp = env_list;
+    while (tmp)
+    {
+        if (tmp->value)
+        {
+            ft_putstr_fd(tmp->key, 1);
+            ft_putstr_fd("=", 1);
+            ft_putstr_fd(tmp->value, 1);
+            ft_putstr_fd("\n", 1);
+        }
+        tmp = tmp->next;
+    }
 }
