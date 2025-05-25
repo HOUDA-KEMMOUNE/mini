@@ -19,6 +19,7 @@ int	main()
 	int		pid;
 	int		pipe_fds[2];
 	char	buffer[225];
+	ssize_t	buffer_count;
 
 	//pipe(array_of_int)
 	if (pipe(pipe_fds) == -1)
@@ -35,7 +36,9 @@ int	main()
 	else if (pid == 0) //child process
 	{
 		close(pipe_fds[1]);
-		read(pipe_fds[0], buffer, ft_strlen(buffer));
+		buffer_count = read(pipe_fds[0], buffer, sizeof(buffer) - 1);
+		if (buffer_count >= 0)
+			buffer[buffer_count] = '\0';
 		printf("the input received by the read system call --> %s\n", buffer);
 		close(pipe_fds[0]);
 		return (0);
