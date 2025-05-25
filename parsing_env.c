@@ -62,7 +62,7 @@ void	ft_env(t_token **token, t_env *env_list)
 {
 	t_token	*token_tmp;
 
-	if ((!token) || (ft_strncmp((*token)->value, "env", 3) != 0))
+	if ((!token) || (ft_strcmp((*token)->value, "env") != 0))
 		return ;
 
 	token_tmp = (*token)->next;
