@@ -15,6 +15,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+// #include <limits.h>
+#include <linux/limits.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <signal.h> 
@@ -96,7 +98,8 @@ char	*expand_variable(char *value, t_env *env_list);
 /*-------------------execution-------------------*/
 t_env	*create_env_list(char **envp);
 char	*get_env_value(t_env *env, char *key);
-void get_env(t_env *env_list);
+void	get_env(t_env *env_list);
+void    ft_pwd(t_token **token);
 
 /*-------------------helpers-------------------*/
 int	ft_strcmp(const char *s1, const char *s2);

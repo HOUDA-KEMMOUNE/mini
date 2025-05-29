@@ -10,6 +10,7 @@
         "tuple": "c",
         "type_traits": "c",
         "utility": "c",
-        "libft.h": "c"
+        "libft.h": "c",
+        "limits.h": "c"
     }
 }

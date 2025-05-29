@@ -42,6 +42,7 @@ int main(int argc, char **argv, char **envp)
 		{
 			parsing(input, &tokens, &echo_struct, env_list);
 			ft_append(&tokens);
+			ft_pwd(&tokens);
 
 			// Free token list here if needed
 			// line = get_next_line(0);
