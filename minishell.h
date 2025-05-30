@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 19:32:00 by akemmoun          #+#    #+#             */
-/*   Updated: 2025/05/22 10:21:19 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/05/30 09:59:39 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@
 #include <signal.h> 
 #include <sys/wait.h>
 #include <termios.h>
+#include <errno.h>
+#include <sys/stat.h>
 #include <readline/readline.h>
 #include "./libft/libft.h"
 // #include "./get_next_line/get_next_line.h"
@@ -102,6 +104,7 @@ char	*get_env_value(t_env *env, char *key);
 void	get_env(t_env *env_list);
 void    ft_pwd(t_token **token);
 
+
 /*-------------------helpers-------------------*/
 int	ft_strcmp(const char *s1, const char *s2);
 void	ft_envadd_back(t_env **lst, t_env *new);
@@ -116,5 +119,12 @@ char	*get_next_line(int fd);
 char	*rest_char(char *line);
 char	*get_line(char *buffer, char *rest, int fd);
 // int		ft_signals(void);
+
+/*----------------builtins-----------------*/
+int handle_builtin(t_token *tokens, t_env *env);
+
+/*----------------cd-----------------*/
+char **token_to_args(t_token *tokens);
+int builtin_cd(char **args, t_env *env);
 
 # endif

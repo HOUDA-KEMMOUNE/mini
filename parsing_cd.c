@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 10:04:13 by hkemmoun          #+#    #+#             */
-/*   Updated: 2025/05/16 14:16:25 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/05/30 12:22:30 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,28 @@ void	ft_cd(t_token **token, t_env *env_list)
 {
 	t_token	*token_tmp;
 	char	*expanded_path;
+	int		arg_count;
+	t_token	*arg_ptr;
 
+	arg_count = 0;
 	if ((!token) || (ft_strncmp((*token)->value, "cd", 2) != 0))
 		return ;
 
 	token_tmp = (*token);
 	if (token_tmp->next == NULL)
 		return ;
+
+	arg_ptr = token_tmp->next;
+	while (arg_ptr && arg_ptr->type == WORD)
+	{
+		arg_count++;
+		arg_ptr = arg_ptr->next;
+	}
+	if (arg_count > 1)
+	{
+		ft_putstr_fd("minishell: cd: too many arguments\n", 2);
+		return ;
+	}
 
 	token_tmp = token_tmp->next;
 	if (check_commande(token_tmp->value) == 0)
