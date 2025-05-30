@@ -37,19 +37,10 @@ int main(int argc, char **argv, char **envp)
 			ft_putstr_fd("\nexit\n", 1);
 			exit(0);
 		}
-		else
-			input[readed] = '\0'; // null-terminate
-
-// Remove newline if present
+		// input[readed] = '\0'; // null-terminate
+		// Remove newline if present
 		if (readed > 0 && input[readed - 1] == '\n')
     		input[readed - 1] = '\0';
-		// if (!fgets(input, sizeof(input), stdin))
-		// break;
-		// // Remove trailing newline if any
-		// size_t len = strlen(input);
-		// if (len > 0 && input[len - 1] == '\n')
-		// input[len - 1] = '\0';
-		
 		tokens = lexer(input);
 		tokens_exec = tokens_exc_handler(tokens);
 		if (tokens)
@@ -68,8 +59,8 @@ int main(int argc, char **argv, char **envp)
 				printf("TOKEN: %s\n", tmp->value);
 				tmp = tmp->next;
 			}
-			if (handle_builtin(tokens, env_list))
-				continue;
+			// if (handle_builtin(tokens, env_list))
+			// 	continue;
 		}
 	}
 }
