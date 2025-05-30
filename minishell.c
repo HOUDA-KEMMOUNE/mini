@@ -14,14 +14,13 @@
 
 int main(int argc, char **argv, char **envp)
 {
-	// printf("jjjjjj\n");
-	char	input[1024];
-	// char	buffer[INT_MAX];
-	ssize_t	readed;
-	t_env *env_list;
-	t_token *tokens;
-	t_echo	*echo_struct;
-	// char	*line;
+	char		input[1024];
+	ssize_t		readed;
+	t_env 		*env_list;
+	t_token 	*tokens;
+	t_token_exc	*tokens_exec;
+	t_echo		*echo_struct;
+	//char	*line;
 
 	(void)argc;
 	(void)argv;
@@ -52,6 +51,7 @@ int main(int argc, char **argv, char **envp)
 		// input[len - 1] = '\0';
 		
 		tokens = lexer(input);
+		tokens_exec = tokens_exc_handler(tokens);
 		if (tokens)
 		{
 			parsing(input, &tokens, &echo_struct, env_list);
