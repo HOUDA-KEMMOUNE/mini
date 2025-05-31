@@ -43,6 +43,20 @@ int main(int argc, char **argv, char **envp)
     		input[readed - 1] = '\0';
 		tokens = lexer(input);
 		tokens_exec = tokens_exc_handler(tokens);
+		// printf("node: cmd = %s\n", tokens_exec->cmd);
+		while (tokens_exec)
+		{
+			printf("node: cmd = %s\n", tokens_exec->cmd);
+			int i = 0;
+			int	count_args = ft_count_args(tokens);
+			while (i < count_args)
+			{
+				printf("arg[%d] -> %s\n", i, tokens_exec->args[i]);
+				i++;
+			}
+			printf("-------------------------------------------\n\n");
+			tokens_exec = tokens_exec->next;
+		}
 		if (tokens)
 		{
 			parsing(input, &tokens, &echo_struct, env_list);
@@ -53,12 +67,12 @@ int main(int argc, char **argv, char **envp)
 				tokens = expander(tokens, env_list);
 				ft_putstr_fd("\n", 1);
 			}
-			t_token *tmp = tokens;
-			while (tmp)
-			{
-				printf("TOKEN: %s\n", tmp->value);
-				tmp = tmp->next;
-			}
+			// t_token *tmp = tokens;
+			// while (tmp)
+			// {
+			// 	printf("TOKEN: %s\n", tmp->value);
+			// 	tmp = tmp->next;
+			// }
 			// if (handle_builtin(tokens, env_list))
 			// 	continue;
 		}

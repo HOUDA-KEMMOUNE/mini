@@ -139,4 +139,9 @@ int handle_builtin(t_token *tokens, t_env *env);
 char **token_to_args(t_token *tokens);
 int builtin_cd(char **args, t_env *env);
 
+/*------------tokens_exec_helper1---------------*/
+void	tokens_exc_helper1(t_token_exc **new, t_token **token);
+void	tokens_exc_helper2(t_token_exc **new, t_token_exc **token_list);
+int	ft_count_args(t_token *token);
+
 # endif
