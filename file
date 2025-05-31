@@ -1,0 +1,19 @@
+// typedef struct s_built
+// {
+//     char *cmd;
+//     void (*ptr)(void);
+// } t_buit;
+
+// t_buit arr[] = {{"echo", echo}, {"cd", cd}. {"pwd", pwd}};
+
+// int i = 0;
+// char * cmd = cmd;
+// while(arr[i])
+// {
+//     if(ft_strcmp(cmd, arr[i].cmd) == 0)
+//     {
+//         arr[i].ptr;
+//         exit(0);
+//     }
+//     i++;
+// }

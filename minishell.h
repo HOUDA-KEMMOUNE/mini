@@ -22,6 +22,7 @@
 #include <fcntl.h>
 #include <signal.h> 
 #include <sys/wait.h>
+#include <sys/stat.h>
 #include <termios.h>
 #include <readline/readline.h>
 #include "./libft/libft.h"
