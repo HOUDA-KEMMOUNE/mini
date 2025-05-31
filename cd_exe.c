@@ -6,40 +6,77 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 11:06:14 by akemmoun          #+#    #+#             */
-/*   Updated: 2025/05/30 11:53:01 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/05/31 18:59:12 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void print_cd_error(const char *path)
-{
-	struct stat st;
+// void print_cd_error(const char *path)
+// {
+// 	struct stat st;
 
-	if (access(path, F_OK) != 0)
-	{
-		ft_putstr_fd("minishell: cd: ", 2);
-		ft_putstr_fd((char *)path, 2);
-		ft_putstr_fd(": No such file or directory\n", 2);
-	}
-	else if (access(path, X_OK) != 0)
-	{
-		ft_putstr_fd("minishell: cd: ", 2);
-		ft_putstr_fd((char *)path, 2);
-		ft_putstr_fd(": Permission denied\n", 2);
-	}
-	else if (stat(path, &st) == 0 && !S_ISDIR(st.st_mode))
-	{
-		ft_putstr_fd("minishell: cd: ", 2);
-		ft_putstr_fd((char *)path, 2);
-		ft_putstr_fd(": Not a directory\n", 2);
-	}
-	else
-	{
-		ft_putstr_fd("minishell: cd: ", 2);
-		ft_putstr_fd((char *)path, 2);
-		ft_putstr_fd(": error\n", 2);
-	}
+// 	if (access(path, F_OK) != 0)
+// 	{
+// 		ft_putstr_fd("minishell: cd: ", 2);
+// 		ft_putstr_fd((char *)path, 2);
+// 		ft_putstr_fd(": No such file or directory\n", 2);
+// 	}
+// 	else if (access(path, X_OK) != 0)
+// 	{
+// 		ft_putstr_fd("minishell: cd: ", 2);
+// 		ft_putstr_fd((char *)path, 2);
+// 		ft_putstr_fd(": Permission denied\n", 2);
+// 	}
+// 	else if (stat(path, &st) == 0 && !S_ISDIR(st.st_mode))
+// 	{
+// 		ft_putstr_fd("minishell: cd: ", 2);
+// 		ft_putstr_fd((char *)path, 2);
+// 		ft_putstr_fd(": Not a directory\n", 2);
+// 	}
+// 	else
+// 	{
+// 		ft_putstr_fd("minishell: cd: ", 2);
+// 		ft_putstr_fd((char *)path, 2);
+// 		ft_putstr_fd(": error\n", 2);
+// 	}
+// }
+void print_cd_error(char *arg, int error_type)
+{
+    if (error_type == 1)
+    {
+        ft_putstr_fd("minishell: cd: too many arguments\n", 2);
+    }
+    else if (error_type == 2)
+    {
+        ft_putstr_fd("minishell: cd: ", 2);
+        ft_putstr_fd(arg, 2);
+        ft_putstr_fd(": No such file or directory\n", 2);
+    }
+    else if (error_type == 3)
+    {
+        ft_putstr_fd("minishell: cd: ", 2);
+        ft_putstr_fd(arg, 2);
+        ft_putstr_fd(": Permission denied\n", 2);
+    }
+    else if (error_type == 4)
+    {
+        ft_putstr_fd("minishell: cd: ", 2);
+        ft_putstr_fd(arg, 2);
+        ft_putstr_fd(": Not a directory\n", 2);
+    }
+    else if (error_type == 5)
+    {
+        ft_putstr_fd("minishell: cd: ", 2);
+        ft_putstr_fd(arg, 2);
+        ft_putstr_fd(": Not set\n", 2);
+    }
+    else if (error_type == 6)
+    {
+        ft_putstr_fd("minishell: cd: ", 2);
+        ft_putstr_fd(arg, 2);
+        ft_putstr_fd(": error\n", 2);
+    }
 }
 
 
@@ -58,50 +95,104 @@ void update_env(t_env *env, char *key, char *new_value)
 
 }
 
-int builtin_cd(char **args, t_env *env)
+int cd(t_token *tokens, t_env *env)
 {
-	char *target = NULL;
-	char cwd[4096];
+    char cwd[4096];
+    char *path;
 
-	// Save current directory to OLDPWD
-	if (!getcwd(cwd, sizeof(cwd)))
-	{
-		perror("getcwd");
-		return 1;
-	}
-	update_env(env, "OLDPWD", cwd);  // update OLDPWD
+    // No argument: do nothing
+    if (!tokens || !tokens->next)
+        return 0;
 
-	// Determine target directory
-	if (!args[1] || ft_strcmp(args[1], "~") == 0)
-		target = get_env_value(env, "HOME");
-	else if (ft_strcmp(args[1], "-") == 0)
-	{
-		target = get_env_value(env, "OLDPWD");
-		if (target)
-			printf("%s\n", target);  // cd - prints path
-	}
-	else
-		target = args[1];
+    // Too many arguments: error
+    if (tokens->next->next)
+    {
+        print_cd_error("cd", 1);
+        return 1;
+    }
 
-	// Handle missing HOME or OLDPWD
-	if (!target)
-	{
-		ft_putstr_fd("minishell: cd: ", 2);
-		ft_putstr_fd(args[1], 2);
-		ft_putstr_fd(": Not set\n", 2);
-		return 1;
-	}
+    path = tokens->next->value;
 
-	// Attempt to change directory
-	if (chdir(target) != 0)
-	{
-		print_cd_error(target);
-		return 1;
-	}
+    // Ignore '~' and '-' silently
+    if (ft_strcmp(path, "~") == 0 || ft_strcmp(path, "-") == 0)
+        return 0;
 
-	// Update PWD
-	if (getcwd(cwd, sizeof(cwd)))
-		update_env(env, "PWD", cwd);
+    // Save current directory
+    if (!getcwd(cwd, sizeof(cwd)))
+        return print_cd_error(path, 6), 1;
+    update_env(env, "OLDPWD", cwd);
 
-	return 0;
+    // Try to change directory
+    if (chdir(path) != 0)
+    {
+        struct stat st;
+        if (access(path, F_OK) != 0)
+            return print_cd_error(path, 2), 1;
+        if (access(path, X_OK) != 0)
+            return print_cd_error(path, 3), 1;
+        if (stat(path, &st) == 0 && !S_ISDIR(st.st_mode))
+            return print_cd_error(path, 4), 1;
+        return print_cd_error(path, 6), 1;
+    }
+
+    // Update new current directory
+    if (getcwd(cwd, sizeof(cwd)))
+        update_env(env, "PWD", cwd);
+
+    return 0;
 }
+
+// int cd(t_token *tokens, t_env *env)
+// {
+//     char cwd[4096];
+//     char *path;
+
+//     if (!getcwd(cwd, sizeof(cwd)))
+//         return print_cd_error("", 6), 1;
+//     update_env(env, "OLDPWD", cwd);
+
+//     if (tokens && tokens->next && tokens->next->next)
+//         return print_cd_error(NULL, 1), 1;
+
+//     if (tokens && tokens->next)
+//         path = tokens->next->value;
+//     else
+//     {
+//         path = get_env_value(env, "HOME");
+//         if (!path)
+//             return print_cd_error("HOME", 5), 1;
+//     }
+
+//     if (ft_strcmp(path, "-") == 0)
+//     {
+//         path = get_env_value(env, "OLDPWD");
+//         if (!path)
+//             return print_cd_error("OLDPWD", 5), 1;
+//         ft_putendl_fd(path, 1); // show the directory
+//     }
+//     else if (path[0] == '~')
+//     {
+//         char *home = get_env_value(env, "HOME");
+//         if (!home)
+//             return print_cd_error("HOME", 5), 1;
+//         path = ft_strjoin(home, path + 1);
+//         // NOTE: free(path) if ft_strjoin allocates
+//     }
+
+//     if (chdir(path) != 0)
+//     {
+//         struct stat st;
+//         if (access(path, F_OK) != 0)
+//             return print_cd_error(path, 2), 1;
+//         if (access(path, X_OK) != 0)
+//             return print_cd_error(path, 3), 1;
+//         if (stat(path, &st) == 0 && !S_ISDIR(st.st_mode))
+//             return print_cd_error(path, 4), 1;
+//         return print_cd_error(path, 6), 1;
+//     }
+
+//     if (getcwd(cwd, sizeof(cwd)))
+//         update_env(env, "PWD", cwd);
+
+//     return 0;
+// }

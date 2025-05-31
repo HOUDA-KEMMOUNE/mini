@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 19:32:00 by akemmoun          #+#    #+#             */
-/*   Updated: 2025/05/30 11:58:16 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/05/31 18:35:42 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,37 +44,37 @@ int main(int argc, char **argv, char **envp)
 		tokens = lexer(input);
 		tokens_exec = tokens_exc_handler(tokens);
 		// printf("node: cmd = %s\n", tokens_exec->cmd);
-		while (tokens_exec)
-		{
-			printf("node: cmd = %s\n", tokens_exec->cmd);
-			int i = 0;
-			int	count_args = ft_count_args(tokens);
-			while (i < count_args)
-			{
-				printf("arg[%d] -> %s\n", i, tokens_exec->args[i]);
-				i++;
-			}
-			printf("-------------------------------------------\n\n");
-			tokens_exec = tokens_exec->next;
-		}
+		// while (tokens_exec)
+		// {
+		// 	printf("node: cmd = %s\n", tokens_exec->cmd);
+		// 	int i = 0;
+		// 	int	count_args = ft_count_args(tokens);
+		// 	while (i < count_args)
+		// 	{
+		// 		printf("arg[%d] -> %s\n", i, tokens_exec->args[i]);
+		// 		i++;
+		// 	}
+		// 	printf("-------------------------------------------\n\n");
+		// 	tokens_exec = tokens_exec->next;
+		// }
 		if (tokens)
 		{
 			parsing(input, &tokens, &echo_struct, env_list);
 			ft_append(&tokens);
-			ft_pwd(&tokens);
+			// ft_pwd(&tokens);
 			if (ft_strchr(tokens->value, '$'))
 			{
 				tokens = expander(tokens, env_list);
 				ft_putstr_fd("\n", 1);
 			}
-			// t_token *tmp = tokens;
-			// while (tmp)
-			// {
-			// 	printf("TOKEN: %s\n", tmp->value);
-			// 	tmp = tmp->next;
-			// }
-			// if (handle_builtin(tokens, env_list))
-			// 	continue;
+			t_token *tmp = tokens;
+			while (tmp)
+			{
+				// printf("TOKEN: %s\n", tmp->value);
+				tmp = tmp->next;
+			}
+			if (run_builtin(tokens->value, tokens, env_list))
+    			continue;
 		}
 	}
 }

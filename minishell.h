@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkemmoun <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 15:59:11 by hkemmoun          #+#    #+#             */
-/*   Updated: 2025/05/30 15:59:12 by hkemmoun         ###   ########.fr       */
+/*   Updated: 2025/05/31 18:46:12 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,13 @@ typedef struct	s_env
 	struct s_env	*next;
 }				t_env;
 
+// to call builtins
+typedef struct s_built
+{
+    char *cmd;
+    int (*ptr)(t_token *tokens, t_env *env);
+} t_built;
+
 
 /*-------------------errors-------------------*/
 int		is_quote_closed(char *input, char quote, int start);
@@ -133,11 +140,14 @@ char	*get_line(char *buffer, char *rest, int fd);
 // int		ft_signals(void);
 
 /*----------------builtins-----------------*/
-int handle_builtin(t_token *tokens, t_env *env);
+int run_builtin(char *cmd, t_token *tokens, t_env *env);
 
 /*----------------cd-----------------*/
 char **token_to_args(t_token *tokens);
-int builtin_cd(char **args, t_env *env);
+int cd(t_token *tokens, t_env *env);
+int ft_cd_exec(t_token **tokens, t_env *env_list);
+// void    pwd(t_token **token);
+int pwd(t_token *tokens, t_env *env);
 
 /*------------tokens_exec_helper1---------------*/
 void	tokens_exc_helper1(t_token_exc **new, t_token **token);

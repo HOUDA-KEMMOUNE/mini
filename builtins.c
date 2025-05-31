@@ -6,34 +6,31 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 16:30:43 by akemmoun          #+#    #+#             */
-/*   Updated: 2025/05/29 16:48:56 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/05/31 18:46:07 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int handle_builtin(t_token *tokens, t_env *env)
+int run_builtin(char *cmd, t_token *tokens, t_env *env)
 {
-    if (!tokens || !tokens->value)
-        return 0;
+    t_built arr[] = {
+        {"cd", cd},
+        {"pwd", pwd},
+        //{"echo", echo},
+        {NULL, NULL}
+    };
 
-    if (ft_strcmp(tokens->value, "cd") == 0)
-        return builtin_cd(token_to_args(tokens), env);
-
-    if (ft_strcmp(tokens->value, "pwd") == 0)
+    int i = 0;
+    while (arr[i].cmd)
     {
-        ft_pwd(&tokens);
-        return 1;
+        if (strcmp(cmd, arr[i].cmd) == 0)
+            return arr[i].ptr(tokens, env); // run and return builtin's return value
+        i++;
     }
-
-    if (ft_strcmp(tokens->value, "env") == 0)
-    {
-        get_env(env);
-        return 1;
-    }
-
-    return 0; // Not a builtin
+    return 0; // not a builtin
 }
+
 
 int	count_args(t_token *token)
 {
