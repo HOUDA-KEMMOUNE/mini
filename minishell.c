@@ -51,6 +51,11 @@ int main(int argc, char **argv, char **envp)
 			parsing(line, &tokens, &echo_struct, env_list);
 			ft_append(&tokens);
 			tokens_exc_redio(tokens, &tokens_exec);
+			if (is_builtin(&tokens_exec) == 1)
+			{
+				path(&tokens_exec);
+				simple_cmd(tokens, &tokens_exec);
+			}
 			// ft_pwd(&tokens);
 			if (ft_strchr(tokens->value, '$'))
 			{

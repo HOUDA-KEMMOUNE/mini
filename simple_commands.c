@@ -25,18 +25,70 @@ void	check_fd(t_token_exc **token_cmd)
 		close((*token_cmd)->fd_out);
 	}
 }
+int	env_size(t_env *env_list)
+{
+	int		size;
+
+	size = 0;
+	while (env_list)
+	{
+		size++;
+		env_list = env_list->next;
+	}
+	return (size);
+}
+
+char	**env_to_array(t_env *env_list)
+{
+	char	**envp;
+	char	*tmp;
+	char	*tmp2;
+	int		i;
+	int		size;
+
+	i = 0;
+	size = env_size(env_list);
+	envp = malloc((size + 1) * sizeof(char *));
+	while (env_list)
+	{
+		tmp = ft_strjoin(env_list->key, "=");
+		tmp2 = ft_strjoin(tmp, env_list->value);
+		envp[i] = tmp2;
+		i++;
+		env_list = env_list->next; 
+	}
+	return (envp);
+}
 
 void	simple_cmd(t_token *token, t_token_exc **token_cmd)
 {
 	int	pid;
+	t_env 	*env;
+	char	**envp;
+	
+	env = *env_func();
 
 	pid = fork();
+	(void)token;
+	// (void)token_cmd;
 	// if (pid < 0)
 	// {
 	// 	perror("");
 	// }
+	if ((*token_cmd)->cmd_path == NULL)
+		return ;
+	envp = env_to_array(env);
+	// return ;
 	if (pid == 0) //child
 	{
-		//execve(path, args, env); path = /usr/bin/cat
+		check_fd(token_cmd);
+		execve((*token_cmd)->cmd_path, (*token_cmd)->args, envp);
+		perror("execve failed");
+		free (envp);
+		exit (0);
+	}
+	else if (pid > 0)
+	{
+		waitpid(pid, NULL, 0);
 	}
 }

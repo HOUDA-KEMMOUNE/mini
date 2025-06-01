@@ -15,8 +15,9 @@
 void	handler_sigint(int sig_num)
 {
 	(void)sig_num;
-	ft_putstr_fd("^C", 1);
-	ft_putstr_fd("\nminishell> ", 1);
+	// ft_putstr_fd("^C\n", 1);
+	ft_putstr_fd("minishell> ^C\n", 1);
+	ft_putstr_fd("minishell> ", 1);
 	return ;
 }
 

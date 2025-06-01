@@ -159,4 +159,15 @@ void	tokens_exc_helper2(t_token_exc **new, t_token_exc **token_list);
 int		ft_count_args(t_token *token);
 void	tokens_exc_redio(t_token *token, t_token_exc **token_list);
 
+/*------------cmd_paths---------------*/
+void	path(t_token_exc **token_list);
+int		is_builtin(t_token_exc **token_list);
+char	**split_path(void);
+char	*find_path(void);
+void	simple_cmd(t_token *token, t_token_exc **token_cmd);
+void	check_fd(t_token_exc **token_cmd);
+char	**env_to_array(t_env *env_list);
+// void	env_to_array_helper(t_env *env_list);
+int		env_size(t_env *env_list);
+
 # endif

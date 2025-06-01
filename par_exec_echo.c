@@ -64,11 +64,20 @@ void	echo(t_token **token, t_echo **echo_struct)
 	{
 		if (ft_strncmp(token_tmp->value, "echo", 4) == 0)
 		{
+			if (token_tmp->next == NULL)
+			{
+				ft_putstr_fd("\n", echo_struct_tmp->fd);
+				return ;
+			}
 			token_tmp = token_tmp->next;
 			if (token_tmp->type != WORD)
 				print_echo_error();
 			else if (ft_strncmp(token_tmp->value, "-n", 2) == 0)
+			{
+				if (token_tmp->next == NULL)
+					return ;
 				token_tmp = token_tmp->next;
+			}
 			if ((token_tmp->type == WORD) || (token_tmp->type == REDIR_OUT) || (token_tmp->type == APPEND))
 			{
 				while (token_tmp)
@@ -93,8 +102,57 @@ void	echo(t_token **token, t_echo **echo_struct)
 					write(echo_struct_tmp->fd, "\n", 1);
 			}
 			else
-				print_error_command(&token_tmp);
+				return ;
+				// print_error_command(&token_tmp);
 		}
 	}
 	// free (echo_struct);
 }
+
+// void	ft_echo(t_token **token, t_echo **echo_struct)
+// {
+// 	t_echo	*echo_struct_tmp;
+// 	t_token	*token_tmp;
+// 	char	*s;
+// 	//int		red;
+
+// 	if ((!token) || (ft_strncmp((*token)->value, "echo", 4) != 0))
+// 		return ;
+// 	token_tmp = (*token);
+// 	echo_struct_tmp = (*echo_struct);
+// 	redir_out_count(token, &echo_struct_tmp);
+// 	if (token_tmp->type == WORD)
+// 	{
+// 		if (ft_strncmp(token_tmp->value, "echo", 4) == 0)
+// 		{
+// 			token_tmp = token_tmp->next;
+// 			if (token_tmp->type != WORD)
+// 				print_echo_error();
+// 			else if (ft_strncmp(token_tmp->value, "-n", 2) == 0)
+// 				ft_echo_helper(&token_tmp, &echo_struct_tmp);
+// 			else if ((token_tmp->type == WORD) || (token_tmp->type == REDIR_OUT))
+// 			{
+// 				while (token_tmp)
+// 				{
+// 					s = token_tmp->value;
+// 					while (*s)
+// 					{
+// 						if (ft_strncmp(s, ">", 1) == 0)
+// 							break ;
+// 						write(echo_struct_tmp->fd, s, 1);
+// 						s++;
+// 					}
+// 					if ((token_tmp->next != NULL))
+// 						write(echo_struct_tmp->fd, " ", 1);
+// 					if (ft_strncmp(token_tmp->value, ">", 1) == 0)
+// 						token_tmp = token_tmp->next->next;
+// 					else
+// 					token_tmp = token_tmp->next;
+// 				}
+// 				write(echo_struct_tmp->fd, "\n", 1);
+// 			}
+// 			else
+// 				print_error_command(&token_tmp);
+// 		}
+// 	}
+// }
