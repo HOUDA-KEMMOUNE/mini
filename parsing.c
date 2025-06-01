@@ -69,7 +69,7 @@ void    parsing(char *input, t_token **token, t_echo **echo_struct, t_env *env_l
 		return ;
 	check_first_token(token);
 	ft_data_init(echo_struct);
-	ft_echo(token, echo_struct);
+	echo(token, echo_struct);
 	ft_cd(token, env_list);
 	ft_ls(token, env_list);
 	ft_export(token);
