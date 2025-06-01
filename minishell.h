@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 15:59:11 by hkemmoun          #+#    #+#             */
-/*   Updated: 2025/06/01 13:56:17 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/05/31 18:46:12 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ typedef struct	s_token_exc
 {
 	char			*value;
 	char			*cmd;
+	char			*cmd_path;
 	char			**args;
 	char			*file;
 	int				fd_in;
@@ -87,6 +88,8 @@ typedef struct s_built
     int (*ptr)(t_token *tokens, t_env *env);
 } t_built;
 
+// globel env
+t_env	**env_func(void);
 
 /*-------------------errors-------------------*/
 int		is_quote_closed(char *input, char quote, int start);
@@ -102,7 +105,6 @@ void	add_token(t_token **head, char *value, t_token_type type, char quote);
 /*-------------------Parsing-------------------*/
 void    parsing(char *input, t_token **token, t_echo **echo_struct, t_env *env_list);
 void	ft_data_init(t_echo	**echo_struct);
-void	ft_echo(t_token **token, t_echo **echo_struct);
 void	ft_cd(t_token **token, t_env *env_list);
 void	ft_ls(t_token **token, t_env *env_list);
 void	ft_export(t_token **token);
@@ -124,6 +126,7 @@ char		*get_env_value(t_env *env, char *key);
 void		get_env(t_env *env_list);
 void		ft_pwd(t_token **token);
 t_token_exc	*tokens_exc_handler(t_token *token);
+void		echo(t_token **token, t_echo **echo_struct);
 
 /*-------------------helpers-------------------*/
 int		ft_strcmp(const char *s1, const char *s2);
@@ -141,7 +144,7 @@ char	*get_line(char *buffer, char *rest, int fd);
 // int		ft_signals(void);
 
 /*----------------builtins-----------------*/
-int run_builtin(char *cmd, t_token *tokens, t_env *env);
+int handle_builtin(t_token *tokens, t_env *env);
 
 /*----------------cd-----------------*/
 char **token_to_args(t_token *tokens);
@@ -153,6 +156,7 @@ int pwd(t_token *tokens, t_env *env);
 /*------------tokens_exec_helper1---------------*/
 void	tokens_exc_helper1(t_token_exc **new, t_token **token);
 void	tokens_exc_helper2(t_token_exc **new, t_token_exc **token_list);
-int	ft_count_args(t_token *token);
+int		ft_count_args(t_token *token);
+void	tokens_exc_redio(t_token *token, t_token_exc **token_list);
 
 # endif

@@ -12,13 +12,20 @@
 
 #include "minishell.h"
 
+t_env	**env_func(void)
+{
+	static t_env *env;
+	return(&env);
+}
+
 t_env	*create_env_list(char **envp)
 {
-	t_env	*env_list;
+	// t_env	*env_list;
 	t_env	*new;
 	char	*equal_sign;
 
-	env_list = NULL;
+	// env_list = NULL;
+
 	while (*envp)
 	{
 		equal_sign = ft_strchr(*envp, '=');
@@ -30,11 +37,11 @@ t_env	*create_env_list(char **envp)
 			new->key = ft_substr(*envp, 0, equal_sign - *envp);
 			new->value = ft_strdup(equal_sign + 1);
 			new->next = NULL;
-			ft_envadd_back(&env_list, new);
+			ft_envadd_back(env_func(), new);
 		}
 		envp++;
 	}
-	return (env_list);
+	return (*env_func());
 }
 
 char *get_env_value(t_env *env, char *key)
