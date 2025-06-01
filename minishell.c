@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 19:32:00 by akemmoun          #+#    #+#             */
-/*   Updated: 2025/05/31 18:35:42 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/06/01 13:58:12 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,35 +14,39 @@
 
 int main(int argc, char **argv, char **envp)
 {
-	char		input[1024];
-	ssize_t		readed;
 	t_env 		*env_list;
 	t_token 	*tokens;
 	t_token_exc	*tokens_exec;
 	t_echo		*echo_struct;
-	//char	*line;
+	char		*line;
 
 	(void)argc;
 	(void)argv;
 	env_list = create_env_list(envp);
 	while (1)
 	{
-		ft_putstr_fd("minishell> ", 1);
+		// print prompt
 		signal(SIGINT, handler_sigint);
-		signal(SIGQUIT, SIG_IGN); //to ignore CTRL+'\'
+		signal(SIGQUIT, SIG_IGN); // to ignore CTRL+backslash
 		disable_sig();
-		readed = read(0, input, sizeof(input) - 1);
-		if (readed == 0)
+
+		line = readline("minishell> "); // use readline to read input line
+		if (!line)
 		{
-			ft_putstr_fd("\nexit\n", 1);
+			ft_putstr_fd("exit\n", 1); // handle Ctrl+D (EOF)
 			exit(0);
 		}
-		// input[readed] = '\0'; // null-terminate
-		// Remove newline if present
-		if (readed > 0 && input[readed - 1] == '\n')
-    		input[readed - 1] = '\0';
-		tokens = lexer(input);
+		if (*line == '\0') // skip empty input
+		{
+			free(line);
+			continue;
+		}
+
+		add_history(line); // save line in history
+
+		tokens = lexer(line);
 		tokens_exec = tokens_exc_handler(tokens);
+
 		// printf("node: cmd = %s\n", tokens_exec->cmd);
 		// while (tokens_exec)
 		// {
@@ -57,9 +61,10 @@ int main(int argc, char **argv, char **envp)
 		// 	printf("-------------------------------------------\n\n");
 		// 	tokens_exec = tokens_exec->next;
 		// }
+
 		if (tokens)
 		{
-			parsing(input, &tokens, &echo_struct, env_list);
+			parsing(line, &tokens, &echo_struct, env_list);
 			ft_append(&tokens);
 			// ft_pwd(&tokens);
 			if (ft_strchr(tokens->value, '$'))
@@ -74,7 +79,11 @@ int main(int argc, char **argv, char **envp)
 				tmp = tmp->next;
 			}
 			if (run_builtin(tokens->value, tokens, env_list))
-    			continue;
+			{
+				free(line);
+				continue;
+			}
 		}
+		free(line);
 	}
 }

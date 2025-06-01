@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 15:59:11 by hkemmoun          #+#    #+#             */
-/*   Updated: 2025/05/31 18:46:12 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/06/01 13:56:17 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 #include <sys/stat.h>
 #include <termios.h>
 #include <readline/readline.h>
+#include <readline/history.h>
 #include "./libft/libft.h"
 // #include "./get_next_line/get_next_line.h"
 

@@ -1,6 +1,7 @@
 NAME = minishell
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
+LIBS = -lreadline
 
 # Source files
 SRC = minishell.c lexer.c lexer_errors.c error_msg.c parsing_cd.c expander.c parsing_export.c\
@@ -22,7 +23,7 @@ all: $(NAME)
 
 # Rule to build minishell
 $(NAME): $(OBJ) $(LIBFT)
-	$(CC) $(CFLAGS) $(OBJ) $(LIBFT) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJ) $(LIBFT) $(LIBS) -o $(NAME)
 
 # Rule to build libft
 $(LIBFT):
