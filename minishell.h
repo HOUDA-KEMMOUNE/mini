@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 15:59:11 by hkemmoun          #+#    #+#             */
-/*   Updated: 2025/05/31 18:46:12 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/06/01 19:31:34 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,7 +144,7 @@ char	*get_line(char *buffer, char *rest, int fd);
 // int		ft_signals(void);
 
 /*----------------builtins-----------------*/
-int handle_builtin(t_token *tokens, t_env *env);
+int run_builtin(char *cmd, t_token *tokens, t_env *env);
 
 /*----------------cd-----------------*/
 char **token_to_args(t_token *tokens);

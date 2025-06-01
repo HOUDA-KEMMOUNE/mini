@@ -46,7 +46,7 @@ static void	redir_out_append(t_token **token, t_echo **echo_struct)
 	}
 }
 
-void	ft_echo(t_token **token, t_echo **echo_struct)
+void	echo(t_token **token, t_echo **echo_struct)
 {
 	t_echo	*echo_struct_tmp;
 	t_token	*token_tmp;

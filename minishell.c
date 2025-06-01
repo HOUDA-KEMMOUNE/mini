@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 19:32:00 by akemmoun          #+#    #+#             */
-/*   Updated: 2025/06/01 13:58:12 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/06/01 19:30:49 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,11 +63,11 @@ int main(int argc, char **argv, char **envp)
 				// printf("TOKEN: %s\n", tmp->value);
 				tmp = tmp->next;
 			}
-			// if (run_builtin(tokens->value, tokens, env_list))
-			// {
-			// 	free(line);
-			// 	continue;
-			// }
+			if (run_builtin(tokens->value, tokens, env_list))
+			{
+				free(line);
+				continue;
+			}
 		}
 		free(line);
 	}

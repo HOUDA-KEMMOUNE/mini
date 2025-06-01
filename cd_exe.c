@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 11:06:14 by akemmoun          #+#    #+#             */
-/*   Updated: 2025/05/31 18:59:12 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/06/01 19:32:58 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,12 @@ void update_env(t_env *env, char *key, char *new_value)
         }
         env = env->next;
     }
+}
 
+int ft_isspace(int c)
+{
+    return (c == ' ' || c == '\n' || \
+            c == '\r' || c == '\t');
 }
 
 int cd(t_token *tokens, t_env *env)
@@ -100,9 +105,25 @@ int cd(t_token *tokens, t_env *env)
     char cwd[4096];
     char *path;
 
-    // No argument: do nothing
+    // No argument: do nothing (or change to home if that's your implementation for `cd` with no args)
     if (!tokens || !tokens->next)
         return 0;
+
+    path = tokens->next->value;
+
+    // Check if the path is an empty string or contains only whitespace
+    int is_whitespace_only = 1;
+    for (int i = 0; path[i] != '\0'; i++) {
+        if (!ft_isspace((unsigned char)path[i])) {
+            is_whitespace_only = 0;
+            break;
+        }
+    }
+
+    if (is_whitespace_only) {
+        // If it's just whitespace, ignore it like normal cd
+        return 0;
+    }
 
     // Too many arguments: error
     if (tokens->next->next)
@@ -110,8 +131,6 @@ int cd(t_token *tokens, t_env *env)
         print_cd_error("cd", 1);
         return 1;
     }
-
-    path = tokens->next->value;
 
     // Ignore '~' and '-' silently
     if (ft_strcmp(path, "~") == 0 || ft_strcmp(path, "-") == 0)
@@ -141,6 +160,7 @@ int cd(t_token *tokens, t_env *env)
 
     return 0;
 }
+
 
 // int cd(t_token *tokens, t_env *env)
 // {
