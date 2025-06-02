@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 11:34:35 by akemmoun          #+#    #+#             */
-/*   Updated: 2025/05/29 11:13:26 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/06/02 11:02:53 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,34 @@ char *get_env_value(t_env *env, char *key)
 		env = env->next;
 	}
 	return (NULL);
+}
+
+void	init_shlvl(t_env *env)
+{
+	t_env	*tmp = env;
+	int		lvl;
+
+	while (tmp)
+	{
+		if (ft_strcmp(tmp->key, "SHLVL") == 0)
+		{
+			lvl = ft_atoi(tmp->value);
+			lvl++;
+			free(tmp->value);
+			tmp->value = ft_itoa(lvl);
+			return ;
+		}
+		tmp = tmp->next;
+	}
+
+	// If SHLVL wasn't found, create it with value "1"
+	t_env *new = malloc(sizeof(t_env));
+	if (!new)
+		return ;
+	new->key = ft_strdup("SHLVL");
+	new->value = ft_strdup("1");
+	new->next = NULL;
+	ft_envadd_back(env_func(), new);
 }
 
 void get_env(t_env *env_list)

@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 19:32:00 by akemmoun          #+#    #+#             */
-/*   Updated: 2025/06/01 19:30:49 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/06/02 11:03:24 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ int main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
 	env_list = create_env_list(envp);
+	init_shlvl(env_list);
 	while (1)
 	{
 		// print prompt

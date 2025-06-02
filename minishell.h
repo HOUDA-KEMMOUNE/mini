@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 15:59:11 by hkemmoun          #+#    #+#             */
-/*   Updated: 2025/06/01 19:31:34 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/06/02 11:03:10 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,6 +127,7 @@ void		get_env(t_env *env_list);
 void		ft_pwd(t_token **token);
 t_token_exc	*tokens_exc_handler(t_token *token);
 void		echo(t_token **token, t_echo **echo_struct);
+void	init_shlvl(t_env *env);
 
 /*-------------------helpers-------------------*/
 int		ft_strcmp(const char *s1, const char *s2);
