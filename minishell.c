@@ -50,8 +50,9 @@ int main(int argc, char **argv, char **envp)
 		if (tokens)
 		{
 			parsing(line, &tokens, &echo_struct, env_list);
-			ft_append(&tokens);
+			// ft_append(&tokens);
 			tokens_exc_redio(tokens, &tokens_exec);
+			// retype_lexer(&tokens, &tokens_exec);
 			if (is_builtin(&tokens_exec) == 1)
 			{
 				path(&tokens_exec);

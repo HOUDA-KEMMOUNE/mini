@@ -120,3 +120,48 @@ t_token *lexer(char *input)
 	}
 	return (token_list);
 }
+
+int	syntax_err_msg(t_token **token, t_token_exc **commande)
+{
+	ft_putstr_fd("minishell: syntax error near unexpected token `", (*commande)->fd_out);
+	ft_putstr_fd((*token)->value, (*commande)->fd_out);
+	ft_putstr_fd("'\n", (*commande)->fd_out);
+	return 1;
+}
+// void	check_cmd_type(t_token **token, t_token_exc **commande)
+// {
+// 	while ((*token))
+// 	{
+// 		if ((*token)->type = CMD)
+// 		{
+
+// 		}
+// 	}
+// }
+
+void	retype_lexer(t_token **token, t_token_exc **commande)
+{
+	int		i;
+
+	if (!token || !(*token) || !commande || !(*commande))
+		return ;
+	i = 0;
+	while ((*token))
+	{
+		if (((*token)->type == WORD) && (i == 0))
+			(*token)->type = CMD;
+		else if (((*token)->type == REDIR_IN) || ((*token)->type == REDIR_OUT) || ((*token)->type == APPEND))
+		{
+			(*token) = (*token)->next;
+			if ((*token)->type == WORD)
+				(*token)->type = FILE_NAME;
+			else if (syntax_err_msg(&(*token), &(*commande)) == 1)
+				return ;
+		}
+		else if ((*token)->type == WORD)
+			(*token)->type = ARG;
+		i++;
+		(*token) = (*token)->next;
+	}
+	// check_cmd_type(token, commande);
+}

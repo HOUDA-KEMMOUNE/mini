@@ -37,6 +37,9 @@
 typedef enum	e_token_type
 {
 	WORD,
+	FILE_NAME,
+	CMD,
+	ARG,
 	PIPE,
 	REDIR_IN,
 	REDIR_OUT,
@@ -55,14 +58,14 @@ typedef struct	s_token
 // 3la 9bal redirections o dak tkharbi9
 typedef struct	s_token_exc
 {
-	char			*value;
-	char			*cmd;
-	char			*cmd_path;
-	char			**args;
-	char			*file;
-	int				fd_in;
-	int				fd_out;
-	t_token_type	type;
+	char				*value;
+	char				*cmd;
+	char				*cmd_path;
+	char				**args;
+	char				*file;
+	int					fd_in;
+	int					fd_out;
+	// t_token_type		type;
 	struct s_token_exc	*next;
 }				t_token_exc;
 
@@ -101,6 +104,8 @@ void	print_echo_error(void);
 t_token	*lexer(char *input);
 void	word_case(char *input, int *i, t_token **token_list);
 void	add_token(t_token **head, char *value, t_token_type type, char quote);
+void	retype_lexer(t_token **token, t_token_exc **commande);
+int		syntax_err_msg(t_token **token, t_token_exc **commande);
 
 /*-------------------Parsing-------------------*/
 void    parsing(char *input, t_token **token, t_echo **echo_struct, t_env *env_list);

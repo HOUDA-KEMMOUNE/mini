@@ -30,8 +30,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": false,
-      "cwd": "/home/hkemmoun/Desktop/mini",
-      "program": "/home/hkemmoun/Desktop/mini/build/Debug/outDebug",
+      "cwd": "/home/hkemmoun/Desktop/mini2",
+      "program": "/home/hkemmoun/Desktop/mini2/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [

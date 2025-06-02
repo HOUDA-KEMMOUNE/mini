@@ -82,6 +82,10 @@ void	simple_cmd(t_token *token, t_token_exc **token_cmd)
 	if (pid == 0) //child
 	{
 		check_fd(token_cmd);
+		dprintf(2, "================== args ===============\n");
+		for(int i =0;  (*token_cmd)->args[i]; i++)
+			dprintf(2, "{%s} ",  (*token_cmd)->args[i]);
+		dprintf(2, "\n");
 		execve((*token_cmd)->cmd_path, (*token_cmd)->args, envp);
 		perror("execve failed");
 		free (envp);

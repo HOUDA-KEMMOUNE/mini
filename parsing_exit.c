@@ -46,16 +46,13 @@ void	ft_exit(t_token **token)
 		ft_putstr_fd("minishell: exit: ", 1);
 		ft_putstr_fd(str, 1);
 		ft_putstr_fd(": numeric argument required\n", 1);
-		exit (255);
+		exit (2);
 	}
 	else if (token_tmp->next != NULL)
 	{
-		ft_putstr_fd("minishell: exit: too many arguments\n", 1);
+		ft_putstr_fd("exit\nminishell: exit: too many arguments\n", 1);
 		return ;
 	}
 	num = ft_atoi(str);
-	if (num >= 0 && num <= 255)
-		exit (num);
-	else if (num < 0 || num > 255)
-		exit (num % 256);
+	exit (num);
 }
