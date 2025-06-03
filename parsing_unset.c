@@ -74,7 +74,7 @@ static void	check_var(t_token **token)
 			ft_putstr_fd("unset: `=': not a valid identifier\n", 1);
 			return ;
 		}
-		else if (is_notForbidden_char(var[i]) == 0)
+		else if (is_notForbidden_char(var[i], 1) == 0)
 		{
 			ft_putstr_fd("unset: not an identifier: ", 1);
 			ft_putstr_fd(var, 1);

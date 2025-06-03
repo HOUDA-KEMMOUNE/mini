@@ -122,7 +122,7 @@ void	ft_cd(t_token **token, t_env *env_list);
 void	ft_ls(t_token **token, t_env *env_list);
 void	ft_export(t_token **token);
 void	ft_unset(t_token **token);
-int		is_notForbidden_char(char c);
+int		is_notForbidden_char(char c, int is_first);
 int		check_commande(char *input);
 void	ft_count(char *s, int *count);
 void	ft_count_dotes(t_token **token);

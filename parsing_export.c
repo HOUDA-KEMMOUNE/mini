@@ -12,13 +12,29 @@
 
 #include "minishell.h"
 
-int	is_notForbidden_char(char c)
+int is_notForbidden_char(char c, int is_first)
 {
-	if ((c >= '0' && c <= '9') || (c >= 'a' && c <= 'z')
-		|| (c >= 'A' && c <= 'Z') || (c == '_'))
-		return (1); // l2omore ta7t saytara ✅
-	else
-		return (0); // forbidden character ❌
+    if (is_first)
+	{
+        // First character: only letter or underscore
+        if ((c >= 'a' && c <= 'z') ||
+            (c >= 'A' && c <= 'Z') ||
+            (c == '_'))
+            return 1;
+        else
+            return 0;
+    } 
+	else 
+	{
+        // Other characters: letter, digit, or underscore
+        if ((c >= '0' && c <= '9') ||
+            (c >= 'a' && c <= 'z') ||
+            (c >= 'A' && c <= 'Z') ||
+            (c == '_'))
+            return 1;
+        else
+            return 0;
+    }
 }
 
 // static void    check_var(t_token **token)
@@ -66,15 +82,27 @@ static void check_var(t_token **token)
         *eq = '\0';
     }
 
-    if (!is_valid_identifier(var)) {
+    // Check first character
+    if (!is_notForbidden_char(var[0], 1)) {
         ft_putstr_fd("export: `", 1);
         ft_putstr_fd(var, 1);
         ft_putstr_fd("': not a valid identifier\n", 1);
-        if (eq) *eq = '='; // restore
+        if (eq) *eq = '=';
         return;
     }
 
-    if (eq) *eq = '='; // restore
+    // Check remaining characters
+    for (int i = 1; var[i]; i++) {
+        if (!is_notForbidden_char(var[i], 0)) {
+            ft_putstr_fd("export: `", 1);
+            ft_putstr_fd(var, 1);
+            ft_putstr_fd("': not a valid identifier\n", 1);
+            if (eq) *eq = '=';
+            return;
+        }
+    }
+
+    if (eq) *eq = '=';
 }
 
 // void	ft_export(t_token **token)
