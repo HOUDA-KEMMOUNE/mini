@@ -56,21 +56,39 @@ static void    check_var(t_token **token)
 	}
 }
 
+// void	ft_export(t_token **token)
+// {
+// 	t_token	*token_tmp;
+// 	// char	*var;
+
+// 	if ((!token) || (ft_strncmp((*token)->value, "export", 6) != 0))
+// 		return ;
+// 	token_tmp = (*token);
+// 	token_tmp = token_tmp->next;
+// 	if (token_tmp->next == NULL)
+// 		return ;
+// 	while (token_tmp)
+// 	{
+// 		check_var(&token_tmp);
+// 		token_tmp = token_tmp->next;
+// 	}
+// 	return ;
+// }
+
 void	ft_export(t_token **token)
 {
 	t_token	*token_tmp;
-	// char	*var;
 
-	if ((!token) || (ft_strncmp((*token)->value, "export", 6) != 0))
+	if (!token || !*token || !(*token)->value)
 		return ;
-	token_tmp = (*token);
-	token_tmp = token_tmp->next;
-	if (token_tmp->next == NULL)
+	if (ft_strncmp((*token)->value, "export", 6) != 0)
+		return ;
+	token_tmp = (*token)->next;
+	if (!token_tmp)
 		return ;
 	while (token_tmp)
 	{
 		check_var(&token_tmp);
 		token_tmp = token_tmp->next;
 	}
-	return ;
 }

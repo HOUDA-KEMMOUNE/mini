@@ -18,6 +18,7 @@ int run_builtin(char *cmd, t_token *tokens, t_env *env)
         {"cd", cd},
         {"pwd", pwd},
         //{"echo", echo},
+		{"export", export},
         {NULL, NULL}
     };
 
@@ -31,32 +32,31 @@ int run_builtin(char *cmd, t_token *tokens, t_env *env)
     return 0; // not a builtin
 }
 
+// int	count_args(t_token *token)
+// {
+// 	int count = 0;
 
-int	count_args(t_token *token)
-{
-	int count = 0;
+// 	while (token)
+// 	{
+// 		count++;
+// 		token = token->next;
+// 	}
+// 	return count;
+// }
 
-	while (token)
-	{
-		count++;
-		token = token->next;
-	}
-	return count;
-}
+// char	**token_to_args(t_token *token)
+// {
+// 	int		count = count_args(token);
+// 	char	**args = malloc(sizeof(char *) * (count + 1));
+// 	int		i = 0;
 
-char	**token_to_args(t_token *token)
-{
-	int		count = count_args(token);
-	char	**args = malloc(sizeof(char *) * (count + 1));
-	int		i = 0;
-
-	if (!args)
-		return (NULL);
-	while (token)
-	{
-		args[i++] = ft_strdup(token->value);
-		token = token->next;
-	}
-	args[i] = NULL;
-	return args;
-}
+// 	if (!args)
+// 		return (NULL);
+// 	while (token)
+// 	{
+// 		args[i++] = ft_strdup(token->value);
+// 		token = token->next;
+// 	}
+// 	args[i] = NULL;
+// 	return args;
+// }

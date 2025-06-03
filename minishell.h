@@ -141,6 +141,7 @@ void		ft_pwd(t_token **token);
 t_token_exc	*tokens_exc_handler(t_token *token);
 void		echo(t_token **token, t_echo **echo_struct);
 void	init_shlvl(t_env *env);
+int export(t_token *tokens, t_env *env_list);
 
 /*-------------------helpers-------------------*/
 int		ft_strcmp(const char *s1, const char *s2);
