@@ -65,7 +65,10 @@ int main(int argc, char **argv, char **envp)
 			if (is_builtin(&tokens_exec) == 1)
 			{
 				path(&tokens_exec);
-				simple_cmd(tokens, &tokens_exec);
+				if (tokens_exec->cmd_path)    // <-- Only call if command was found!
+					simple_cmd(tokens, &tokens_exec);
+				free(line);
+				continue; //  continue after non-builtin (prevents running more logic)
 			}
 			// ft_pwd(&tokens);
 			if (ft_strchr(tokens->value, '$'))
