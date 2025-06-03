@@ -55,6 +55,12 @@ typedef struct	s_token
 	struct s_token	*next;
 }				t_token;
 
+typedef struct	s_meta_char
+{
+	char			*value;
+	t_token_type	type;
+}				t_meta_char;
+
 // 3la 9bal redirections o dak tkharbi9
 typedef struct	s_token_exc
 {
@@ -106,6 +112,8 @@ void	word_case(char *input, int *i, t_token **token_list);
 void	add_token(t_token **head, char *value, t_token_type type, char quote);
 void	retype_lexer(t_token **token, t_token_exc **commande);
 int		syntax_err_msg(t_token **token, t_token_exc **commande);
+char	*char_to_str(char c, int n, t_token **token_list);
+void	add_type(t_token **token_list);
 
 /*-------------------Parsing-------------------*/
 void    parsing(char *input, t_token **token, t_echo **echo_struct, t_env *env_list);

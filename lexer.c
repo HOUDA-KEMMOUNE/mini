@@ -15,13 +15,15 @@
 void	add_token(t_token **head, char *value, t_token_type type, char quote)
 {
 	t_token *new;
+	(void)type;
 
 	new = malloc (sizeof(t_token));
 	if (!new)
 		return ;
 	
+	// printf("value ---> %s\n", value);
 	new->value = ft_strdup(value);
-	new->type = type;
+	// new->type = type;
 	new->quote = quote;
 	new->next = NULL;
 
@@ -73,10 +75,60 @@ void	word_case(char *input, int *i, t_token **token_list)
 	}
 }
 
+void	add_type(t_token **token_list)
+{
+	static t_meta_char	arr[] = {{"|", PIPE}, {">", REDIR_OUT}, {"<", REDIR_IN}, {">>", APPEND}, {"<<", HEREDOC}};	
+	int		(i), (flag);
+	t_token	*head;
+
+	i = 0;
+	flag = 0;
+	head = (*token_list);
+	while ((*token_list))
+	{
+		while (i < 5)
+		{
+			if (strcmp((*token_list)->value, arr[i].value) == 0)
+			{
+				flag = 1;
+				(*token_list)->type = arr[i].type;
+			}
+			i++;
+		}
+		if (flag == 0)
+			(*token_list)->type = WORD;
+		i = 0;
+		(*token_list) = (*token_list)->next;
+	}
+	(*token_list) = head;
+}
+
+char	*char_to_str(char c, int n, t_token **token_list)
+{
+	char	str[3];
+	char	*result;
+
+	if (n == 0)
+	{
+		str[0] = c;
+		str[1] = '\0';
+	}
+	else if (n == 1)
+	{
+		str[0] = c;
+		str[1] = c;
+		str[2] = '\0';
+	}
+	result = str;
+	add_token(token_list, str, PIPE, 0);
+	return (result);
+}
+
 t_token *lexer(char *input)
 {
 	t_token *token_list;
-	int i;
+	int 	i;
+	char	*str;
 
 	i = 0;
 	token_list = NULL;
@@ -84,42 +136,68 @@ t_token *lexer(char *input)
 	{
 		while (input[i] == ' ' || input[i] == '\t')
 			i++;
-		if (input[i] == '|')
+		if (input[i] == '|' || input[i] == '>' || input[i] == '<' || (input[i] == '>' && input[i + 1] == '>') || (input[i] == '<' && input[i + 1] == '<'))
 		{
-			add_token(&token_list, "|", PIPE, 0);
+			if ((input[i] == '>' && input[i + 1] == '>') || (input[i] == '<' && input[i + 1] == '<'))
+				str = char_to_str(input[i], 1, &token_list);
+			else
+				str = char_to_str(input[i], 0, &token_list);
 			i++;
-		}
-		else if (input[i] == '>')
-		{
-			if (input[i+1] == '>')
-			{
-				add_token(&token_list, ">>", APPEND, 0);
-				i += 2;
-			}
-			else 
-			{
-				add_token(&token_list, ">", REDIR_OUT, 0);
-				i++;
-			}
-		}
-		else if (input[i] == '<')
-		{
-			if (input[i+1] == '<')
-			{
-				add_token(&token_list, "<<", HEREDOC, 0);
-				i += 2;
-			}
-			else 
-			{
-				add_token(&token_list, "<", REDIR_IN, 0);
-				i++;
-			}
 		}
 		else
 			word_case(input, &i, &token_list);
 	}
+	// add_type(&token_list);
 	return (token_list);
 }
+
+// t_token *lexer(char *input)
+// {
+// 	t_token *token_list;
+// 	int i;
+
+// 	i = 0;
+// 	token_list = NULL;
+// 	while (input[i])
+// 	{
+// 		while (input[i] == ' ' || input[i] == '\t')
+// 			i++;
+// 		if (input[i] == '|')
+// 		{
+// 			add_token(&token_list, "|", PIPE, 0);
+// 			i++;
+// 		}
+// 		else if (input[i] == '>')
+// 		{
+// 			if (input[i+1] == '>')
+// 			{
+// 				add_token(&token_list, ">>", APPEND, 0);
+// 				i += 2;
+// 			}
+// 			else 
+// 			{
+// 				add_token(&token_list, ">", REDIR_OUT, 0);
+// 				i++;
+// 			}
+// 		}
+// 		else if (input[i] == '<')
+// 		{
+// 			if (input[i+1] == '<')
+// 			{
+// 				add_token(&token_list, "<<", HEREDOC, 0);
+// 				i += 2;
+// 			}
+// 			else 
+// 			{
+// 				add_token(&token_list, "<", REDIR_IN, 0);
+// 				i++;
+// 			}
+// 		}
+// 		else
+// 			word_case(input, &i, &token_list);
+// 	}
+// 	return (token_list);
+// }
 
 int	syntax_err_msg(t_token **token, t_token_exc **commande)
 {

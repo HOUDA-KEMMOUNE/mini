@@ -12,6 +12,8 @@
 
 #include "minishell.h"
 
+void	print_type(t_token *list);
+
 int main(int argc, char **argv, char **envp)
 {
 	t_env 		*env_list;
@@ -46,13 +48,20 @@ int main(int argc, char **argv, char **envp)
 		add_history(line); // save line in history
 
 		tokens = lexer(line);
+		add_type(&tokens);
+		// while (tokens)
+		// {
+		// 	printf("token->value = %s\n", tokens->value);
+		// 	tokens = tokens->next;
+		// }
 		tokens_exec = tokens_exc_handler(tokens);
 		if (tokens)
 		{
+			// print_type(tokens);
 			parsing(line, &tokens, &echo_struct, env_list);
+			// retype_lexer(&tokens, &tokens_exec);
 			// ft_append(&tokens);
 			tokens_exc_redio(tokens, &tokens_exec);
-			// retype_lexer(&tokens, &tokens_exec);
 			if (is_builtin(&tokens_exec) == 1)
 			{
 				path(&tokens_exec);
