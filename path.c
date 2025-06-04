@@ -51,7 +51,8 @@ int	is_builtin(t_token_exc **token_list)
 	|| (ft_strncmp((*token_list)->cmd, "export", 6) == 0)
 	|| (ft_strncmp((*token_list)->cmd, "unset", 5) == 0)
 	|| (ft_strncmp((*token_list)->cmd, "env", 3) == 0)
-	|| (ft_strncmp((*token_list)->cmd, "exit", 4) == 0))
+	|| (ft_strncmp((*token_list)->cmd, "exit", 4) == 0)
+	|| (ft_strncmp((*token_list)->cmd, "./minishell", ft_strlen("./minishell")) == 0))
 		return (0); //builtin
 	else
 		return (1);

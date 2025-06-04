@@ -103,10 +103,10 @@ void	add_type(t_token **token_list)
 	(*token_list) = head;
 }
 
-char	*char_to_str(char c, int n, t_token **token_list)
+void	char_to_str(char c, int n, t_token **token_list)
 {
 	char	str[3];
-	char	*result;
+	// char	*result;
 
 	if (n == 0)
 	{
@@ -119,16 +119,16 @@ char	*char_to_str(char c, int n, t_token **token_list)
 		str[1] = c;
 		str[2] = '\0';
 	}
-	result = str;
+	// result = str;
 	add_token(token_list, str, PIPE, 0);
-	return (result);
+	// return (result);
 }
 
 t_token *lexer(char *input)
 {
 	t_token *token_list;
 	int 	i;
-	char	*str;
+	// char	*str;
 
 	i = 0;
 	token_list = NULL;
@@ -139,15 +139,14 @@ t_token *lexer(char *input)
 		if (input[i] == '|' || input[i] == '>' || input[i] == '<' || (input[i] == '>' && input[i + 1] == '>') || (input[i] == '<' && input[i + 1] == '<'))
 		{
 			if ((input[i] == '>' && input[i + 1] == '>') || (input[i] == '<' && input[i + 1] == '<'))
-				str = char_to_str(input[i], 1, &token_list);
+				char_to_str(input[i], 1, &token_list);
 			else
-				str = char_to_str(input[i], 0, &token_list);
+				char_to_str(input[i], 0, &token_list);
 			i++;
 		}
 		else
 			word_case(input, &i, &token_list);
 	}
-	// add_type(&token_list);
 	return (token_list);
 }
 

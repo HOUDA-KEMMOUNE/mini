@@ -151,6 +151,8 @@ void	ft_append(t_token **token);
 /*-------------------signals-------------------*/
 void	handler_sigint(int sig_num);
 void	disable_sig(void);
+void	handler_sigint_child(int sig_num);
+void	sig_quit_handler(int sig_num);
 
 /*----------------get_next_line-----------------*/
 char	*get_next_line(int fd);
@@ -173,6 +175,7 @@ void	tokens_exc_helper1(t_token_exc **new, t_token **token);
 void	tokens_exc_helper2(t_token_exc **new, t_token_exc **token_list);
 int		ft_count_args(t_token *token);
 void	tokens_exc_redio(t_token *token, t_token_exc **token_list);
+void	filename_node(t_token **token);
 
 /*------------cmd_paths---------------*/
 void	path(t_token_exc **token_list);

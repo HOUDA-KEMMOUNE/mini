@@ -15,10 +15,36 @@
 void	handler_sigint(int sig_num)
 {
 	(void)sig_num;
-	// ft_putstr_fd("^C\n", 1);
-	ft_putstr_fd("minishell> ^C\n", 1);
-	ft_putstr_fd("minishell> ", 1);
-	return ;
+    // printf("\n^C");
+    rl_on_new_line();
+    rl_replace_line("", 0);
+    rl_redisplay();
+	printf("^C\n");
+	printf("minishell> ");// signal(SIGINT, handler_sigint);
+}
+
+void	handler_sigint_child(int sig_num)
+{
+	(void)sig_num;
+    // printf("\n^C");
+    rl_on_new_line();
+    rl_replace_line("", 0);
+    rl_redisplay();
+	printf("^C\n");
+	printf("minishell> ");
+	exit (0);
+}
+
+void	sig_quit_handler(int sig_num)
+{
+	(void)sig_num;
+    printf("\n^C");
+    // rl_on_new_line();
+    // rl_replace_line("", 0);
+    // rl_redisplay();
+	printf("^\'Quit (core dumped)\n");
+	// printf("minishell> ");
+	exit (0);
 }
 
 void	disable_sig(void)

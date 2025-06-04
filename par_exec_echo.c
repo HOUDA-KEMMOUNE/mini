@@ -46,6 +46,59 @@ static void	redir_out_append(t_token **token, t_echo **echo_struct)
 	}
 }
 
+// int	arg_count(t_token *token)
+// {
+// 	t_token		*token_tmp;
+// 	int			count;
+
+// 	token_tmp = token;
+// 	count = 0;
+// 	while (token_tmp)	
+// 	{
+// 		if (token_tmp->type == ARG)
+// 			count++;
+// 		token_tmp = token_tmp->next;
+// 	}
+// 	return (count);
+// }
+
+// void	echo(t_token **token, t_token_exc **commande)
+// {
+// 	t_token		(*token_tmp), (*head);
+// 	t_token_exc	*commande_tmp;
+// 	char		**args_tmp;
+// 	// int			(i), (count_arg);
+// 	int			count_arg;
+
+// 	if (!token || !(*token))
+// 		return ;
+// 	token_tmp = (*token);
+// 	head = (*token);
+// 	commande_tmp = (*commande);
+// 	count_arg = ft_count_args(head);
+// 	while (*token)
+// 	{
+// 		printf("token->value ==== %s\n", (*token)->value);
+// 		(*token) = (*token)->next;
+// 	}
+// 	// while ()
+// 	printf("======ECHO==========count_arg  %d============\n", count_arg);
+// 	ft_putstr_fd("%d\n", commande_tmp->fd_out);
+// 	args_tmp = commande_tmp->args;
+// 	(*token) = token_tmp;
+// 	// i = 0;
+// 	// while (i < count_arg)
+// 	// {
+// 	// 	while (token_tmp)
+// 	// 	{
+// 	// 		if (token_tmp->type == ARG)
+// 	// 			printf("args_tmp[%d] ============= %s\n", i, args_tmp[i]);
+// 	// 		token_tmp = token_tmp->next;
+// 	// 	}
+// 	// 	i++;
+// 	// }
+// }
+
 void	echo(t_token **token, t_echo **echo_struct)
 {
 	t_echo	*echo_struct_tmp;
@@ -53,15 +106,14 @@ void	echo(t_token **token, t_echo **echo_struct)
 	t_token	*head;
 	char	*s;
 	//int		red;
-
 	if ((!token) || (ft_strncmp((*token)->value, "echo", 4) != 0))
 		return ;
 	token_tmp = (*token);
 	head = (*token)->next;
 	echo_struct_tmp = (*echo_struct);
 	redir_out_append(token, &echo_struct_tmp);
-	if (token_tmp->type == WORD)
-	{
+	// if (token_tmp->type == WORD)
+	// {
 		if (ft_strncmp(token_tmp->value, "echo", 4) == 0)
 		{
 			if (token_tmp->next == NULL)
@@ -70,16 +122,17 @@ void	echo(t_token **token, t_echo **echo_struct)
 				return ;
 			}
 			token_tmp = token_tmp->next;
-			if (token_tmp->type != WORD)
-				print_echo_error();
-			else if (ft_strncmp(token_tmp->value, "-n", 2) == 0)
+			// if (token_tmp->type != WORD)
+			// 	print_echo_error();
+			if (ft_strncmp(token_tmp->value, "-n", 2) == 0)
 			{
 				if (token_tmp->next == NULL)
 					return ;
 				token_tmp = token_tmp->next;
 			}
-			if ((token_tmp->type == WORD) || (token_tmp->type == REDIR_OUT) || (token_tmp->type == APPEND))
+			if ((token_tmp->type == ARG) || (token_tmp->type == REDIR_OUT) || (token_tmp->type == APPEND))
 			{
+				// printf("ll\n");
 				while (token_tmp)
 				{
 					s = token_tmp->value;
@@ -105,7 +158,7 @@ void	echo(t_token **token, t_echo **echo_struct)
 				return ;
 				// print_error_command(&token_tmp);
 		}
-	}
+	// }
 	// free (echo_struct);
 }
 

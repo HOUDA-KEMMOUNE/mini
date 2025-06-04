@@ -67,32 +67,23 @@ void	simple_cmd(t_token *token, t_token_exc **token_cmd)
 	char	**envp;
 	
 	env = *env_func();
-
 	pid = fork();
 	(void)token;
-	// (void)token_cmd;
-	// if (pid < 0)
-	// {
-	// 	perror("");
-	// }
 	if ((*token_cmd)->cmd_path == NULL)
 		return ;
 	envp = env_to_array(env);
-	// return ;
+	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN); // to ignore CTRL+backslash
 	if (pid == 0) //child
 	{
+		signal(SIGINT, handler_sigint_child);
+		signal(SIGQUIT, sig_quit_handler); // to ignore CTRL+backslash
 		check_fd(token_cmd);
-		dprintf(2, "================== args ===============\n");
-		for(int i =0;  (*token_cmd)->args[i]; i++)
-			dprintf(2, "{%s} ",  (*token_cmd)->args[i]);
-		dprintf(2, "\n");
 		execve((*token_cmd)->cmd_path, (*token_cmd)->args, envp);
 		perror("execve failed");
 		free (envp);
 		exit (0);
 	}
 	else if (pid > 0)
-	{
 		waitpid(pid, NULL, 0);
-	}
 }
