@@ -33,7 +33,7 @@ void	syntax_error(char *s)
 {
 	ft_putstr_fd("minishell: syntax error near unexpected token `", 1);
 	ft_putstr_fd(s, 1);
-	ft_putstr_fd("'\n", 1);
+	ft_putstr_fd("\n", 1);
 
 }
 
@@ -41,11 +41,13 @@ void	filename_node(t_token **token)
 {
 	while ((*token))
 	{
-		if ((*token)->type != WORD && (*token)->type != PIPE && (*token)->next->type == WORD)
+		if ((*token)->type == REDIR_IN || (*token)->type == REDIR_OUT || (*token)->type == APPEND)
 		{
 			if ((*token)->next == NULL)
 				break ;
 			(*token) = (*token)->next;
+			if ((*token)->type == REDIR_IN || (*token)->type == REDIR_OUT || (*token)->type == APPEND)
+				return ;
 			(*token)->type = FILE_NAME;
 		}
 		(*token) = (*token)->next;

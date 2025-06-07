@@ -51,9 +51,21 @@ int	is_builtin(t_token_exc **token_list)
 	|| (ft_strncmp((*token_list)->cmd, "export", 6) == 0)
 	|| (ft_strncmp((*token_list)->cmd, "unset", 5) == 0)
 	|| (ft_strncmp((*token_list)->cmd, "env", 3) == 0)
-	|| (ft_strncmp((*token_list)->cmd, "exit", 4) == 0)
-	|| (ft_strncmp((*token_list)->cmd, "./minishell", ft_strlen("./minishell")) == 0))
+	|| (ft_strncmp((*token_list)->cmd, "exit", 4) == 0))
 		return (0); //builtin
+	else
+		return (1);
+}
+
+int	check_first_cmd(t_token_exc *token_list)
+{
+	char	*s;
+
+	s = token_list->cmd;
+	if (ft_strncmp(s, ">", 1) == 0 || ft_strncmp(s, ">>", 2) == 0
+		|| ft_strncmp(s, "<", 1) == 0 || ft_strncmp(s, "<<", 2) == 0
+		|| ft_strncmp(s, "./minishell", ft_strlen("./minishell")) == 0)
+		return (0);
 	else
 		return (1);
 }
@@ -65,16 +77,12 @@ void	path(t_token_exc **token_list)
 	char	*tmp;
 	int		flag;
 
+	// printf("hh\n");
 	splited_path = split_path();
 	flag = 0;
 	if (!splited_path)
 		return ;
 	(*token_list)->cmd_path = NULL;
-	// if (is_builtin(token_list) == 0)
-	// {
-	// 	printf("It's a built in command\n");
-	// 	return ;
-	// }
 	new_cmd = ft_strjoin("/", (*token_list)->cmd);
 	while (*splited_path)
 	{
@@ -87,7 +95,7 @@ void	path(t_token_exc **token_list)
 		}
 		splited_path++;
 	}
-	if (flag == 0)
+	if (flag == 0 && check_first_cmd(*token_list) == 1)
 	{
 		printf("minishell: command not found: %s\n", (*token_list)->cmd);
 		return ;

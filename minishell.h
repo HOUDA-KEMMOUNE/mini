@@ -112,11 +112,12 @@ void	word_case(char *input, int *i, t_token **token_list);
 void	add_token(t_token **head, char *value, t_token_type type, char quote);
 void	retype_lexer(t_token **token, t_token_exc **commande);
 int		syntax_err_msg(t_token **token, t_token_exc **commande);
-char	*char_to_str(char c, int n, t_token **token_list);
+void	char_to_str(char c, int n, t_token **token_list);
 void	add_type(t_token **token_list);
 
 /*-------------------Parsing-------------------*/
 void    parsing(char *input, t_token **token, t_echo **echo_struct, t_env *env_list);
+int		check_first_cmd(t_token_exc *token_list);
 void	ft_data_init(t_echo	**echo_struct);
 void	ft_cd(t_token **token, t_env *env_list);
 void	ft_ls(t_token **token, t_env *env_list);

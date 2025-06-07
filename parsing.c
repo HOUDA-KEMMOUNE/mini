@@ -70,8 +70,8 @@ void    parsing(char *input, t_token **token, t_echo **echo_struct, t_env *env_l
 	check_first_token(token);
 	ft_data_init(echo_struct);
 	echo(token, echo_struct);
-	ft_cd(token, env_list);
-	ft_ls(token, env_list);
+	// ft_cd(token, env_list);
+	// ft_ls(token, env_list);
 	ft_export(token);
 	ft_unset(token);
 	ft_env(token, env_list);
