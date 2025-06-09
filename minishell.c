@@ -13,110 +13,37 @@
 #include "minishell.h"
 
 // void	print_type(t_token *list);
-void	se_redout(t_token **token)
+int	se_redout(t_token **token)
 {
 	t_token	*token_tmp;
 
 	token_tmp = (*token);
 	while (token_tmp)
 	{
-		printf("token_tmp->value = %s\n", token_tmp->value);
 		if (token_tmp->type == REDIR_IN || token_tmp->type == REDIR_OUT || token_tmp->type == APPEND || token_tmp->type == HEREDOC)
 		{
 			token_tmp = token_tmp->next;
-			printf("token_tmp->value = %s\n", token_tmp->value);
 			if (token_tmp == NULL)
-				return ;
+				return (-1);
 			if (token_tmp->type == REDIR_IN || token_tmp->type == REDIR_OUT || token_tmp->type == APPEND || token_tmp->type == HEREDOC)
 			{
 				ft_putstr_fd("minishell: syntax error near unexpected token `", 1);
 				ft_putstr_fd(token_tmp->value, 1);
 				ft_putstr_fd("'\n", 1);
-				return ;
+				return (0);
 			}
 		}
 		token_tmp = token_tmp->next;
 	}
+	return (1);
 }
 
-// void	se_redin(t_token **token)
-// {
-// 	t_token	*token_tmp;
-
-// 	token_tmp = (*token);
-// 	while (token_tmp)
-// 	{
-// 		if (token_tmp->type == REDIR_IN)
-// 		{
-// 			token_tmp = token_tmp->next;
-// 			if (token_tmp == NULL)
-// 				return ;
-// 			if (token_tmp->type == REDIR_IN || token_tmp->type == REDIR_OUT || token_tmp->type == APPEND || token_tmp->type == HEREDOC)
-// 			{
-// 				ft_putstr_fd("minishell: syntax error near unexpected token `", 1);
-// 				ft_putstr_fd(token_tmp->value, 1);
-// 				ft_putstr_fd("'\n", 1);
-// 				return ;
-// 			}
-// 		}
-// 		token_tmp = token_tmp->next;
-// 	}
-// }
-
-// void	se_append(t_token **token)
-// {
-// 	t_token	*token_tmp;
-
-// 	token_tmp = (*token);
-// 	while (token_tmp)
-// 	{
-// 		if (token_tmp->type == APPEND)
-// 		{
-// 			token_tmp = token_tmp->next;
-// 			if (token_tmp == NULL)
-// 				return ;
-// 			if (token_tmp->type == REDIR_IN || token_tmp->type == REDIR_OUT || token_tmp->type == APPEND || token_tmp->type == HEREDOC)
-// 			{
-// 				ft_putstr_fd("minishell: syntax error near unexpected token `", 1);
-// 				ft_putstr_fd(token_tmp->value, 1);
-// 				ft_putstr_fd("'\n", 1);
-// 				return ;
-// 			}
-// 		}
-// 		token_tmp = token_tmp->next;
-// 	}
-// }
-
-// void	se_heredoc(t_token **token)
-// {
-// 	t_token	*token_tmp;
-
-// 	token_tmp = (*token);
-// 	while (token_tmp)
-// 	{
-// 		if (token_tmp->type == HEREDOC)
-// 		{
-// 			token_tmp = token_tmp->next;
-// 			if (token_tmp == NULL)
-// 				return ;
-// 			if (token_tmp->type == REDIR_IN || token_tmp->type == REDIR_OUT || token_tmp->type == APPEND || token_tmp->type == HEREDOC)
-// 			{
-// 				ft_putstr_fd("minishell: syntax error near unexpected token `", 1);
-// 				ft_putstr_fd(token_tmp->value, 1);
-// 				ft_putstr_fd("'\n", 1);
-// 				return ;
-// 			}
-// 		}
-// 		token_tmp = token_tmp->next;
-// 	}
-// }
-
-void	check_pipeline(t_token **token)
+int	check_pipeline(t_token **token)
 {
-	se_redout(token);
-	// se_redin(token);
-	// se_append(token);
-	// se_heredoc(token);
+	if (se_redout(token) <= 0)
+		return (0);
+	else
+		return (1);
 }
 
 int main(int argc, char **argv, char **envp)
@@ -137,8 +64,9 @@ int main(int argc, char **argv, char **envp)
 		signal(SIGINT, handler_sigint);
 		signal(SIGQUIT, SIG_IGN); // to ignore CTRL+backslash
 		disable_sig();
-		
-		line = readline("minishell> "); // use readline to read input line
+		//"\033[1;34mminishell>\033[0m "
+		line = readline("\033[1;32mminishell>\033[0m "); // use readline to read input line
+		// line = readline("minishell> "); // use readline to read input line
 		if (!line)
 		{
 			ft_putstr_fd("exit\n", 1); // handle Ctrl+D (EOF)
@@ -162,13 +90,10 @@ int main(int argc, char **argv, char **envp)
 		tokens_exec = tokens_exc_handler(tokens);
 		if (tokens)
 		{
-			check_pipeline(&tokens);
-			// print_type(tokens);
+			if (check_pipeline(&tokens) == 0)
+				continue;
 			parsing(line, &tokens, &echo_struct, env_list);
-			// retype_lexer(&tokens, &tokens_exec);
-			// ft_append(&tokens);
 			tokens_exc_redio(tokens, &tokens_exec);
-			// printf("fgfhfg\n");
 			if (is_builtin(&tokens_exec) == 1)
 			{
 				path(&tokens_exec);
@@ -186,7 +111,6 @@ int main(int argc, char **argv, char **envp)
 			t_token *tmp = tokens;
 			while (tmp)
 			{
-				// printf("TOKEN: %s\n", tmp->value);
 				tmp = tmp->next;
 			}
 			if (run_builtin(tokens->value, tokens, env_list))
