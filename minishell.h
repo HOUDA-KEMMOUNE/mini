@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 15:59:11 by hkemmoun          #+#    #+#             */
-/*   Updated: 2025/06/02 11:03:10 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/06/14 12:35:41 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,7 +142,17 @@ void		ft_pwd(t_token **token);
 t_token_exc	*tokens_exc_handler(t_token *token);
 void		echo(t_token **token, t_echo **echo_struct);
 void	init_shlvl(t_env *env);
-int export(t_token *tokens, t_env *env_list);
+
+
+/*-------------------export-------------------*/
+int export_internal(t_token *tokens, t_env **env_list);
+t_env *export(t_token *tokens, t_env *env_list);
+int export_builtin_adapter(t_token *tokens, t_env *env_list);
+int export_wrapper(t_token *tokens, t_env **env_list);
+
+/*-------------------unset-------------------*/
+int unset(t_token *token, t_env *env);
+void unset_env_var(t_env **env, const char *name);
 
 /*-------------------helpers-------------------*/
 int		ft_strcmp(const char *s1, const char *s2);
@@ -162,7 +172,14 @@ char	*get_line(char *buffer, char *rest, int fd);
 // int		ft_signals(void);
 
 /*----------------builtins-----------------*/
-int run_builtin(char *cmd, t_token *tokens, t_env *env);
+int run_builtin(char *cmd, t_token *tokens, t_env **env_list);
+
+/*----------------free-----------------*/
+void free_env_list(t_env *env);
+void free_echo_struct(t_echo *echo);
+void free_token_list(t_token *tok);
+void free_token_exc_list(t_token_exc *cmd);
+void minishell_cleanup(t_env *env, t_token *tokens, t_token_exc *tokens_exec, t_echo *echo);
 
 /*----------------cd-----------------*/
 char **token_to_args(t_token *tokens);

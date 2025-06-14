@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 19:32:00 by akemmoun          #+#    #+#             */
-/*   Updated: 2025/06/02 11:03:24 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/06/14 12:16:09 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,8 @@ int main(int argc, char **argv, char **envp)
 		if (!line)
 		{
 			ft_putstr_fd("exit\n", 1); // handle Ctrl+D (EOF)
-			exit(0);
+			minishell_cleanup(env_list, tokens, tokens_exec, echo_struct);
+    		exit(0);
 		}
 		if (*line == '\0') // skip empty input
 		{
@@ -113,12 +114,18 @@ int main(int argc, char **argv, char **envp)
 			{
 				tmp = tmp->next;
 			}
-			if (run_builtin(tokens->value, tokens, env_list))
+			if (run_builtin(tokens->value, tokens, &env_list))
 			{
 				free(line);
 				continue;
 			}
 		}
 		free(line);
+		free_token_list(tokens);
+        free_token_exc_list(tokens_exec);
+        free_echo_struct(echo_struct);
+        tokens = NULL;
+        tokens_exec = NULL;
+        echo_struct = NULL;
 	}
 }

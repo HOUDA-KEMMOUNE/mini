@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokens_exec.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkemmoun <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 13:24:49 by hkemmoun          #+#    #+#             */
-/*   Updated: 2025/05/29 13:24:51 by hkemmoun         ###   ########.fr       */
+/*   Updated: 2025/06/14 11:32:58 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,44 +55,78 @@ void	filename_node(t_token **token)
 }
 
 
-void	command_node(t_token **token, t_token_exc **new)
-{
-	char	**args_tmp;
-	int		(count_args), (i), (flag);
-	t_token *head;
+// void	command_node(t_token **token, t_token_exc **new)
+// {
+// 	char	**args_tmp;
+// 	int		(count_args), (i), (flag);
+// 	t_token *head;
 
-	head = (*token);
-	count_args = ft_count_args((*token));
-	// printf("count_args -----------> %d\n", count_args);
-	args_tmp = malloc((count_args + 1) * sizeof(char *));
-	i = 0;
-	flag = 0;
-	while ((*token) && ft_strncmp((*token)->value, "|", 1) != 0)
-	{
-		// printf("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH\n");
-		if ((*token)->type == WORD)
-		{
-			if (flag == 0)
-			{
-				// printf("mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm\n");
-				// (*new)->cmd = (*token)->value;
-				(*token)->type = CMD;
-			}
-			else
-			{
-				(*token)->type = ARG;
-				// printf("token->value ==== %s\n", (*token)->value);
-				// printf("HJJJJJJJJJJJJJJJJJJJ\n");
-			}
-			args_tmp[i] = (*token)->value;
-			i++;
-			flag = 1;
-		}
-		(*token) = (*token)->next;
-	}
-	(*token) = head;
-	args_tmp[i] = NULL;
-	(*new)->args = args_tmp;
+// 	head = (*token);
+// 	count_args = ft_count_args((*token));
+// 	// printf("count_args -----------> %d\n", count_args);
+// 	args_tmp = malloc((count_args + 1) * sizeof(char *));
+// 	i = 0;
+// 	flag = 0;
+// 	while ((*token) && ft_strncmp((*token)->value, "|", 1) != 0)
+// 	{
+// 		// printf("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH\n");
+// 		if ((*token)->type == WORD)
+// 		{
+// 			if (flag == 0)
+// 			{
+// 				// printf("mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm\n");
+// 				// (*new)->cmd = (*token)->value;
+// 				(*token)->type = CMD;
+// 			}
+// 			else
+// 			{
+// 				(*token)->type = ARG;
+// 				// printf("token->value ==== %s\n", (*token)->value);
+// 				// printf("HJJJJJJJJJJJJJJJJJJJ\n");
+// 			}
+// 			args_tmp[i] = (*token)->value;
+// 			i++;
+// 			flag = 1;
+// 		}
+// 		(*token) = (*token)->next;
+// 	}
+// 	(*token) = head;
+// 	args_tmp[i] = NULL;
+// 	(*new)->args = args_tmp;
+// }
+
+void command_node(t_token **token, t_token_exc **new)
+{
+    int count_args, i, flag;
+    t_token *head;
+    char **args_tmp;
+
+    head = (*token);
+    count_args = ft_count_args((*token));
+    args_tmp = malloc((count_args + 1) * sizeof(char *));
+    if (!args_tmp)
+        return; // handle allocation failure
+
+    i = 0;
+    flag = 0;
+    while ((*token) && ft_strncmp((*token)->value, "|", 1) != 0)
+    {
+        if ((*token)->type == WORD)
+        {
+            if (flag == 0)
+                (*token)->type = CMD;
+            else
+                (*token)->type = ARG;
+
+            if (i < count_args) // protect against overflow
+                args_tmp[i++] = (*token)->value;
+            flag = 1;
+        }
+        (*token) = (*token)->next;
+    }
+    (*token) = head;
+    args_tmp[i] = NULL;
+    (*new)->args = args_tmp;
 }
 
 static void	tokens_exc_helper(t_token **token, t_token_exc **token_list)

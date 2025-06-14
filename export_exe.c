@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   export_exe.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akemmoun <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 22:03:42 by akemmoun          #+#    #+#             */
-/*   Updated: 2025/05/19 22:04:35 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/06/14 12:35:10 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,44 +93,67 @@ static void	export_set_var(t_env **env_list, char *key, char *value)
 		}
 		tmp = tmp->next;
 	}
-	new = (t_env *)malloc(sizeof(t_env));
+	new = malloc(sizeof(t_env));
 	if (!new)
-		return ;
+		return;
 	new->key = ft_strdup(key);
-	if (value)
-		new->value = ft_strdup(value);
-	else
-		new->value = NULL;
+	if (!new->key) {
+		free(new);
+		return;
+	}
+	new->value = value ? ft_strdup(value) : NULL;
+	if (value && !new->value) {
+		free(new->key);
+		free(new);
+		return;
+	}
 	new->next = *env_list;
 	*env_list = new;
 }
 
-int export(t_token *tokens, t_env *env_list)
+int export_internal(t_token *tokens, t_env **env_list)
 {
     t_token *current = tokens->next;
 
-    // If no arguments, print environment sorted
     if (!current)
     {
-        export_print_sorted(env_list);
+        export_print_sorted(*env_list);
         return 0;
     }
-
-    // Otherwise, handle each argument
     while (current)
     {
         char *eq = ft_strchr(current->value, '=');
         if (eq)
         {
             *eq = '\0';
-            export_set_var(&env_list, current->value, eq + 1);
+            export_set_var(env_list, current->value, eq + 1);
             *eq = '=';
         }
         else
         {
-            export_set_var(&env_list, current->value, NULL);
+            export_set_var(env_list, current->value, NULL);
         }
         current = current->next;
     }
+    return 0;
+}
+
+t_env *export(t_token *tokens, t_env *env_list)
+{
+	export_internal(tokens, &env_list);
+    return env_list;
+}
+
+int export_wrapper(t_token *tokens, t_env **env_list)
+{
+    t_env *new_head = export(tokens, *env_list); // pass current head
+    if (new_head != *env_list)
+        *env_list = new_head; // update the caller's pointer
+    return 0;
+}
+
+int export_builtin_adapter(t_token *tokens, t_env *env_list)
+{
+    export(tokens, env_list); // call real export, head change ignored here
     return 0;
 }
