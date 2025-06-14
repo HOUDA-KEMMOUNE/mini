@@ -13,7 +13,7 @@
 #include "minishell.h"
 
 // void	print_type(t_token *list);
-int	se_redout(t_token **token)
+int	se_redirections(t_token **token)
 {
 	t_token	*token_tmp;
 
@@ -38,13 +38,13 @@ int	se_redout(t_token **token)
 	return (1);
 }
 
-int	check_pipeline(t_token **token)
-{
-	if (se_redout(token) <= 0)
-		return (0);
-	else
-		return (1);
-}
+// int	check_pipeline(t_token **token)
+// {
+// 	if (se_redout(token) <= 0)
+// 		return (0);
+// 	else
+// 		return (1);
+// }
 
 int main(int argc, char **argv, char **envp)
 {
@@ -91,9 +91,10 @@ int main(int argc, char **argv, char **envp)
 		tokens_exec = tokens_exc_handler(tokens);
 		if (tokens)
 		{
-			if (check_pipeline(&tokens) == 0)
+			if (se_redirections(&tokens) <= 0)
 				continue;
 			parsing(line, &tokens, &echo_struct, env_list);
+			// printf("tokens->value --> %s\n", tokens->value);
 			tokens_exc_redio(tokens, &tokens_exec);
 			if (is_builtin(&tokens_exec) == 1)
 			{
@@ -102,12 +103,6 @@ int main(int argc, char **argv, char **envp)
 					simple_cmd(tokens, &tokens_exec);
 				free(line);
 				continue; //  continue after non-builtin (prevents running more logic)
-			}
-			// ft_pwd(&tokens);
-			if (ft_strchr(tokens->value, '$'))
-			{
-				tokens = expander(tokens, env_list);
-				ft_putstr_fd("\n", 1);
 			}
 			t_token *tmp = tokens;
 			while (tmp)

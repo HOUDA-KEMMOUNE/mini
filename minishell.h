@@ -117,6 +117,7 @@ void	add_type(t_token **token_list);
 
 /*-------------------Parsing-------------------*/
 void    parsing(char *input, t_token **token, t_echo **echo_struct, t_env *env_list);
+int		se_redirections(t_token **token);
 int		check_first_cmd(t_token_exc *token_list);
 void	ft_data_init(t_echo	**echo_struct);
 void	ft_cd(t_token **token, t_env *env_list);
@@ -132,6 +133,7 @@ void	ft_exit(t_token **token);
 
 /*-------------------expander-------------------*/
 t_token *expander(t_token *token_list, t_env *env_list);
+t_token *echo_expander(t_token *token_list, t_env *env_list, int fd);
 char	*expand_variable(char *value, t_env *env_list);
 
 /*-------------------execution-------------------*/
@@ -140,7 +142,7 @@ char		*get_env_value(t_env *env, char *key);
 void		get_env(t_env *env_list);
 void		ft_pwd(t_token **token);
 t_token_exc	*tokens_exc_handler(t_token *token);
-void		echo(t_token **token, t_echo **echo_struct);
+void	echo(t_token **token, t_echo **echo_struct, t_env *env_list);
 void	init_shlvl(t_env *env);
 
 

@@ -43,14 +43,14 @@ void	ft_exit(t_token **token)
 	str = token_tmp->value;
 	if (ft_isalpha_exit(str) == 0)
 	{
-		ft_putstr_fd("minishell: exit: ", 1);
-		ft_putstr_fd(str, 1);
-		ft_putstr_fd(": numeric argument required\n", 1);
+		ft_putstr_fd("minishell: exit: ", 2);
+		ft_putstr_fd(str, 2);
+		ft_putstr_fd(": numeric argument required\n", 2);
 		exit (2);
 	}
 	else if (token_tmp->next != NULL)
 	{
-		ft_putstr_fd("exit\nminishell: exit: too many arguments\n", 1);
+		ft_putstr_fd("exit\nminishell: exit: too many arguments\n", 2);
 		return ;
 	}
 	num = ft_atoi(str);

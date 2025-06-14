@@ -99,7 +99,7 @@ static void	redir_out_append(t_token **token, t_echo **echo_struct)
 // 	// }
 // }
 
-void	echo(t_token **token, t_echo **echo_struct)
+void	echo(t_token **token, t_echo **echo_struct, t_env *env_list)
 {
 	t_echo	*echo_struct_tmp;
 	t_token	*token_tmp;
@@ -135,6 +135,13 @@ void	echo(t_token **token, t_echo **echo_struct)
 				// printf("ll\n");
 				while (token_tmp)
 				{
+					// (void)env_list;
+					if (ft_strchr(token_tmp->value, '$'))
+					{
+						(*token) = echo_expander(*token, env_list, echo_struct_tmp->fd);
+						// ft_putstr_fd("\n", 1);
+						return ;
+					}
 					s = token_tmp->value;
 					while (*s)
 					{
