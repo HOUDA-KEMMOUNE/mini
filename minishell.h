@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 15:59:11 by hkemmoun          #+#    #+#             */
-/*   Updated: 2025/06/14 12:35:41 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/06/15 15:33:36 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,13 +47,31 @@ typedef enum	e_token_type
 	APPEND,
 }				t_token_type;
 
+
+typedef struct	s_env
+{
+	char			*key;
+	char			*value;
+	struct s_env	*next;
+}				t_env;
+
 typedef struct	s_token
 {
 	char			*value;
 	t_token_type	type;
 	char			quote;
 	struct s_token	*next;
-}				t_token;
+}
+				t_token;
+
+// to call builtins
+typedef int (*builtin_ptr)(t_token *, t_env **);
+typedef struct s_built
+{
+    char *cmd;
+    builtin_ptr ptr;
+} t_built;
+
 
 typedef struct	s_meta_char
 {
@@ -83,19 +101,14 @@ typedef struct	s_echo
 	char	**msg;
 }				t_echo;
 
-typedef struct	s_env
-{
-	char			*key;
-	char			*value;
-	struct s_env	*next;
-}				t_env;
+
 
 // to call builtins
-typedef struct s_built
-{
-    char *cmd;
-    int (*ptr)(t_token *tokens, t_env *env);
-} t_built;
+// typedef struct s_built
+// {
+//     char *cmd;
+//     int (*ptr)(t_token *tokens, t_env *env);
+// } t_built;
 
 // globel env
 t_env	**env_func(void);
@@ -149,11 +162,11 @@ void	init_shlvl(t_env *env);
 /*-------------------export-------------------*/
 int export_internal(t_token *tokens, t_env **env_list);
 t_env *export(t_token *tokens, t_env *env_list);
-int export_builtin_adapter(t_token *tokens, t_env *env_list);
+int export_builtin_adapter(t_token *tokens, t_env **env_list);
 int export_wrapper(t_token *tokens, t_env **env_list);
 
 /*-------------------unset-------------------*/
-int unset(t_token *token, t_env *env);
+int unset(t_token *tokens, t_env **env_list);
 void unset_env_var(t_env **env, const char *name);
 
 /*-------------------helpers-------------------*/
@@ -185,10 +198,12 @@ void minishell_cleanup(t_env *env, t_token *tokens, t_token_exc *tokens_exec, t_
 
 /*----------------cd-----------------*/
 char **token_to_args(t_token *tokens);
-int cd(t_token *tokens, t_env *env);
+int cd(t_token *tokens, t_env **env_list);
 int ft_cd_exec(t_token **tokens, t_env *env_list);
 // void    pwd(t_token **token);
-int pwd(t_token *tokens, t_env *env);
+
+/*----------------pwd-----------------*/
+int pwd(t_token *tokens, t_env **env_list);
 
 /*------------tokens_exec_helper1---------------*/
 void	tokens_exc_helper1(t_token_exc **new, t_token **token);

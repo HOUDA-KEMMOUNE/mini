@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 22:03:42 by akemmoun          #+#    #+#             */
-/*   Updated: 2025/06/14 12:35:10 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/06/15 15:28:56 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,12 +97,14 @@ static void	export_set_var(t_env **env_list, char *key, char *value)
 	if (!new)
 		return;
 	new->key = ft_strdup(key);
-	if (!new->key) {
+	if (!new->key)
+	{
 		free(new);
 		return;
 	}
 	new->value = value ? ft_strdup(value) : NULL;
-	if (value && !new->value) {
+	if (value && !new->value)
+	{
 		free(new->key);
 		free(new);
 		return;
@@ -152,8 +154,8 @@ int export_wrapper(t_token *tokens, t_env **env_list)
     return 0;
 }
 
-int export_builtin_adapter(t_token *tokens, t_env *env_list)
+int export_builtin_adapter(t_token *tokens, t_env **env_list)
 {
-    export(tokens, env_list); // call real export, head change ignored here
+    export_internal(tokens, env_list); // uses t_env **
     return 0;
 }

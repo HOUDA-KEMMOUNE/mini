@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 11:06:14 by akemmoun          #+#    #+#             */
-/*   Updated: 2025/06/01 19:32:58 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/06/15 15:38:17 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,8 +100,9 @@ int ft_isspace(int c)
             c == '\r' || c == '\t');
 }
 
-int cd(t_token *tokens, t_env *env)
+int cd(t_token *tokens, t_env **env_list)
 {
+    (void)env_list;
     char cwd[4096];
     char *path;
 
@@ -139,7 +140,7 @@ int cd(t_token *tokens, t_env *env)
     // Save current directory
     if (!getcwd(cwd, sizeof(cwd)))
         return print_cd_error(path, 6), 1;
-    update_env(env, "OLDPWD", cwd);
+    update_env(*env_list, "OLDPWD", cwd);
 
     // Try to change directory
     if (chdir(path) != 0)
@@ -156,7 +157,7 @@ int cd(t_token *tokens, t_env *env)
 
     // Update new current directory
     if (getcwd(cwd, sizeof(cwd)))
-        update_env(env, "PWD", cwd);
+        update_env(*env_list, "PWD", cwd);
 
     return 0;
 }

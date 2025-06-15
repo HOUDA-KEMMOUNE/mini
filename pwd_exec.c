@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 18:52:14 by hkemmoun          #+#    #+#             */
-/*   Updated: 2025/05/31 18:08:30 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/06/15 15:35:53 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,11 @@
 // 		ft_putstr_fd("Something is wrong :/\n", 1);
 // }
 
-int pwd(t_token *tokens, t_env *env)
+int pwd(t_token *tokens, t_env **env_list)
 {
     char path[PATH_MAX];
     (void)tokens; // unused
-    (void)env;    // unused
+    (void)env_list;    // unused
 
     if (getcwd(path, PATH_MAX) != NULL)
     {

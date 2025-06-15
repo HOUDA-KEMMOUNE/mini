@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/14 11:05:09 by akemmoun          #+#    #+#             */
-/*   Updated: 2025/06/14 12:35:34 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/06/15 15:39:39 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,9 @@ void unset_env_var(t_env **env, const char *name)
     }
 }
 
-int unset(t_token *token, t_env *env)
+int unset(t_token *tokens, t_env **env_list)
 {
-    t_token *arg = token->next; // skip "unset" itself
+    t_token *arg = tokens->next; // skip "unset" itself
 
     while (arg)
     {
@@ -56,7 +56,7 @@ int unset(t_token *token, t_env *env)
             }
         }
         if (valid)
-            unset_env_var(&env, name);
+            unset_env_var(env_list, name);
 
         arg = arg->next;
     }
