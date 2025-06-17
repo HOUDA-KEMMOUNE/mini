@@ -180,7 +180,6 @@ void	ft_append(t_token **token);
 
 /*-------------------signals-------------------*/
 void	handler_sigint(int sig_num);
-void	disable_sig(void);
 void	handler_sigint_child(int sig_num);
 void	sig_quit_handler(int sig_num);
 

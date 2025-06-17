@@ -14,10 +14,11 @@
 
 void	handler_sigint(int sig_num)
 {
-    (void)sig_num;
-    rl_replace_line("", 0);
-    write(1, "^C\n", 3);
+	(void)sig_num;
+    printf("^C\n");
     rl_on_new_line();
+    rl_replace_line("", 0);
+    rl_redisplay();
 	// printf("minishell> ");// signal(SIGINT, handler_sigint);
 	// printf("^C\n");
 }
@@ -45,21 +46,3 @@ void	sig_quit_handler(int sig_num)
 	// printf("minishell> ");
 	exit (0);
 }
-
-void	disable_sig(void)
-{
-	struct termios	term_echo_hand;
-
-	if (tcgetattr(STDIN_FILENO, &term_echo_hand) == -1)
-	{
-		printf("tcgetattr\n");
-		exit (0);
-	}
-	term_echo_hand.c_lflag &= ~(ECHOCTL);	
-	if (tcsetattr(STDIN_FILENO, TCSANOW, &term_echo_hand) == -1)
-	{
-		printf("tcsetattr\n");
-		exit (0);
-	}
-}
-

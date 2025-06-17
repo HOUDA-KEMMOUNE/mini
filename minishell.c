@@ -68,7 +68,6 @@ int main(int argc, char **argv, char **envp)
 		// print prompt
 		signal(SIGINT, handler_sigint);
 		signal(SIGQUIT, SIG_IGN); // to ignore CTRL+backslash
-		disable_sig();
 		//"\033[1;34mminishell>\033[0m "
 		line = readline("\033[1;32mminishell>\033[0m "); // use readline to read input line
 		// line = readline("minishell> "); // use readline to read input line
