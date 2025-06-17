@@ -17,6 +17,7 @@ void	handler_sigint(int sig_num)
     (void)sig_num;
     rl_replace_line("", 0);
     write(1, "^C\n", 3);
+    rl_on_new_line();
 	// printf("minishell> ");// signal(SIGINT, handler_sigint);
 	// printf("^C\n");
 }
