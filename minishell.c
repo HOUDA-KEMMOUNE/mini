@@ -48,79 +48,70 @@ int	se_redirections(t_token **token)
 
 int main(int argc, char **argv, char **envp)
 {
-	t_env 		*env_list;
-	t_token 	*tokens;
-	t_token_exc	*tokens_exec;
-	t_echo		*echo_struct;
-	char		*line;
+    t_env       *env_list = NULL;
+    t_token     *tokens = NULL;
+    t_token_exc *tokens_exec = NULL;
+    t_echo      *echo_struct = NULL;
+    char        *line = NULL;
 
-	(void)argc;
-	(void)argv;
-	env_list = create_env_list(envp);
-	init_shlvl(env_list);
-	while (1)
-	{
-		// print prompt
-		signal(SIGINT, handler_sigint);
-		signal(SIGQUIT, SIG_IGN); // to ignore CTRL+backslash
-		disable_sig();
-		//"\033[1;34mminishell>\033[0m "
-		line = readline("\033[1;32mminishell>\033[0m "); // use readline to read input line
-		// line = readline("minishell> "); // use readline to read input line
-		if (!line)
-		{
-			ft_putstr_fd("exit\n", 1); // handle Ctrl+D (EOF)
-			minishell_cleanup(env_list, tokens, tokens_exec, echo_struct);
-    		exit(0);
-		}
-		if (*line == '\0') // skip empty input
-		{
-			free(line);
-			continue;
-		}
-		
-		add_history(line); // save line in history
-		
-		tokens = lexer(line);
-		add_type(&tokens);
-		// while (tokens)
-		// {
-			// 	printf("token->value = %s\n", tokens->value);
-			// 	tokens = tokens->next;
-			// }
-		tokens_exec = tokens_exc_handler(tokens);
-		if (tokens)
-		{
-			if (se_redirections(&tokens) <= 0)
-				continue;
-			parsing(line, &tokens, &echo_struct, env_list);
-			// printf("tokens->value --> %s\n", tokens->value);
-			tokens_exc_redio(tokens, &tokens_exec);
-			if (is_builtin(&tokens_exec) == 1)
-			{
-				path(&tokens_exec);
-				if (tokens_exec->cmd_path)    // <-- Only call if command was found!
-					simple_cmd(tokens, &tokens_exec);
-				free(line);
-				continue; //  continue after non-builtin (prevents running more logic)
-			}
-			t_token *tmp = tokens;
-			while (tmp)
-			{
-				tmp = tmp->next;
-			}
-			if (run_builtin(tokens->value, tokens, &env_list))
-			{
-				free(line);
-				continue;
-			}
-		}
-		free(line);
-		free_token_list(tokens);
-        free_token_exc_list(tokens_exec);
-        free_echo_struct(echo_struct);
+    (void)argc;
+    (void)argv;
+    env_list = create_env_list(envp);
+    init_shlvl(env_list);
+
+    while (1)
+    {
+        // Only set signal handlers in the shell, not in children
+        signal(SIGINT, handler_sigint);
+        signal(SIGQUIT, SIG_IGN); // Ignore CTRL+\ in the shell
+        disable_sig();
+
+        line = readline("\033[1;32mminishell>\033[0m ");
+        if (!line)
+        {
+            ft_putstr_fd("exit\n", 1);
+            minishell_cleanup(env_list, tokens, tokens_exec, echo_struct);
+            exit(0);
+        }
+        if (*line == '\0')
+        {
+            free(line);
+            continue;
+        }
+        add_history(line);
+
+        tokens = lexer(line);
+        add_type(&tokens);
+
+        tokens_exec = tokens_exc_handler(tokens);
+        if (tokens)
+        {
+            if (se_redirections(&tokens) <= 0)
+            {
+                free(line);
+                continue;
+            }
+            parsing(line, &tokens, &echo_struct, env_list);
+            tokens_exc_redio(tokens, &tokens_exec);
+
+            if (is_builtin(&tokens_exec) == 1)
+            {
+                path(&tokens_exec);
+                if (tokens_exec->cmd_path)
+                    simple_cmd(tokens, &tokens_exec);
+            }
+        }
+
+        // Always free all allocated memory for this command
+        if (line) free(line);
+        if (tokens) free_token_list(tokens);
+        if (tokens_exec) free_token_exc_list(tokens_exec);
+        if (echo_struct) free_echo_struct(echo_struct);
+
+        // Set pointers to NULL to avoid double free or invalid access
+        line = NULL;
         tokens = NULL;
         tokens_exec = NULL;
         echo_struct = NULL;
-	}
+    }
 }

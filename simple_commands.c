@@ -81,9 +81,12 @@ void	simple_cmd(t_token *token, t_token_exc **token_cmd)
 		check_fd(token_cmd);
 		execve((*token_cmd)->cmd_path, (*token_cmd)->args, envp);
 		perror("execve failed");
-		free (envp);
+		free_env_array(envp);
 		exit (0);
 	}
 	else if (pid > 0)
+	{
 		waitpid(pid, NULL, 0);
+		free_env_array(envp);
+	}
 }

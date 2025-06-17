@@ -119,6 +119,10 @@ void	print_error(char *msg);
 void	print_error_command(t_token **token);
 void	print_echo_error(void);
 
+
+/*-------------------env-------------------*/
+void free_env_array(char **envp);
+
 /*-------------------Lexer-------------------*/
 t_token	*lexer(char *input);
 void	word_case(char *input, int *i, t_token **token_list);

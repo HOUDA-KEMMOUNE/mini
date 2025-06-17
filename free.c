@@ -58,6 +58,19 @@ void free_token_exc_list(t_token_exc *cmd)
     }
 }
 
+
+void free_env_array(char **envp)
+{
+    int i;
+
+    i = 0;
+    if (!envp)
+        return;
+    while (envp[i])
+        free(envp[i++]);
+    free(envp);
+}
+
 void minishell_cleanup(t_env *env, t_token *tokens, t_token_exc *tokens_exec, t_echo *echo)
 {
     free_env_list(env);
