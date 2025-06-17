@@ -15,13 +15,14 @@
 void	handler_sigint(int sig_num)
 {
 	(void)sig_num;
-    rl_on_new_line();
-    printf("^C\n");
+    printf("\n");
     rl_replace_line("", 0);
+    rl_on_new_line();
     rl_redisplay();
 	// printf("minishell> ");// signal(SIGINT, handler_sigint);
 	// printf("^C\n");
 }
+
 
 void	handler_sigint_child(int sig_num)
 {
