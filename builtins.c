@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 16:30:43 by akemmoun          #+#    #+#             */
-/*   Updated: 2025/06/15 15:25:56 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/06/19 18:49:21 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@ int	run_builtin(char *cmd, t_token *tokens, t_env **env_list)
 	while (arr[i].cmd)
 	{
 		if (strcmp(cmd, arr[i].cmd) == 0)
-			return (arr[i].ptr(tokens, env_list)); // FIXED: pass env_list,
-		not *env_list i++;
+			return (arr[i].ptr(tokens, env_list)); // Call the builtin
+		i++;
 	}
 	return (0); // not a builtin
 }

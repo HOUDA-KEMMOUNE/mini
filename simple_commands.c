@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   simple_commands.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkemmoun <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/01 15:07:23 by hkemmoun          #+#    #+#             */
-/*   Updated: 2025/06/01 15:07:24 by hkemmoun         ###   ########.fr       */
+/*   Updated: 2025/06/19 18:51:29 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,13 +76,13 @@ void	simple_cmd(t_token *token, t_token_exc **token_cmd)
 	signal(SIGQUIT, SIG_IGN); // to ignore CTRL+backslash
 	if (pid == 0)             // child
 	{
-		signal(SIGINT, handler_sigint_child);
-		signal(SIGQUIT, sig_quit_handler); // to ignore CTRL+backslash
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL); // to ignore CTRL+backslash
 		check_fd(token_cmd);
 		execve((*token_cmd)->cmd_path, (*token_cmd)->args, envp);
 		perror("execve failed");
 		free_env_array(envp);
-		exit(0);
+		exit(1);
 	}
 	else if (pid > 0)
 	{
