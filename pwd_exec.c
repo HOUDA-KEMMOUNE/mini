@@ -31,20 +31,20 @@
 // 		ft_putstr_fd("Something is wrong :/\n", 1);
 // }
 
-int pwd(t_token *tokens, t_env **env_list)
+int	pwd(t_token *tokens, t_env **env_list)
 {
-    char path[PATH_MAX];
-    (void)tokens; // unused
-    (void)env_list;    // unused
+	char	path[PATH_MAX];
 
-    if (getcwd(path, PATH_MAX) != NULL)
-    {
-        ft_putstr_fd(path, 1);
-        ft_putstr_fd("\n", 1);
-    }
-    else
-    {
-        ft_putstr_fd("Something is wrong :/\n", 1);
-    }
-    return 0;
+	(void)tokens;   // unused
+	(void)env_list; // unused
+	if (getcwd(path, PATH_MAX) != NULL)
+	{
+		ft_putstr_fd(path, 1);
+		ft_putstr_fd("\n", 1);
+	}
+	else
+	{
+		ft_putstr_fd("Something is wrong :/\n", 1);
+	}
+	return (0);
 }

@@ -12,24 +12,20 @@
 
 #include "minishell.h"
 
-int run_builtin(char *cmd, t_token *tokens, t_env **env_list)
+int	run_builtin(char *cmd, t_token *tokens, t_env **env_list)
 {
-    t_built arr[] = {
-        {"cd", cd},
-        {"pwd", pwd},
-        {"export", export_builtin_adapter},
-        {"unset", unset},
-        {NULL, NULL}
-    };
+	t_built	arr[] = {{"cd", cd}, {"pwd", pwd}, {"export",
+			export_builtin_adapter}, {"unset", unset}, {NULL, NULL}};
+	int		i;
 
-    int i = 0;
-    while (arr[i].cmd)
-    {
-        if (strcmp(cmd, arr[i].cmd) == 0)
-            return arr[i].ptr(tokens, env_list); // FIXED: pass env_list, not *env_list
-        i++;
-    }
-    return 0; // not a builtin
+	i = 0;
+	while (arr[i].cmd)
+	{
+		if (strcmp(cmd, arr[i].cmd) == 0)
+			return (arr[i].ptr(tokens, env_list)); // FIXED: pass env_list,
+		not *env_list i++;
+	}
+	return (0); // not a builtin
 }
 
 // int	count_args(t_token *token)
@@ -41,7 +37,7 @@ int run_builtin(char *cmd, t_token *tokens, t_env **env_list)
 // 		count++;
 // 		token = token->next;
 // 	}
-// 	return count;
+// 	return (count);
 // }
 
 // char	**token_to_args(t_token *token)
@@ -58,5 +54,5 @@ int run_builtin(char *cmd, t_token *tokens, t_env **env_list)
 // 		token = token->next;
 // 	}
 // 	args[i] = NULL;
-// 	return args;
+// 	return (args);
 // }

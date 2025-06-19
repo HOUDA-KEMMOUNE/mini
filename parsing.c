@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void	ft_data_init(t_echo	**echo_struct)
+void	ft_data_init(t_echo **echo_struct)
 {
 	*echo_struct = malloc(sizeof(t_echo));
 	if (!echo_struct)
@@ -40,30 +40,35 @@ void	check_first_token(t_token **token)
 		tmp = *first_token;
 		if (tmp == '|')
 		{
-			write(1, "minishell: parse error near `|'\n", ft_strlen("minishell: parse error near `|'\n"));
+			write(1, "minishell: parse error near `|'\n",
+				ft_strlen("minishell: parse error near `|'\n"));
 			return ;
 		}
 		else if (tmp == '(')
 		{
-			write(1, "minishell: unclosed parenthesis `('\n", ft_strlen("minishell: unclosed parenthesis `('\n"));
+			write(1, "minishell: unclosed parenthesis `('\n",
+				ft_strlen("minishell: unclosed parenthesis `('\n"));
 			return ;
 		}
 		else if (tmp == ')')
 		{
-			write(1, "minishell: unclosed parenthesis `)'\n", ft_strlen("minishell: unclosed parenthesis `)'\n"));
+			write(1, "minishell: unclosed parenthesis `)'\n",
+				ft_strlen("minishell: unclosed parenthesis `)'\n"));
 			return ;
 		}
 		else if (tmp == 39)
 		{
-			write(1, "minishell: parse error near `\''\n", ft_strlen("minishell: unclosed parenthesis `\''\n"));
+			write(1, "minishell: parse error near `\''\n",
+				ft_strlen("minishell: unclosed parenthesis `\''\n"));
 			return ;
 		}
 	}
 	else
 		return ;
-}	
+}
 
-void    parsing(char *input, t_token **token, t_echo **echo_struct, t_env *env_list)
+void	parsing(char *input, t_token **token, t_echo **echo_struct,
+		t_env *env_list)
 {
 	if (!input || !token)
 		return ;

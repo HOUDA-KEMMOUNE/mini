@@ -95,67 +95,69 @@ static void	export_set_var(t_env **env_list, char *key, char *value)
 	}
 	new = malloc(sizeof(t_env));
 	if (!new)
-		return;
+		return ;
 	new->key = ft_strdup(key);
 	if (!new->key)
 	{
 		free(new);
-		return;
+		return ;
 	}
 	new->value = value ? ft_strdup(value) : NULL;
 	if (value && !new->value)
 	{
 		free(new->key);
 		free(new);
-		return;
+		return ;
 	}
 	new->next = *env_list;
 	*env_list = new;
 }
 
-int export_internal(t_token *tokens, t_env **env_list)
+int	export_internal(t_token *tokens, t_env **env_list)
 {
-    t_token *current = tokens->next;
+	t_token	*current;
+	char	*eq;
 
-    if (!current)
-    {
-        export_print_sorted(*env_list);
-        return 0;
-    }
-    while (current)
-    {
-        char *eq = ft_strchr(current->value, '=');
-        if (eq)
-        {
-            *eq = '\0';
-            export_set_var(env_list, current->value, eq + 1);
-            *eq = '=';
-        }
-        else
-        {
-            export_set_var(env_list, current->value, NULL);
-        }
-        current = current->next;
-    }
-    return 0;
+	current = tokens->next;
+	if (!current)
+	{
+		export_print_sorted(*env_list);
+		return (0);
+	}
+	while (current)
+	{
+		eq = ft_strchr(current->value, '=');
+		if (eq)
+		{
+			*eq = '\0';
+			export_set_var(env_list, current->value, eq + 1);
+			*eq = '=';
+		}
+		else
+		{
+			export_set_var(env_list, current->value, NULL);
+		}
+		current = current->next;
+	}
+	return (0);
 }
 
-t_env *export(t_token *tokens, t_env *env_list)
+t_env	*export(t_token *tokens, t_env *env_list)
 {
 	export_internal(tokens, &env_list);
-    return env_list;
+	return (env_list);
 }
 
-int export_wrapper(t_token *tokens, t_env **env_list)
+int	export_wrapper(t_token *tokens, t_env **env_list)
 {
-    t_env *new_head = export(tokens, *env_list); // pass current head
-    if (new_head != *env_list)
-        *env_list = new_head; // update the caller's pointer
-    return 0;
+	t_env *new_head = export(tokens, *env_list); // pass current head
+	if (new_head != *env_list)
+		*env_list = new_head; // update the caller's pointer
+	return (0);
 }
 
-int export_builtin_adapter(t_token *tokens, t_env **env_list)
+int	export_builtin_adapter(t_token *tokens, t_env **env_list)
 {
-    export_internal(tokens, env_list); // uses t_env **
-    return 0;
+	export_internal(tokens, env_list); // uses t_env **
+	return (0);
 }

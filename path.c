@@ -14,7 +14,7 @@
 
 char	*find_path(void)
 {
-	t_env *env;
+	t_env	*env;
 	char	*tmp;
 
 	env = *env_func();
@@ -46,13 +46,13 @@ char	**split_path(void)
 int	is_builtin(t_token_exc **token_list)
 {
 	if ((ft_strncmp((*token_list)->cmd, "echo", 4) == 0)
-	|| (ft_strncmp((*token_list)->cmd, "cd", 2) == 0)
-	|| (ft_strncmp((*token_list)->cmd, "pwd", 4) == 0)
-	|| (ft_strncmp((*token_list)->cmd, "export", 6) == 0)
-	|| (ft_strncmp((*token_list)->cmd, "unset", 5) == 0)
-	|| (ft_strncmp((*token_list)->cmd, "env", 3) == 0)
-	|| (ft_strncmp((*token_list)->cmd, "exit", 4) == 0))
-		return (0); //builtin
+		|| (ft_strncmp((*token_list)->cmd, "cd", 2) == 0)
+		|| (ft_strncmp((*token_list)->cmd, "pwd", 4) == 0)
+		|| (ft_strncmp((*token_list)->cmd, "export", 6) == 0)
+		|| (ft_strncmp((*token_list)->cmd, "unset", 5) == 0)
+		|| (ft_strncmp((*token_list)->cmd, "env", 3) == 0)
+		|| (ft_strncmp((*token_list)->cmd, "exit", 4) == 0))
+		return (0); // builtin
 	else
 		return (1);
 }

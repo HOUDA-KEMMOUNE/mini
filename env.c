@@ -14,18 +14,18 @@
 
 t_env	**env_func(void)
 {
-	static t_env *env;
-	return(&env);
+	static t_env	*env;
+
+	return (&env);
 }
 
 t_env	*create_env_list(char **envp)
 {
-	// t_env	*env_list;
 	t_env	*new;
 	char	*equal_sign;
 
+	// t_env	*env_list;
 	// env_list = NULL;
-
 	while (*envp)
 	{
 		equal_sign = ft_strchr(*envp, '=');
@@ -44,7 +44,7 @@ t_env	*create_env_list(char **envp)
 	return (*env_func());
 }
 
-char *get_env_value(t_env *env, char *key)
+char	*get_env_value(t_env *env, char *key)
 {
 	while (env)
 	{
@@ -57,9 +57,11 @@ char *get_env_value(t_env *env, char *key)
 
 void	init_shlvl(t_env *env)
 {
-	t_env	*tmp = env;
+	t_env	*tmp;
 	int		lvl;
+	t_env	*new;
 
+	tmp = env;
 	while (tmp)
 	{
 		if (ft_strcmp(tmp->key, "SHLVL") == 0)
@@ -72,9 +74,8 @@ void	init_shlvl(t_env *env)
 		}
 		tmp = tmp->next;
 	}
-
 	// If SHLVL wasn't found, create it with value "1"
-	t_env *new = malloc(sizeof(t_env));
+	new = malloc(sizeof(t_env));
 	if (!new)
 		return ;
 	new->key = ft_strdup("SHLVL");
@@ -83,18 +84,20 @@ void	init_shlvl(t_env *env)
 	ft_envadd_back(env_func(), new);
 }
 
-void get_env(t_env *env_list)
+void	get_env(t_env *env_list)
 {
-    t_env *tmp = env_list;
-    while (tmp)
-    {
-        if (tmp->value)
-        {
-            ft_putstr_fd(tmp->key, 1);
-            ft_putstr_fd("=", 1);
-            ft_putstr_fd(tmp->value, 1);
-            ft_putstr_fd("\n", 1);
-        }
-        tmp = tmp->next;
-    }
+	t_env	*tmp;
+
+	tmp = env_list;
+	while (tmp)
+	{
+		if (tmp->value)
+		{
+			ft_putstr_fd(tmp->key, 1);
+			ft_putstr_fd("=", 1);
+			ft_putstr_fd(tmp->value, 1);
+			ft_putstr_fd("\n", 1);
+		}
+		tmp = tmp->next;
+	}
 }

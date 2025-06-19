@@ -51,13 +51,15 @@ void	tokens_exc_redio(t_token *token, t_token_exc **token_list)
 		{
 			token_tmp = token_tmp->next;
 			(*token_list)->file = token_tmp->value;
-			(*token_list)->fd_out = open(token_tmp->value, O_CREAT | O_WRONLY | O_TRUNC, 0640);
+			(*token_list)->fd_out = open(token_tmp->value,
+					O_CREAT | O_WRONLY | O_TRUNC, 0640);
 		}
 		else if (token_tmp->type == APPEND)
 		{
 			token_tmp = token_tmp->next;
 			(*token_list)->file = token_tmp->value;
-			(*token_list)->fd_out = open(token_tmp->value, O_CREAT | O_WRONLY | O_APPEND, 0640);
+			(*token_list)->fd_out = open(token_tmp->value,
+					O_CREAT | O_WRONLY | O_APPEND, 0640);
 		}
 		else if (token_tmp->type == REDIR_IN)
 		{

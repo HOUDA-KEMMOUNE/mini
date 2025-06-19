@@ -12,44 +12,45 @@
 
 #include "minishell.h"
 
-char *expand_variable(char *value, t_env *env_list)
+char	*expand_variable(char *value, t_env *env_list)
 {
-    char *dollar;
-    char *var_name;
-    char *env_value;
-    char *expanded_value;
-	char *key;
-    size_t prefix_len;
-	size_t var_len;
+	char	*dollar;
+	char	*var_name;
+	char	*env_value;
+	char	*expanded_value;
+	char	*key;
+	size_t	prefix_len;
+	size_t	var_len;
 
-    dollar = ft_strchr(value, '$');
-    if (!dollar)
+	dollar = ft_strchr(value, '$');
+	if (!dollar)
 	{
-        return (ft_strdup(value));
+		return (ft_strdup(value));
 	}
 	prefix_len = dollar - value;
-    var_name = dollar + 1;
-    var_len = 0;
-    while (var_name[var_len] && (ft_isalnum(var_name[var_len]) || var_name[var_len] == '_'))
+	var_name = dollar + 1;
+	var_len = 0;
+	while (var_name[var_len] && (ft_isalnum(var_name[var_len])
+			|| var_name[var_len] == '_'))
 	{
-        var_len++;
+		var_len++;
 	}
 	key = ft_substr(var_name, 0, var_len);
 	env_value = get_env_value(env_list, key);
 	free(key);
-	expanded_value = malloc(prefix_len + ft_strlen(env_value) + ft_strlen(dollar + var_len + 1) + 1);
-
-    if (!expanded_value)
-        return NULL;
-
-    ft_strlcpy(expanded_value, value, prefix_len + 1);
-    ft_strlcat(expanded_value, env_value, prefix_len + ft_strlen(env_value) + 1);
-    ft_strlcat(expanded_value, var_name + var_len, prefix_len + ft_strlen(env_value) + ft_strlen(var_name + var_len) + 1);
-
-    return (expanded_value);
+	expanded_value = malloc(prefix_len + ft_strlen(env_value) + ft_strlen(dollar
+				+ var_len + 1) + 1);
+	if (!expanded_value)
+		return (NULL);
+	ft_strlcpy(expanded_value, value, prefix_len + 1);
+	ft_strlcat(expanded_value, env_value, prefix_len + ft_strlen(env_value)
+		+ 1);
+	ft_strlcat(expanded_value, var_name + var_len, prefix_len
+		+ ft_strlen(env_value) + ft_strlen(var_name + var_len) + 1);
+	return (expanded_value);
 }
 
-void print_tokens(t_token *tokens)
+void	print_tokens(t_token *tokens)
 {
 	while (tokens)
 	{
@@ -58,17 +59,18 @@ void print_tokens(t_token *tokens)
 	}
 }
 
-t_token *expander(t_token *token_list, t_env *env_list)
+t_token	*expander(t_token *token_list, t_env *env_list)
 {
-	t_token *curr;
-	char *expanded;
+	t_token	*curr;
+	char	*expanded;
 
 	curr = token_list;
 	while (curr)
 	{
 		if (curr->type == ARG)
 		{
-			if ((curr->quote == 0 || curr->quote == '"') && ft_strchr(curr->value, '$'))
+			if ((curr->quote == 0 || curr->quote == '"')
+				&& ft_strchr(curr->value, '$'))
 			{
 				expanded = expand_variable(curr->value, env_list);
 				free(curr->value);
@@ -81,17 +83,18 @@ t_token *expander(t_token *token_list, t_env *env_list)
 	return (token_list);
 }
 
-t_token *echo_expander(t_token *token_list, t_env *env_list, int fd)
+t_token	*echo_expander(t_token *token_list, t_env *env_list, int fd)
 {
-	t_token *curr;
-	char *expanded;
+	t_token	*curr;
+	char	*expanded;
 
 	curr = token_list;
 	while (curr)
 	{
 		if (curr->type == ARG)
 		{
-			if ((curr->quote == 0 || curr->quote == '"') && ft_strchr(curr->value, '$'))
+			if ((curr->quote == 0 || curr->quote == '"')
+				&& ft_strchr(curr->value, '$'))
 			{
 				expanded = expand_variable(curr->value, env_list);
 				free(curr->value);

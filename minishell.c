@@ -20,14 +20,17 @@ int	se_redirections(t_token **token)
 	token_tmp = (*token);
 	while (token_tmp)
 	{
-		if (token_tmp->type == REDIR_IN || token_tmp->type == REDIR_OUT || token_tmp->type == APPEND || token_tmp->type == HEREDOC)
+		if (token_tmp->type == REDIR_IN || token_tmp->type == REDIR_OUT
+			|| token_tmp->type == APPEND || token_tmp->type == HEREDOC)
 		{
 			token_tmp = token_tmp->next;
 			if (token_tmp == NULL)
 				return (-1);
-			if (token_tmp->type == REDIR_IN || token_tmp->type == REDIR_OUT || token_tmp->type == APPEND || token_tmp->type == HEREDOC)
+			if (token_tmp->type == REDIR_IN || token_tmp->type == REDIR_OUT
+				|| token_tmp->type == APPEND || token_tmp->type == HEREDOC)
 			{
-				ft_putstr_fd("minishell: syntax error near unexpected token `", 1);
+				ft_putstr_fd("minishell: syntax error near unexpected token `",
+					1);
 				ft_putstr_fd(token_tmp->value, 1);
 				ft_putstr_fd("'\n", 1);
 				return (0);
@@ -46,10 +49,10 @@ int	se_redirections(t_token **token)
 // 		return (1);
 // }
 
-int main(int argc, char **argv, char **envp)
+int	main(int argc, char **argv, char **envp)
 {
-	t_env 		*env_list;
-	t_token 	*tokens;
+	t_env		*env_list;
+	t_token		*tokens;
 	t_token_exc	*tokens_exec;
 	t_echo		*echo_struct;
 	char		*line;
@@ -69,7 +72,8 @@ int main(int argc, char **argv, char **envp)
 		signal(SIGINT, handler_sigint);
 		signal(SIGQUIT, SIG_IGN); // to ignore CTRL+backslash
 		//"\033[1;34mminishell>\033[0m "
-		line = readline("\033[1;32mminishell>\033[0m "); // use readline to read input line
+		line = readline("\033[1;32mminishell>\033[0m ");
+		// use readline to read input line
 		// line = readline("minishell> "); // use readline to read input line
 		if (!line)
 		{
@@ -78,19 +82,20 @@ int main(int argc, char **argv, char **envp)
 			exit(0);
 		}
 		if (*line == '\0')
-			{ free(line); continue; }
+		{
+			free(line);
+			continue ;
+		}
 		add_history(line);
 		tokens = lexer(line);
 		add_type(&tokens);
 		tokens_exec = tokens_exc_handler(tokens);
-
 		if (tokens)
 		{
 			if (se_redirections(&tokens) <= 0)
 				goto cleanup;
 			parsing(line, &tokens, &echo_struct, env_list);
 			tokens_exc_redio(tokens, &tokens_exec);
-
 			if (is_builtin(&tokens_exec) == 1)
 			{
 				path(&tokens_exec);
@@ -101,7 +106,7 @@ int main(int argc, char **argv, char **envp)
 			if (run_builtin(tokens->value, tokens, &env_list))
 				goto cleanup;
 		}
-		cleanup:
+	cleanup:
 		free(line);
 		free_token_list(tokens);
 		free_token_exc_list(tokens_exec);

@@ -12,29 +12,25 @@
 
 #include "minishell.h"
 
-int is_notForbidden_char(char c, int is_first)
+int	is_notForbidden_char(char c, int is_first)
 {
-    if (is_first)
+	if (is_first)
 	{
-        // First character: only letter or underscore
-        if ((c >= 'a' && c <= 'z') ||
-            (c >= 'A' && c <= 'Z') ||
-            (c == '_'))
-            return 1;
-        else
-            return 0;
-    } 
-	else 
+		// First character: only letter or underscore
+		if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c == '_'))
+			return (1);
+		else
+			return (0);
+	}
+	else
 	{
-        // Other characters: letter, digit, or underscore
-        if ((c >= '0' && c <= '9') ||
-            (c >= 'a' && c <= 'z') ||
-            (c >= 'A' && c <= 'Z') ||
-            (c == '_'))
-            return 1;
-        else
-            return 0;
-    }
+		// Other characters: letter, digit, or underscore
+		if ((c >= '0' && c <= '9') || (c >= 'a' && c <= 'z') || (c >= 'A'
+				&& c <= 'Z') || (c == '_'))
+			return (1);
+		else
+			return (0);
+	}
 }
 
 // static void    check_var(t_token **token)
@@ -60,7 +56,7 @@ int is_notForbidden_char(char c, int is_first)
 // 		{
 // 			ft_putstr_fd("export: `=': not a valid identifier\n", 1);
 // 			return ;
-// 		}		
+// 		}
 // 		else if (is_notForbidden_char(var[i]) == 0)
 // 		{
 // 			ft_putstr_fd("export: not an identifier: ", 1);
@@ -72,37 +68,43 @@ int is_notForbidden_char(char c, int is_first)
 // 	}
 // }
 
-static void check_var(t_token **token)
+static void	check_var(t_token **token)
 {
-    char *var = (*token)->value;
-    char *eq = ft_strchr(var, '=');
+	char	*var;
+	char	*eq;
 
-    if (eq) {
-        // Temporarily split at '='
-        *eq = '\0';
-    }
-
-    // Check first character
-    if (!is_notForbidden_char(var[0], 1)) {
-        ft_putstr_fd("export: `", 1);
-        ft_putstr_fd(var, 1);
-        ft_putstr_fd("': not a valid identifier\n", 1);
-        if (eq) *eq = '=';
-        return;
-    }
-
-    // Check remaining characters
-    for (int i = 1; var[i]; i++) {
-        if (!is_notForbidden_char(var[i], 0)) {
-            ft_putstr_fd("export: `", 1);
-            ft_putstr_fd(var, 1);
-            ft_putstr_fd("': not a valid identifier\n", 1);
-            if (eq) *eq = '=';
-            return;
-        }
-    }
-
-    if (eq) *eq = '=';
+	var = (*token)->value;
+	eq = ft_strchr(var, '=');
+	if (eq)
+	{
+		// Temporarily split at '='
+		*eq = '\0';
+	}
+	// Check first character
+	if (!is_notForbidden_char(var[0], 1))
+	{
+		ft_putstr_fd("export: `", 1);
+		ft_putstr_fd(var, 1);
+		ft_putstr_fd("': not a valid identifier\n", 1);
+		if (eq)
+			*eq = '=';
+		return ;
+	}
+	// Check remaining characters
+	for (int i = 1; var[i]; i++)
+	{
+		if (!is_notForbidden_char(var[i], 0))
+		{
+			ft_putstr_fd("export: `", 1);
+			ft_putstr_fd(var, 1);
+			ft_putstr_fd("': not a valid identifier\n", 1);
+			if (eq)
+				*eq = '=';
+			return ;
+		}
+	}
+	if (eq)
+		*eq = '=';
 }
 
 // void	ft_export(t_token **token)

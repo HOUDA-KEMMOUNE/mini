@@ -19,8 +19,8 @@ static int	ft_isalpha_exit(char *str)
 	i = 0;
 	while (str[i])
 	{
-		if ((str[i] >= 'a' && str[i] <= 'z') ||
-			(str[i] >= 'A' && str[i] <= 'Z'))
+		if ((str[i] >= 'a' && str[i] <= 'z') || (str[i] >= 'A'
+				&& str[i] <= 'Z'))
 			return (0); // l2omoor ba2at bil fachal ❌
 		else
 			i++;
@@ -38,7 +38,7 @@ void	ft_exit(t_token **token)
 	if ((!token) || (ft_strncmp((*token)->value, "exit", 4) != 0))
 		return ;
 	if (token_tmp->next == NULL)
-		exit (0);
+		exit(0);
 	token_tmp = token_tmp->next;
 	str = token_tmp->value;
 	if (ft_isalpha_exit(str) == 0)
@@ -46,7 +46,7 @@ void	ft_exit(t_token **token)
 		ft_putstr_fd("minishell: exit: ", 2);
 		ft_putstr_fd(str, 2);
 		ft_putstr_fd(": numeric argument required\n", 2);
-		exit (2);
+		exit(2);
 	}
 	else if (token_tmp->next != NULL)
 	{
@@ -54,5 +54,5 @@ void	ft_exit(t_token **token)
 		return ;
 	}
 	num = ft_atoi(str);
-	exit (num);
+	exit(num);
 }

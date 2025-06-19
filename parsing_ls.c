@@ -17,7 +17,7 @@ void	ft_count(char *s, int *count)
 	while (*s)
 	{
 		if (*s == '.')
-            *count = *count + 1;
+			*count = *count + 1;
 		else
 			return ;
 		s++;
@@ -26,7 +26,7 @@ void	ft_count(char *s, int *count)
 
 void	ft_count_dotes(t_token **token)
 {
-	t_token *token_tmp;
+	t_token	*token_tmp;
 	char	*s;
 	int		count;
 

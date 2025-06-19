@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal_hand.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkemmoun <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 15:48:14 by hkemmoun          #+#    #+#             */
-/*   Updated: 2025/05/18 15:48:15 by hkemmoun         ###   ########.fr       */
+/*   Updated: 2025/06/19 17:45:31 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,35 +15,34 @@
 void	handler_sigint(int sig_num)
 {
 	(void)sig_num;
-    printf("\n");
-    rl_replace_line("", 0);
-    rl_on_new_line();
-    rl_redisplay();
+	printf("\n");
+	rl_replace_line("", 0);
+	rl_on_new_line();
+	rl_redisplay();
 	// printf("minishell> ");// signal(SIGINT, handler_sigint);
 	// printf("^C\n");
 }
 
-
 void	handler_sigint_child(int sig_num)
 {
 	(void)sig_num;
-    // printf("\n^C");
-    rl_on_new_line();
-    rl_replace_line("", 0);
-    rl_redisplay();
+	// printf("\n^C");
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
 	printf("^C\n");
 	printf("minishell> ");
-	exit (0);
+	exit(0);
 }
 
 void	sig_quit_handler(int sig_num)
 {
 	(void)sig_num;
-    printf("\n^C");
-    // rl_on_new_line();
-    // rl_replace_line("", 0);
-    // rl_redisplay();
+	printf("\n^C");
+	// rl_on_new_line();
+	// rl_replace_line("", 0);
+	// rl_redisplay();
 	printf("^\'Quit (core dumped)\n");
 	// printf("minishell> ");
-	exit (0);
+	exit(0);
 }

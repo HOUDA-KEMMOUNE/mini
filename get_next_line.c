@@ -14,8 +14,8 @@
 
 char	*get_line(char *buffer, char *rest, int fd)
 {
-	ssize_t		read_ret;
-	char		*tmp;
+	ssize_t	read_ret;
+	char	*tmp;
 
 	read_ret = 1;
 	while (read_ret > 0)
@@ -70,10 +70,9 @@ char	*get_next_line(int fd)
 	if (!buffer)
 		return (NULL);
 	line = get_line(buffer, rest, fd);
-	free (buffer);
+	free(buffer);
 	if (!line)
 		return (NULL);
 	rest = rest_char(line);
 	return (line);
 }
-

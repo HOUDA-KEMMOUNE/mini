@@ -14,13 +14,13 @@
 
 static void	after_dollar(char *var)
 {
-	int		i;
+	int	i;
 
 	i = 0;
 	while (var[i])
 	{
 		if ((var[i] >= 'a' && var[i] <= 'z') || (var[i] >= 'A' && var[i] <= 'Z')
-		|| (var[i] >= '0' && var[i] <= '9'))
+			|| (var[i] >= '0' && var[i] <= '9'))
 			i++;
 		else if (var[i] == '(' || var[i] == ')')
 		{
@@ -52,8 +52,8 @@ static void	check_var(t_token **token)
 
 	var = (*token)->value;
 	i = 0;
-	if ((var[i] == '_') || (var[i] >= 'a' && var[i] <= 'z')
-	|| (var[i] >= 'A' && var[i] <= 'Z'))
+	if ((var[i] == '_') || (var[i] >= 'a' && var[i] <= 'z') || (var[i] >= 'A'
+			&& var[i] <= 'Z'))
 		i++;
 	else if (var[i] == '$')
 	{

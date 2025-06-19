@@ -14,24 +14,23 @@
 
 void	add_token(t_token **head, char *value, t_token_type type, char quote)
 {
-	t_token *new;
-	(void)type;
+	t_token	*new;
+	t_token	*temp;
 
-	new = malloc (sizeof(t_token));
+	(void)type;
+	new = malloc(sizeof(t_token));
 	if (!new)
 		return ;
-	
 	// printf("value ---> %s\n", value);
 	new->value = ft_strdup(value);
 	// new->type = type;
 	new->quote = quote;
 	new->next = NULL;
-
 	if (*head == NULL)
 		*head = new;
 	else
 	{
-		t_token *temp = *head;
+		temp = *head;
 		while (temp->next)
 			temp = temp->next;
 		temp->next = new;
@@ -40,9 +39,9 @@ void	add_token(t_token **head, char *value, t_token_type type, char quote)
 
 void	word_case(char *input, int *i, t_token **token_list)
 {
-	int start;
-	char *word;
-	char quote;
+	int		start;
+	char	*word;
+	char	quote;
 
 	quote = 0;
 	if (input[*i] == '"' || input[*i] == '\'')
@@ -66,8 +65,8 @@ void	word_case(char *input, int *i, t_token **token_list)
 	else
 	{
 		start = *i;
-		while (input[*i] && input[*i] != ' ' && input[*i] != '\t' && \
-		input[*i] !='|' && input[*i] != '>' && input[*i] != '<')
+		while (input[*i] && input[*i] != ' ' && input[*i] != '\t'
+			&& input[*i] != '|' && input[*i] != '>' && input[*i] != '<')
 			(*i)++;
 		word = ft_substr(input, start, *i - start);
 		add_token(token_list, word, WORD, 0);
@@ -77,10 +76,11 @@ void	word_case(char *input, int *i, t_token **token_list)
 
 void	add_type(t_token **token_list)
 {
-	static t_meta_char	arr[] = {{"|", PIPE}, {">", REDIR_OUT}, {"<", REDIR_IN}, {">>", APPEND}, {"<<", HEREDOC}};	
-	int		(i), (flag);
-	t_token	*head;
+	static t_meta_char	arr[] = {{"|", PIPE}, {">", REDIR_OUT}, {"<", REDIR_IN},
+			{">>", APPEND}, {"<<", HEREDOC}};
+	t_token				*head;
 
+	int(i), (flag);
 	i = 0;
 	flag = 0;
 	head = (*token_list);
@@ -106,8 +106,8 @@ void	add_type(t_token **token_list)
 void	char_to_str(char c, int n, t_token **token_list)
 {
 	char	str[3];
-	// char	*result;
 
+	// char	*result;
 	if (n == 0)
 	{
 		str[0] = c;
@@ -124,21 +124,24 @@ void	char_to_str(char c, int n, t_token **token_list)
 	// return (result);
 }
 
-t_token *lexer(char *input)
+t_token	*lexer(char *input)
 {
-	t_token *token_list;
-	int 	i;
-	// char	*str;
+	t_token	*token_list;
+	int		i;
 
+	// char	*str;
 	i = 0;
 	token_list = NULL;
 	while (input[i])
 	{
 		while (input[i] == ' ' || input[i] == '\t')
 			i++;
-		if (input[i] == '|' || input[i] == '>' || input[i] == '<' || (input[i] == '>' && input[i + 1] == '>') || (input[i] == '<' && input[i + 1] == '<'))
+		if (input[i] == '|' || input[i] == '>' || input[i] == '<'
+			|| (input[i] == '>' && input[i + 1] == '>') || (input[i] == '<'
+				&& input[i + 1] == '<'))
 		{
-			if ((input[i] == '>' && input[i + 1] == '>') || (input[i] == '<' && input[i + 1] == '<'))
+			if ((input[i] == '>' && input[i + 1] == '>') || (input[i] == '<'
+					&& input[i + 1] == '<'))
 				char_to_str(input[i], 1, &token_list);
 			else
 				char_to_str(input[i], 0, &token_list);
@@ -173,7 +176,7 @@ t_token *lexer(char *input)
 // 				add_token(&token_list, ">>", APPEND, 0);
 // 				i += 2;
 // 			}
-// 			else 
+// 			else
 // 			{
 // 				add_token(&token_list, ">", REDIR_OUT, 0);
 // 				i++;
@@ -186,7 +189,7 @@ t_token *lexer(char *input)
 // 				add_token(&token_list, "<<", HEREDOC, 0);
 // 				i += 2;
 // 			}
-// 			else 
+// 			else
 // 			{
 // 				add_token(&token_list, "<", REDIR_IN, 0);
 // 				i++;
@@ -200,10 +203,11 @@ t_token *lexer(char *input)
 
 int	syntax_err_msg(t_token **token, t_token_exc **commande)
 {
-	ft_putstr_fd("minishell: syntax error near unexpected token `", (*commande)->fd_out);
+	ft_putstr_fd("minishell: syntax error near unexpected token `",
+		(*commande)->fd_out);
 	ft_putstr_fd((*token)->value, (*commande)->fd_out);
 	ft_putstr_fd("'\n", (*commande)->fd_out);
-	return 1;
+	return (1);
 }
 // void	check_cmd_type(t_token **token, t_token_exc **commande)
 // {
@@ -218,7 +222,7 @@ int	syntax_err_msg(t_token **token, t_token_exc **commande)
 
 void	retype_lexer(t_token **token, t_token_exc **commande)
 {
-	int		i;
+	int	i;
 
 	if (!token || !(*token) || !commande || !(*commande))
 		return ;
@@ -227,7 +231,8 @@ void	retype_lexer(t_token **token, t_token_exc **commande)
 	{
 		if (((*token)->type == WORD) && (i == 0))
 			(*token)->type = CMD;
-		else if (((*token)->type == REDIR_IN) || ((*token)->type == REDIR_OUT) || ((*token)->type == APPEND))
+		else if (((*token)->type == REDIR_IN) || ((*token)->type == REDIR_OUT)
+			|| ((*token)->type == APPEND))
 		{
 			(*token) = (*token)->next;
 			if ((*token)->type == WORD)

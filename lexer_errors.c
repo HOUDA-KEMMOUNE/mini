@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int is_quote_closed(char *input, char quote, int start)
+int	is_quote_closed(char *input, char quote, int start)
 {
 	while (input[start])
 	{
@@ -23,7 +23,7 @@ int is_quote_closed(char *input, char quote, int start)
 	return (0);
 }
 
-void print_error(char *msg)
+void	print_error(char *msg)
 {
 	ft_putstr_fd("Lexer error: ", 2);
 	ft_putstr_fd(msg, 2);

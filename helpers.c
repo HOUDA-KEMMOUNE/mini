@@ -34,14 +34,14 @@ int	ft_strcmp(const char *s1, const char *s2)
 
 void	ft_envadd_back(t_env **lst, t_env *new)
 {
-	t_env *temp;
+	t_env	*temp;
 
 	if (!lst || !new)
-		return;
+		return ;
 	if (*lst == NULL)
 	{
 		*lst = new;
-		return;
+		return ;
 	}
 	temp = *lst;
 	while (temp->next)

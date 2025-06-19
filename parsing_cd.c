@@ -39,7 +39,7 @@
 // 		ft_putstr_fd("minishell: cd: too many arguments\n", 2);
 // 		return ;
 // 	}
-	
+
 // 	if (check_commande(token_tmp->value) == 0)
 // 	{
 // 		ft_putstr_fd("minishell: cd: ", 1);
@@ -63,39 +63,33 @@
 // 	ft_count_dotes(token);
 // }
 
-void ft_cd(t_token **token, t_env *env_list)
+void	ft_cd(t_token **token, t_env *env_list)
 {
-    t_token *token_tmp;
-    int arg_count = 0;
-    t_token *arg_ptr;
+	t_token	*token_tmp;
+	int		arg_count;
+	t_token	*arg_ptr;
+
+	arg_count = 0;
 	(void)env_list;
-
-    if ((!token) || (ft_strcmp((*token)->value, "cd") != 0))
-        return;
-
-    token_tmp = (*token);
-    if (token_tmp->next == NULL)
-        return;
-
-    // Count args
-    arg_ptr = token_tmp->next;
-    while (arg_ptr && arg_ptr->type == WORD)
-    {
-        arg_count++;
-        arg_ptr = arg_ptr->next;
-    }
-
-    if (arg_count > 1)
-        return; // Just return, error handled elsewhere
-
-    token_tmp = token_tmp->next;
-
-    // Basic check_command calls but no error printing here
-    if (check_commande(token_tmp->value) == 0)
-        return; // No such file or directory error handled elsewhere
-
-    if (check_commande(token_tmp->value) == 4)
-        return; // No such file or directory error handled elsewhere
-
-    ft_count_dotes(token);
+	if ((!token) || (ft_strcmp((*token)->value, "cd") != 0))
+		return ;
+	token_tmp = (*token);
+	if (token_tmp->next == NULL)
+		return ;
+	// Count args
+	arg_ptr = token_tmp->next;
+	while (arg_ptr && arg_ptr->type == WORD)
+	{
+		arg_count++;
+		arg_ptr = arg_ptr->next;
+	}
+	if (arg_count > 1)
+		return ; // Just return, error handled elsewhere
+	token_tmp = token_tmp->next;
+	// Basic check_command calls but no error printing here
+	if (check_commande(token_tmp->value) == 0)
+		return ; // No such file or directory error handled elsewhere
+	if (check_commande(token_tmp->value) == 4)
+		return ; // No such file or directory error handled elsewhere
+	ft_count_dotes(token);
 }

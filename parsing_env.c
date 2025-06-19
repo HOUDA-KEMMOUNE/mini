@@ -17,7 +17,7 @@ static void	ft_count_env(char *s, int *count)
 	while (*s)
 	{
 		if (*s == '.')
-            *count = *count + 1;
+			*count = *count + 1;
 		else
 			return ;
 		s++;
@@ -26,7 +26,7 @@ static void	ft_count_env(char *s, int *count)
 
 static void	ft_count_dotes_env(t_token **token)
 {
-	t_token *token_tmp;
+	t_token	*token_tmp;
 	char	*s;
 	int		count;
 
@@ -64,7 +64,6 @@ void	ft_env(t_token **token, t_env *env_list)
 
 	if ((!token) || (ft_strcmp((*token)->value, "env") != 0))
 		return ;
-
 	token_tmp = (*token)->next;
 	if (!token_tmp)
 	{
@@ -73,7 +72,6 @@ void	ft_env(t_token **token, t_env *env_list)
 	}
 	if (ft_strncmp(token_tmp->value, "cd", 2) == 0)
 	{
-
 		ft_putstr_fd("env: ‘", 1);
 		ft_putstr_fd(token_tmp->value, 1);
 		ft_putstr_fd("’: No such file or directory\n", 1);
