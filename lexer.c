@@ -142,9 +142,15 @@ t_token	*lexer(char *input)
 		{
 			if ((input[i] == '>' && input[i + 1] == '>') || (input[i] == '<'
 					&& input[i + 1] == '<'))
+			{
 				char_to_str(input[i], 1, &token_list);
+				i++;
+			}
 			else
+			{
 				char_to_str(input[i], 0, &token_list);
+				i++;
+			}
 			i++;
 		}
 		else

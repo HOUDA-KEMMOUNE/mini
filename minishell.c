@@ -56,7 +56,6 @@ int	main(int argc, char **argv, char **envp)
 	t_token_exc	*tokens_exec;
 	t_echo		*echo_struct;
 	char		*line;
-	int i; 
 
 	(void)argc;
 	(void)argv;
@@ -74,10 +73,6 @@ int	main(int argc, char **argv, char **envp)
 		signal(SIGQUIT, SIG_IGN); // to ignore CTRL+backslash
 		//"\033[1;34mminishell>\033[0m "
 		line = readline("\033[1;32mminishell>\033[0m ");
-		char **split = ft_split(, ' ');
-		i = 0;
-		while (split[i])
-			i++;
 		if (!line)
 		{
 			ft_putstr_fd("exit\n", 1);
@@ -105,6 +100,7 @@ int	main(int argc, char **argv, char **envp)
 			if (se_redirections(&tokens) <= 0)
 				goto cleanup;
 			parsing(line, &tokens, &echo_struct, env_list);
+			heredoc(&tokens, &tokens_exec);
 			tokens_exc_redio(tokens, &tokens_exec);
 			if (is_builtin(&tokens_exec) == 1)
 			{

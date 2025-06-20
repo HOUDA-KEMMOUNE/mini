@@ -39,6 +39,7 @@ typedef enum e_token_type
 	WORD,
 	FILE_NAME,
 	CMD,
+	DELIMITER,
 	ARG,
 	PIPE,
 	REDIR_IN,
@@ -84,6 +85,7 @@ typedef struct s_token_exc
 	char				*cmd_path;
 	char				**args;
 	char				*file;
+	char				*delimiter;
 	int					fd_in;
 	int					fd_out;
 	// t_token_type		type;
@@ -227,5 +229,9 @@ void					check_fd(t_token_exc **token_cmd);
 char					**env_to_array(t_env *env_list);
 // void	env_to_array_helper(t_env *env_list);
 int						env_size(t_env *env_list);
+
+/*------------heredoc---------------*/
+void	heredoc(t_token **token, t_token_exc **command);
+int		check_heredoc(t_token **token, t_token_exc **command);
 
 #endif
