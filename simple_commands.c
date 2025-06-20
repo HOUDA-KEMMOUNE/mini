@@ -86,7 +86,16 @@ void	simple_cmd(t_token *token, t_token_exc **token_cmd)
 	}
 	else if (pid > 0)
 	{
-		waitpid(pid, NULL, 0);
+		int status;
+		waitpid(pid, &status, 0);
 		free_env_array(envp);
+
+		if (WIFSIGNALED(status)) {
+			int sig = WTERMSIG(status);
+			if (sig == SIGINT)
+				write(1, "\n", 1); // print newline (like bash)
+			else if (sig == SIGQUIT)
+				write(1, "Quit (core dumped)\n", 19); // print quit message
+		}
 	}
 }

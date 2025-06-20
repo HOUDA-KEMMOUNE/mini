@@ -89,6 +89,7 @@ int	main(int argc, char **argv, char **envp)
 		add_history(line);
 		tokens = lexer(line);
 		add_type(&tokens);
+		tokens = expander(tokens, env_list);
 		tokens_exec = tokens_exc_handler(tokens);
 		if (tokens)
 		{

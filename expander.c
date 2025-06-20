@@ -12,6 +12,29 @@
 
 #include "minishell.h"
 
+char *expand_pid_special(const char *value)
+{
+    const char *dollar = strchr(value, '$');
+    if (!dollar || dollar[1] != '$')
+        return NULL;
+
+    char pid_str[20];
+    snprintf(pid_str, sizeof(pid_str), "%d", getpid());
+
+    size_t prefix_len = dollar - value;
+    size_t total_len = prefix_len + strlen(pid_str) + strlen(dollar + 2) + 1;
+    char *result = malloc(total_len);
+    if (!result)
+        return NULL;
+
+    strncpy(result, value, prefix_len);
+    result[prefix_len] = '\0';
+    strcat(result, pid_str);
+    strcat(result, dollar + 2);
+
+    return result;
+}
+
 char	*expand_variable(char *value, t_env *env_list)
 {
 	char	*dollar;
@@ -21,6 +44,10 @@ char	*expand_variable(char *value, t_env *env_list)
 	char	*key;
 	size_t	prefix_len;
 	size_t	var_len;
+
+	char *special_pid = expand_pid_special(value); // <-- move this here!
+	if (special_pid)
+		return special_pid;
 
 	dollar = ft_strchr(value, '$');
 	if (!dollar)
@@ -59,6 +86,31 @@ void	print_tokens(t_token *tokens)
 	}
 }
 
+// t_token	*expander(t_token *token_list, t_env *env_list)
+// {
+// 	t_token	*curr;
+// 	char	*expanded;
+
+// 	curr = token_list;
+// 	while (curr)
+// 	{
+// 		if (curr->type == ARG)
+// 		{
+// 			if ((curr->quote == 0 || curr->quote == '"')
+// 				&& ft_strchr(curr->value, '$'))
+// 			{
+// 				expanded = expand_variable(curr->value, env_list);
+// 				free(curr->value);
+// 				curr->value = expanded;
+// 			}
+// 		}
+// 		curr = curr->next;
+// 	}
+// 	print_tokens(token_list);
+// 	return (token_list);
+// }
+
+
 t_token	*expander(t_token *token_list, t_env *env_list)
 {
 	t_token	*curr;
@@ -67,19 +119,17 @@ t_token	*expander(t_token *token_list, t_env *env_list)
 	curr = token_list;
 	while (curr)
 	{
-		if (curr->type == ARG)
+		// Expand in all tokens, not just ARG
+		if ((curr->quote == 0 || curr->quote == '"')
+			&& ft_strchr(curr->value, '$'))
 		{
-			if ((curr->quote == 0 || curr->quote == '"')
-				&& ft_strchr(curr->value, '$'))
-			{
-				expanded = expand_variable(curr->value, env_list);
-				free(curr->value);
-				curr->value = expanded;
-			}
+			expanded = expand_variable(curr->value, env_list);
+			free(curr->value);
+			curr->value = expanded;
 		}
 		curr = curr->next;
 	}
-	print_tokens(token_list);
+	// print_tokens(token_list); // You probably don't want to print here!
 	return (token_list);
 }
 

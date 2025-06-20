@@ -70,6 +70,22 @@ int	check_first_cmd(t_token_exc *token_list)
 		return (1);
 }
 
+void print_cmd_error(const char *cmd)
+{
+    struct stat st;
+
+    if (!cmd || cmd[0] == 0)
+        return; // Don't print anything for empty
+
+    if (stat(cmd, &st) == 0 && S_ISDIR(st.st_mode))
+        printf("minishell: %s: Is a directory\n", cmd);
+	else
+        printf("%s: command not found\n", cmd);
+	if (!cmd || cmd[0] == '\0')
+    	return;
+}
+
+
 void	path(t_token_exc **token_list)
 {
 	char	**splited_path;
@@ -97,7 +113,9 @@ void	path(t_token_exc **token_list)
 	}
 	if (flag == 0 && check_first_cmd(*token_list) == 1)
 	{
-		printf("minishell: command not found: %s\n", (*token_list)->cmd);
+		if (!(*token_list)->cmd || (*token_list)->cmd[0] == '\0')
+        	return;
+		print_cmd_error((*token_list)->cmd);
 		return ;
 	}
 	// printf("path's command --> %s\n", (*token_list)->cmd_path);
