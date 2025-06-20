@@ -64,6 +64,8 @@ char	*expand_variable(char *value, t_env *env_list)
 	}
 	key = ft_substr(var_name, 0, var_len);
 	env_value = get_env_value(env_list, key);
+	if (!env_value)
+    	env_value = "";
 	free(key);
 	expanded_value = malloc(prefix_len + ft_strlen(env_value) + ft_strlen(dollar
 				+ var_len + 1) + 1);

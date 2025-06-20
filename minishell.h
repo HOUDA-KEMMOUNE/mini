@@ -158,7 +158,7 @@ void					ft_pwd(t_token **token);
 t_token_exc				*tokens_exc_handler(t_token *token);
 void					echo(t_token **token, t_echo **echo_struct,
 							t_env *env_list);
-void					init_shlvl(t_env *env);
+// void					init_shlvl(t_env *env);
 
 /*-------------------export-------------------*/
 int						export_internal(t_token *tokens, t_env **env_list);

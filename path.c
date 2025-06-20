@@ -81,8 +81,6 @@ void print_cmd_error(const char *cmd)
         printf("minishell: %s: Is a directory\n", cmd);
 	else
         printf("%s: command not found\n", cmd);
-	if (!cmd || cmd[0] == '\0')
-    	return;
 }
 
 

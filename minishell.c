@@ -56,6 +56,7 @@ int	main(int argc, char **argv, char **envp)
 	t_token_exc	*tokens_exec;
 	t_echo		*echo_struct;
 	char		*line;
+	int i; 
 
 	(void)argc;
 	(void)argv;
@@ -65,7 +66,7 @@ int	main(int argc, char **argv, char **envp)
 	echo_struct = NULL;
 	line = NULL;
 	env_list = create_env_list(envp);
-	init_shlvl(env_list);
+	// init_shlvl(env_list);
 	while (1)
 	{
 		// print prompt
@@ -73,8 +74,10 @@ int	main(int argc, char **argv, char **envp)
 		signal(SIGQUIT, SIG_IGN); // to ignore CTRL+backslash
 		//"\033[1;34mminishell>\033[0m "
 		line = readline("\033[1;32mminishell>\033[0m ");
-		// use readline to read input line
-		// line = readline("minishell> "); // use readline to read input line
+		char **split = ft_split(, ' ');
+		i = 0;
+		while (split[i])
+			i++;
 		if (!line)
 		{
 			ft_putstr_fd("exit\n", 1);
@@ -91,6 +94,12 @@ int	main(int argc, char **argv, char **envp)
 		add_type(&tokens);
 		tokens = expander(tokens, env_list);
 		tokens_exec = tokens_exc_handler(tokens);
+
+		if (tokens_exec == NULL || tokens_exec->cmd == NULL || tokens_exec->cmd[0] == '\0')
+		{
+			goto cleanup;
+		}
+
 		if (tokens)
 		{
 			if (se_redirections(&tokens) <= 0)
@@ -107,14 +116,14 @@ int	main(int argc, char **argv, char **envp)
 			if (run_builtin(tokens->value, tokens, &env_list))
 				goto cleanup;
 		}
-	cleanup:
-		free(line);
-		free_token_list(tokens);
-		free_token_exc_list(tokens_exec);
-		free_echo_struct(echo_struct);
-		line = NULL;
-		tokens = NULL;
-		tokens_exec = NULL;
-		echo_struct = NULL;
+		cleanup:
+			free(line);
+			free_token_list(tokens);
+			free_token_exc_list(tokens_exec);
+			free_echo_struct(echo_struct);
+			line = NULL;
+			tokens = NULL;
+			tokens_exec = NULL;
+			echo_struct = NULL;
 	}
 }

@@ -57,6 +57,7 @@ char	**env_to_array(t_env *env_list)
 		i++;
 		env_list = env_list->next;
 	}
+	envp[i] = NULL;
 	return (envp);
 }
 
