@@ -47,12 +47,12 @@ int	creat_tmpfile(char **file_name)
 	// char		*path;
 	static int	i;
 	char		*num;
-	(void)file_name;
+	// (void)file_name;
 
 	tmp = "/tmp/minishell_heredoc";
 	num = ft_itoa(i);
-	tmp = ft_strjoin(tmp, num);
-	fd = open(tmp, O_CREAT | O_EXCL | O_RDONLY, 0600);
+	(*file_name) = ft_strjoin(tmp, num);
+	fd = open((*file_name), O_CREAT | O_EXCL | O_RDWR, 0600);
 	if (fd < 0)
 		perror("Failed to create a temp file");
 	i++;
@@ -77,6 +77,8 @@ void	heredoc(t_token **token, t_token_exc **command)
 		return ;
 	}
 	fd = creat_tmpfile(&file_name); //TODO
+	unlink(file_name);
 	printf("re: %d\n", fd);
+	close(fd);
 }
   
