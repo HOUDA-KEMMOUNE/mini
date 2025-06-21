@@ -44,7 +44,6 @@ void	tokens_exc_redio(t_token *token, t_token_exc **token_list)
 	token_tmp = token;
 	while (token_tmp)
 	{
-		// printf("HHHHHHHHHHHHHHHHHHHHHHHH\n");
 		if (ft_strncmp((*token_list)->cmd, "echo", 4) == 0)
 			return ;
 		if (token_tmp->type == REDIR_OUT)

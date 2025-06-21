@@ -233,5 +233,6 @@ int						env_size(t_env *env_list);
 /*------------heredoc---------------*/
 void	heredoc(t_token **token, t_token_exc **command);
 int		check_heredoc(t_token **token, t_token_exc **command);
+int		creat_tmpfile(char **file_name);
 
 #endif
