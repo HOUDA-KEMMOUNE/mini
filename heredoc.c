@@ -98,6 +98,11 @@ void	heredoc(t_token **token, t_token_exc **command)
 		return ;
 	command_tmp = (*command);
 	token_tmp = (*token);
+	if (token_tmp->type != HEREDOC)
+	{
+		printf("re (heredoc.c)\n");
+		return ;
+	}
 	if (check_heredoc(token, command) == 0)
 		return ;
 	fd = creat_tmpfile(&file_name);

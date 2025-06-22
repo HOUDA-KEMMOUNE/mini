@@ -67,6 +67,7 @@ void	simple_cmd(t_token *token, t_token_exc **token_cmd)
 	int		pid;
 	t_env	*env;
 	char	**envp;
+	int		fd;
 
 	env = *env_func();
 	pid = fork();
@@ -81,6 +82,15 @@ void	simple_cmd(t_token *token, t_token_exc **token_cmd)
 		signal(SIGINT, SIG_DFL);
 		signal(SIGQUIT, SIG_DFL); // to ignore CTRL+backslash
 		check_fd(token_cmd);
+		if ((*token_cmd)->delimiter != NULL)
+		{
+			fd = open((*token_cmd)->delimiter, O_CREAT | O_EXCL | O_RDWR, 0600);
+			if (fd >= 0)
+			{
+            	dup2(fd, STDIN_FILENO);
+            	close(fd);
+        	}
+		}
 		execve((*token_cmd)->cmd_path, (*token_cmd)->args, envp);
 		perror("execve failed");
 		free_env_array(envp);

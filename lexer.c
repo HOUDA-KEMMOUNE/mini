@@ -148,10 +148,8 @@ t_token	*lexer(char *input)
 				i++;
 			}
 			else
-			{
 				char_to_str(input[i], 0, &token_list);
-				i++;
-			}
+			i++;
 		}
 		else
 			word_case(input, &i, &token_list);
