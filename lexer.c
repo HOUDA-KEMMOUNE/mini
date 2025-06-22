@@ -149,7 +149,7 @@ t_token	*lexer(char *input)
 			else
 			{
 				char_to_str(input[i], 0, &token_list);
-				i++;
+				// i++;
 			}
 			i++;
 		}
