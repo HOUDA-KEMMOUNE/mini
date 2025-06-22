@@ -6,25 +6,37 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 13:24:49 by hkemmoun          #+#    #+#             */
-/*   Updated: 2025/06/14 11:32:58 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/06/22 09:51:59 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_count_args(t_token *token)
+// int	ft_count_args(t_token *token)
+// {
+// 	int(count), (flag);
+// 	count = 0;
+// 	flag = 0;
+// 	while ((token != NULL) && (ft_strncmp(token->value, "|", 1) != 0))
+// 	{
+// 		if (token->type == WORD && token->type != FILE_NAME && flag == 1)
+// 			count++;
+// 		flag = 1;
+// 		token = token->next;
+// 	}
+// 	return (count);
+// }
+
+int ft_count_args(t_token *token)
 {
-	int(count), (flag);
-	count = 0;
-	flag = 0;
-	while ((token != NULL) && (ft_strncmp(token->value, "|", 1) != 0))
-	{
-		if (token->type == WORD && token->type != FILE_NAME && flag == 1)
-			count++;
-		flag = 1;
-		token = token->next;
-	}
-	return (count);
+    int count = 0;
+    while (token != NULL && ft_strncmp(token->value, "|", 1) != 0)
+    {
+        if (token->type == WORD && token->type != FILE_NAME)
+            count++;
+        token = token->next;
+    }
+    return count;
 }
 
 void	syntax_error(char *s)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkemmoun <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/01 15:23:13 by hkemmoun          #+#    #+#             */
-/*   Updated: 2025/06/01 15:23:19 by hkemmoun         ###   ########.fr       */
+/*   Updated: 2025/06/22 10:02:33 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,29 +86,33 @@ void print_cmd_error(const char *cmd)
 
 void	path(t_token_exc **token_list)
 {
-	char	**splited_path;
-	char	*new_cmd;
-	char	*tmp;
-	int		flag;
+    char    **splited_path;
+    char    *new_cmd;
+    char    *tmp;
+    int     flag;
+    int     i;
 
-	// printf("hh\n");
-	splited_path = split_path();
-	flag = 0;
-	if (!splited_path)
-		return ;
-	(*token_list)->cmd_path = NULL;
-	new_cmd = ft_strjoin("/", (*token_list)->cmd);
-	while (*splited_path)
-	{
-		tmp = ft_strjoin((*splited_path), new_cmd);
-		if (access(tmp, F_OK) == 0)
-		{
-			flag = 1;
-			(*token_list)->cmd_path = tmp;
-			break ;
-		}
-		splited_path++;
-	}
+    splited_path = split_path();
+    flag = 0;
+    if (!splited_path)
+        return ;
+    (*token_list)->cmd_path = NULL;
+    new_cmd = ft_strjoin("/", (*token_list)->cmd);
+    for (i = 0; splited_path[i]; i++)
+    {
+        tmp = ft_strjoin(splited_path[i], new_cmd);
+        if (access(tmp, F_OK) == 0)
+        {
+            flag = 1;
+            (*token_list)->cmd_path = tmp;
+            break;
+        }
+        free(tmp);
+    }
+    free(new_cmd);
+    for (i = 0; splited_path[i]; i++)
+        free(splited_path[i]);
+    free(splited_path);
 	if (flag == 0 && check_first_cmd(*token_list) == 1)
 	{
 		if (!(*token_list)->cmd || (*token_list)->cmd[0] == '\0')

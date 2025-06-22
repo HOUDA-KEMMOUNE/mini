@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/01 15:07:23 by hkemmoun          #+#    #+#             */
-/*   Updated: 2025/06/19 18:51:29 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/06/22 10:48:57 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ char	**env_to_array(t_env *env_list)
 		tmp = ft_strjoin(env_list->key, "=");
 		tmp2 = ft_strjoin(tmp, env_list->value);
 		envp[i] = tmp2;
+		free(tmp);
 		i++;
 		env_list = env_list->next;
 	}
@@ -91,7 +92,8 @@ void	simple_cmd(t_token *token, t_token_exc **token_cmd)
 		waitpid(pid, &status, 0);
 		free_env_array(envp);
 
-		if (WIFSIGNALED(status)) {
+		if (WIFSIGNALED(status))
+		{
 			int sig = WTERMSIG(status);
 			if (sig == SIGINT)
 				write(1, "\n", 1); // print newline (like bash)
