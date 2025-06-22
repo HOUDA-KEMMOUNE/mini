@@ -32,8 +32,16 @@ int ft_count_args(t_token *token)
     int count = 0;
     while (token != NULL && ft_strncmp(token->value, "|", 1) != 0)
     {
-        if (token->type == WORD && token->type != FILE_NAME)
+        if (token->type == WORD && token->type != FILE_NAME && token->type == HEREDOC)
+		{
+			if (token->type == HEREDOC)
+			{
+				token = token->next;
+				if (token->type == WORD)
+					break ;
+			}
             count++;
+		}
         token = token->next;
     }
     return count;
@@ -64,46 +72,6 @@ void	filename_node(t_token **token)
 		(*token) = (*token)->next;
 	}
 }
-
-// void	command_node(t_token **token, t_token_exc **new)
-// {
-// 	char	**args_tmp;
-// 	int		(count_args), (i), (flag);
-// 	t_token *head;
-
-// 	head = (*token);
-// 	count_args = ft_count_args((*token));
-// 	// printf("count_args -----------> %d\n", count_args);
-// 	args_tmp = malloc((count_args + 1) * sizeof(char *));
-// 	i = 0;
-// 	flag = 0;
-// 	while ((*token) && ft_strncmp((*token)->value, "|", 1) != 0)
-// 	{
-// 		// printf("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH\n");
-// 		if ((*token)->type == WORD)
-// 		{
-// 			if (flag == 0)
-// 			{
-// 				// printf("mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm\n");
-// 				// (*new)->cmd = (*token)->value;
-// 				(*token)->type = CMD;
-// 			}
-// 			else
-// 			{
-// 				(*token)->type = ARG;
-// 				// printf("token->value ==== %s\n", (*token)->value);
-// 				// printf("HJJJJJJJJJJJJJJJJJJJ\n");
-// 			}
-// 			args_tmp[i] = (*token)->value;
-// 			i++;
-// 			flag = 1;
-// 		}
-// 		(*token) = (*token)->next;
-// 	}
-// 	(*token) = head;
-// 	args_tmp[i] = NULL;
-// 	(*new)->args = args_tmp;
-// }
 
 void	command_node(t_token **token, t_token_exc **new)
 {

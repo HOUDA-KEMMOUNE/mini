@@ -100,8 +100,8 @@ int	main(int argc, char **argv, char **envp)
 			if (se_redirections(&tokens) <= 0)
 				goto cleanup;
 			parsing(line, &tokens, &echo_struct, env_list);
-			heredoc(&tokens, &tokens_exec);
 			tokens_exc_redio(tokens, &tokens_exec);
+			heredoc(&tokens, &tokens_exec);
 			if (is_builtin(&tokens_exec) == 1)
 			{
 				path(&tokens_exec);

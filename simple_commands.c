@@ -82,9 +82,9 @@ void	simple_cmd(t_token *token, t_token_exc **token_cmd)
 		signal(SIGINT, SIG_DFL);
 		signal(SIGQUIT, SIG_DFL); // to ignore CTRL+backslash
 		check_fd(token_cmd);
-		if ((*token_cmd)->delimiter != NULL)
+		if ((*token_cmd)->heredoc_file != NULL)
 		{
-			fd = open((*token_cmd)->delimiter, O_CREAT | O_EXCL | O_RDWR, 0600);
+			fd = open((*token_cmd)->heredoc_file, O_RDONLY);
 			if (fd >= 0)
 			{
             	dup2(fd, STDIN_FILENO);
@@ -94,14 +94,19 @@ void	simple_cmd(t_token *token, t_token_exc **token_cmd)
 		execve((*token_cmd)->cmd_path, (*token_cmd)->args, envp);
 		perror("execve failed");
 		free_env_array(envp);
-		exit(1);
+		exit(0);
 	}
 	else if (pid > 0)
 	{
 		int status;
 		waitpid(pid, &status, 0);
 		free_env_array(envp);
-
+		if ((*token_cmd)->heredoc_file != NULL)
+		{
+			unlink((*token_cmd)->heredoc_file);
+			free((*token_cmd)->heredoc_file);
+			(*token_cmd)->heredoc_file = NULL;
+		}
 		if (WIFSIGNALED(status))
 		{
 			int sig = WTERMSIG(status);

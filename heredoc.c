@@ -98,18 +98,19 @@ void	heredoc(t_token **token, t_token_exc **command)
 		return ;
 	command_tmp = (*command);
 	token_tmp = (*token);
-	if (token_tmp->type != HEREDOC)
-	{
-		printf("re (heredoc.c)\n");
-		return ;
-	}
+	// if (token_tmp->type != HEREDOC)
+	// {
+	// 	printf("re (heredoc.c)\n");
+	// 	return ;
+	// }
 	if (check_heredoc(token, command) == 0)
 		return ;
 	fd = creat_tmpfile(&file_name);
+	command_tmp->heredoc_file = ft_strdup(file_name);
 	fill_heredoc_file(fd, command_tmp->delimiter); //TODO
 	if (fd >= 0)
 	{
-		unlink(file_name);
+		// unlink(file_name);
 		close(fd);
 	}
 	free (file_name);
