@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 22:03:42 by akemmoun          #+#    #+#             */
-/*   Updated: 2025/06/15 15:28:56 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/06/22 14:36:50 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,7 @@ static void	export_set_var(t_env **env_list, char *key, char *value)
 	new = malloc(sizeof(t_env));
 	if (!new)
 		return ;
+	ft_memset(new, 0, sizeof(t_env));
 	new->key = ft_strdup(key);
 	if (!new->key)
 	{

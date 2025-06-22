@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 13:24:49 by hkemmoun          #+#    #+#             */
-/*   Updated: 2025/06/22 09:51:59 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/06/22 14:35:28 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,6 +149,7 @@ static void	tokens_exc_helper(t_token **token, t_token_exc **token_list)
 	new = malloc(sizeof(t_token_exc));
 	if (!new)
 		return ;
+	ft_memset(new, 0, sizeof(t_token_exc));
 	new->cmd = (*token)->value;
 	new->fd_in = 0;
 	new->fd_out = 1;

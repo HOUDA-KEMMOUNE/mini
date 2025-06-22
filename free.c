@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/14 11:39:52 by akemmoun          #+#    #+#             */
-/*   Updated: 2025/06/22 11:03:30 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/06/22 14:40:57 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,21 +49,21 @@ void	free_token_list(t_token *tok)
 	}
 }
 
-// void free_str_array(char **arr)
-// {
-//     int i = 0;
-//     if (!arr)
-//         return;
-//     while (arr[i])
-//         free(arr[i++]);
-//     free(arr);
-// }
-
-void free_str_array_shallow(char **arr)
+void free_args(char **arr)
 {
-    if (arr)
-		free(arr);
+    int i = 0;
+    if (!arr)
+        return;
+    while (arr[i])
+        free(arr[i++]);
+    free(arr);
 }
+
+// void free_str_array_shallow(char **arr)
+// {
+//     if (arr)
+// 		free(arr);
+// }
 
 void free_token_exc_list(t_token_exc *cmd)
 {
@@ -71,18 +71,9 @@ void free_token_exc_list(t_token_exc *cmd)
     while (cmd)
     {
         tmp = cmd->next;
-		if (cmd->args) {
-            int j = 0;
-            while (cmd->args[j]) {
-                // debug print:
-                // printf("args[%d]=%p (%s)\n", j, (void*)cmd->args[j], cmd->args[j]);
-                j++;
-                if (j > 100) break; // prevent infinite loop!
-            }
-        }
         // Do NOT free strings inside args, just the array
         if (cmd->args)
-            free_str_array_shallow(cmd->args);
+            free_args(cmd->args);
         if (cmd->cmd_path)
             free(cmd->cmd_path);
         if (cmd->file)

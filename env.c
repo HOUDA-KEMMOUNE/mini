@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 11:34:35 by akemmoun          #+#    #+#             */
-/*   Updated: 2025/06/02 11:02:53 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/06/22 14:37:18 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ t_env	*create_env_list(char **envp)
 			new = malloc(sizeof(t_env));
 			if (!new)
 				return (NULL);
+			ft_memset(new, 0, sizeof(t_env));
 			new->key = ft_substr(*envp, 0, equal_sign - *envp);
 			new->value = ft_strdup(equal_sign + 1);
 			new->next = NULL;

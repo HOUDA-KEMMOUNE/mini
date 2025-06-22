@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 10:09:26 by hkemmoun          #+#    #+#             */
-/*   Updated: 2025/05/17 10:48:39 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/06/22 14:34:32 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ void	ft_data_init(t_echo **echo_struct)
 	*echo_struct = malloc(sizeof(t_echo));
 	if (!echo_struct)
 		return ;
+	ft_memset(*echo_struct, 0, sizeof(t_echo));
 	(*echo_struct)->fd = 1;
 	(*echo_struct)->file = NULL;
 	(*echo_struct)->input = NULL;

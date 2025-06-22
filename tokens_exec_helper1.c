@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokens_exec_helper1.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkemmoun <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 09:07:55 by hkemmoun          #+#    #+#             */
-/*   Updated: 2025/05/31 09:07:57 by hkemmoun         ###   ########.fr       */
+/*   Updated: 2025/06/22 14:35:01 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,21 +49,21 @@ void	tokens_exc_redio(t_token *token, t_token_exc **token_list)
 		if (token_tmp->type == REDIR_OUT)
 		{
 			token_tmp = token_tmp->next;
-			(*token_list)->file = token_tmp->value;
+			(*token_list)->file = ft_strdup(token_tmp->value);
 			(*token_list)->fd_out = open(token_tmp->value,
 					O_CREAT | O_WRONLY | O_TRUNC, 0640);
 		}
 		else if (token_tmp->type == APPEND)
 		{
 			token_tmp = token_tmp->next;
-			(*token_list)->file = token_tmp->value;
+			(*token_list)->file = ft_strdup(token_tmp->value);
 			(*token_list)->fd_out = open(token_tmp->value,
 					O_CREAT | O_WRONLY | O_APPEND, 0640);
 		}
 		else if (token_tmp->type == REDIR_IN)
 		{
 			token_tmp = token_tmp->next;
-			(*token_list)->file = token_tmp->value;
+			(*token_list)->file = ft_strdup(token_tmp->value);
 			if (open(token_tmp->value, O_RDONLY) < 0)
 			{
 				ft_putstr_fd("minishell: ", 1);

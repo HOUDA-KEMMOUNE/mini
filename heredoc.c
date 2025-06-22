@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkemmoun <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:05:22 by hkemmoun          #+#    #+#             */
-/*   Updated: 2025/06/20 16:05:23 by hkemmoun         ###   ########.fr       */
+/*   Updated: 2025/06/22 14:33:43 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	check_heredoc(t_token **token, t_token_exc **command)
 				|| token_tmp->type == CMD)
 			{
 				token_tmp->type = DELIMITER;
-				command_tmp->delimiter = token_tmp->value;
+				command_tmp->delimiter = ft_strdup(token_tmp->value);
 				check++;
 			}
 		}

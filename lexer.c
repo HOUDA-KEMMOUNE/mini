@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 19:32:00 by akemmoun          #+#    #+#             */
-/*   Updated: 2025/05/15 13:51:32 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/06/22 14:39:25 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ void	add_token(t_token **head, char *value, t_token_type type, char quote)
 	new = malloc(sizeof(t_token));
 	if (!new)
 		return ;
+	ft_memset(new, 0, sizeof(t_token));
 	// printf("value ---> %s\n", value);
 	new->value = ft_strdup(value);
 	// new->type = type;
@@ -149,9 +150,8 @@ t_token	*lexer(char *input)
 			else
 			{
 				char_to_str(input[i], 0, &token_list);
-				// i++;
+				i++;
 			}
-			i++;
 		}
 		else
 			word_case(input, &i, &token_list);
