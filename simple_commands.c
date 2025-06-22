@@ -67,7 +67,7 @@ void	simple_cmd(t_token *token, t_token_exc **token_cmd)
 	int		pid;
 	t_env	*env;
 	char	**envp;
-	int		fd;
+	int		(fd), (j);
 
 	env = *env_func();
 	pid = fork();
@@ -82,14 +82,17 @@ void	simple_cmd(t_token *token, t_token_exc **token_cmd)
 		signal(SIGINT, SIG_DFL);
 		signal(SIGQUIT, SIG_DFL); // to ignore CTRL+backslash
 		check_fd(token_cmd);
-		if ((*token_cmd)->heredoc_file != NULL)
+		if ((*token_cmd)->heredoc_file != NULL
+			&& (*token_cmd)->count_heredoc > 0)
 		{
-			fd = open((*token_cmd)->heredoc_file, O_RDONLY);
+			int	last = (*token_cmd)->count_heredoc - 1;
+			fd = open((*token_cmd)->heredoc_file[last], O_RDONLY);
 			if (fd >= 0)
 			{
-            	dup2(fd, STDIN_FILENO);
-            	close(fd);
-        	}
+				dup2(fd, STDIN_FILENO);
+				close(fd);
+			}
+
 		}
 		execve((*token_cmd)->cmd_path, (*token_cmd)->args, envp);
 		perror("execve failed");
@@ -103,9 +106,14 @@ void	simple_cmd(t_token *token, t_token_exc **token_cmd)
 		free_env_array(envp);
 		if ((*token_cmd)->heredoc_file != NULL)
 		{
-			unlink((*token_cmd)->heredoc_file);
-			free((*token_cmd)->heredoc_file);
-			(*token_cmd)->heredoc_file = NULL;
+			j = 0;
+			while (j < (*token_cmd)->count_heredoc)
+			{
+				unlink((*token_cmd)->heredoc_file[j]);
+				free((*token_cmd)->heredoc_file[j]);
+				(*token_cmd)->heredoc_file[j] = NULL;
+				j++;
+			}
 		}
 		if (WIFSIGNALED(status))
 		{

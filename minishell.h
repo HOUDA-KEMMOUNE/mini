@@ -85,8 +85,9 @@ typedef struct s_token_exc
 	char				*cmd_path;
 	char				**args;
 	char				*file;
-	char				*delimiter;
-	char				*heredoc_file;
+	char				**delimiter;
+	char				**heredoc_file;
+	int					count_heredoc;
 	int					fd_in;
 	int					fd_out;
 	// t_token_type		type;

@@ -16,9 +16,10 @@ int	check_heredoc(t_token **token, t_token_exc **command)
 {
 	t_token		*token_tmp;
 	t_token_exc	*command_tmp;
-	int			check;
-
+	int			check;	
+	
 	check = 0;
+	// i = 0;
 	token_tmp = (*token);
 	command_tmp = (*command);
 	while (token_tmp)
@@ -30,7 +31,6 @@ int	check_heredoc(t_token **token, t_token_exc **command)
 				|| token_tmp->type == CMD)
 			{
 				token_tmp->type = DELIMITER;
-				command_tmp->delimiter = ft_strdup(token_tmp->value);
 				check++;
 			}
 		}
@@ -92,26 +92,46 @@ void	heredoc(t_token **token, t_token_exc **command)
 	t_token_exc	*command_tmp;
 	t_token		*token_tmp;
 	char		*file_name;
-	int			fd;
-
+	int			(fd), (i);
+\
 	if (!token || !(*token) || !command || !(*command))
 		return ;
 	command_tmp = (*command);
 	token_tmp = (*token);
-	// if (token_tmp->type != HEREDOC)
-	// {
-	// 	printf("re (heredoc.c)\n");
-	// 	return ;
-	// }
-	if (check_heredoc(token, command) == 0)
+
+	command_tmp->count_heredoc = check_heredoc(token, command);
+	if (command_tmp->count_heredoc == 0)
 		return ;
-	fd = creat_tmpfile(&file_name);
-	command_tmp->heredoc_file = ft_strdup(file_name);
-	fill_heredoc_file(fd, command_tmp->delimiter); //TODO
-	if (fd >= 0)
+	
+	command_tmp->delimiter = malloc((command_tmp->count_heredoc + 1) * sizeof(char *));
+    command_tmp->heredoc_file = malloc((command_tmp->count_heredoc + 1) * sizeof(char *));
+    command_tmp->delimiter[command_tmp->count_heredoc] = NULL;
+    command_tmp->heredoc_file[command_tmp->count_heredoc] = NULL;
+
+	i = 0;
+	while (token_tmp && i < command_tmp->count_heredoc)
 	{
-		// unlink(file_name);
-		close(fd);
+		if (token_tmp->type == HEREDOC)
+		{
+			token_tmp = token_tmp->next;
+			if (token_tmp->type == DELIMITER || token_tmp->type == ARG
+				|| token_tmp->type == CMD)
+			{
+				command_tmp->delimiter[i] = ft_strdup(token_tmp->value);
+                i++;
+			}
+		}
+		token_tmp = token_tmp->next;
 	}
-	free (file_name);
+	i = 0;
+	while (i < command_tmp->count_heredoc)
+	{
+		fd = creat_tmpfile(&file_name);
+		command_tmp->heredoc_file[i] = ft_strdup(file_name);
+		fill_heredoc_file(fd, command_tmp->delimiter[i]); //TODO
+		if (fd >= 0)
+			close(fd);
+		free (file_name);
+		i++;
+	}
 }
