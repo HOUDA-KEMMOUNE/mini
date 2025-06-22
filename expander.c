@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 10:50:59 by akemmoun          #+#    #+#             */
-/*   Updated: 2025/05/16 14:05:14 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/06/22 17:33:30 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ char	*expand_variable(char *value, t_env *env_list)
 	char *special_pid = expand_pid_special(value); // <-- move this here!
 	if (special_pid)
 		return special_pid;
-
 	dollar = ft_strchr(value, '$');
 	if (!dollar)
 	{

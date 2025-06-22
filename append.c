@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 18:38:02 by akemmoun          #+#    #+#             */
-/*   Updated: 2025/06/19 18:38:49 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/06/22 17:32:11 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,26 +32,6 @@ static int	check_append_count(t_token **token)
 	return (count);
 }
 
-// static int	check_append_command(t_token **token)
-// {
-// 	t_token	*token_tmp;
-// 	char	*input;
-
-// 	if (!token || !(*token))
-// 		return (-1);
-// 	token_tmp = (*token);
-// 	if (ft_strncmp(input, "<<", 2) == 0)
-// 		return (-1);
-// 	while (token_tmp)
-// 	{
-// 		input = token_tmp->value;
-// 		if (ft_strncmp(input, "<<", 2) == 0)
-// 			count++;
-// 		token_tmp = token_tmp->next;
-// 	}
-// 	return (count);
-// }
-
 void	ft_append(t_token **token)
 {
 	t_token	*token_tmp;
@@ -65,10 +45,4 @@ void	ft_append(t_token **token)
 		return ;
 	if (ft_strncmp(token_tmp->value, "<<", 2) == 0)
 		return ;
-	// check_append_command(token);
-	// printf("count of append --> %d\n", count);
-	// while (token_tmp)
-	// {
-
-	// }
 }
