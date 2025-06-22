@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 13:24:49 by hkemmoun          #+#    #+#             */
-/*   Updated: 2025/06/22 14:35:28 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/06/22 14:51:13 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,7 @@ void	command_node(t_token **token, t_token_exc **new)
 			else
 				(*token)->type = ARG;
 			if (i < count_args) // protect against overflow
-				args_tmp[i++] = (*token)->value;
+				args_tmp[i++] = ft_strdup((*token)->value);
 			flag = 1;
 		}
 		(*token) = (*token)->next;
