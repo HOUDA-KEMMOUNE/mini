@@ -167,10 +167,10 @@ void					echo(t_token **token, t_echo **echo_struct,
 
 /*-------------------export-------------------*/
 int						export_internal(t_token *tokens, t_env **env_list);
-t_env					*export(t_token *tokens, t_env *env_list);
 int						export_builtin_adapter(t_token *tokens,
 							t_env **env_list);
-int						export_wrapper(t_token *tokens, t_env **env_list);
+void					export_set_var(t_env **env_list, char *key, char *value);
+void					export_print_sorted(t_env *env_list);
 void					export_set_var(t_env **env_list, char *key, char *value);
 
 /*-------------------unset-------------------*/
@@ -209,6 +209,7 @@ void					minishell_cleanup(t_env *env, t_token *tokens,
 char					**token_to_args(t_token *tokens);
 int						cd(t_token *tokens, t_env **env_list);
 int						ft_cd_exec(t_token **tokens, t_env *env_list);
+
 // void    pwd(t_token **token);
 
 /*----------------pwd-----------------*/

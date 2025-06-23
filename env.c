@@ -15,6 +15,7 @@
 t_env	**env_func(void)
 {
 	static t_env	*env;
+
 	return (&env);
 }
 
@@ -23,8 +24,6 @@ t_env	*create_env_list(char **envp)
 	t_env	*new;
 	char	*equal_sign;
 
-	// t_env	*env_list;
-	// env_list = NULL;
 	while (*envp)
 	{
 		equal_sign = ft_strchr(*envp, '=');
@@ -86,7 +85,7 @@ char	*get_env_value(t_env *env, char *key)
 
 void	init_minimal_env(t_env **env_list)
 {
-	char cwd[4096];
+	char	cwd[4096];
 
 	if (getcwd(cwd, sizeof(cwd)))
 		export_set_var(env_list, "PWD", cwd);

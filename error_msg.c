@@ -15,7 +15,6 @@
 void	print_error_command(t_token **token)
 {
 	(void)token;
-	// i should free the structer here later
 	write(1, "ERROR: This is not a command :/-\n",
 		ft_strlen("ERROR: This is not a command :/-\n"));
 	exit(1);

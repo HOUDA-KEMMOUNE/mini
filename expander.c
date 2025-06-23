@@ -12,27 +12,28 @@
 
 #include "minishell.h"
 
-char *expand_pid_special(const char *value)
+char	*expand_pid_special(const char *value)
 {
-    const char *dollar = strchr(value, '$');
-    if (!dollar || dollar[1] != '$')
-        return NULL;
+	const char	*dollar;
+	char		pid_str[20];
+	size_t		prefix_len;
+	size_t		total_len;
+	char		*result;
 
-    char pid_str[20];
-    snprintf(pid_str, sizeof(pid_str), "%d", getpid());
-
-    size_t prefix_len = dollar - value;
-    size_t total_len = prefix_len + strlen(pid_str) + strlen(dollar + 2) + 1;
-    char *result = malloc(total_len);
-    if (!result)
-        return NULL;
-
-    strncpy(result, value, prefix_len);
-    result[prefix_len] = '\0';
-    strcat(result, pid_str);
-    strcat(result, dollar + 2);
-
-    return result;
+	dollar = strchr(value, '$');
+	if (!dollar || dollar[1] != '$')
+		return (NULL);
+	snprintf(pid_str, sizeof(pid_str), "%d", getpid());
+	prefix_len = dollar - value;
+	total_len = prefix_len + strlen(pid_str) + strlen(dollar + 2) + 1;
+	result = malloc(total_len);
+	if (!result)
+		return (NULL);
+	strncpy(result, value, prefix_len);
+	result[prefix_len] = '\0';
+	strcat(result, pid_str);
+	strcat(result, dollar + 2);
+	return (result);
 }
 
 char	*expand_variable(char *value, t_env *env_list)
@@ -44,10 +45,11 @@ char	*expand_variable(char *value, t_env *env_list)
 	char	*key;
 	size_t	prefix_len;
 	size_t	var_len;
+	char	*special_pid;
 
-	char *special_pid = expand_pid_special(value); // <-- move this here!
+	special_pid = expand_pid_special(value);
 	if (special_pid)
-		return special_pid;
+		return (special_pid);
 	dollar = ft_strchr(value, '$');
 	if (!dollar)
 	{
@@ -58,13 +60,11 @@ char	*expand_variable(char *value, t_env *env_list)
 	var_len = 0;
 	while (var_name[var_len] && (ft_isalnum(var_name[var_len])
 			|| var_name[var_len] == '_'))
-	{
 		var_len++;
-	}
 	key = ft_substr(var_name, 0, var_len);
 	env_value = get_env_value(env_list, key);
 	if (!env_value)
-    	env_value = "";
+		env_value = "";
 	free(key);
 	expanded_value = malloc(prefix_len + ft_strlen(env_value) + ft_strlen(dollar
 				+ var_len + 1) + 1);
@@ -111,7 +111,6 @@ void	print_tokens(t_token *tokens)
 // 	return (token_list);
 // }
 
-
 t_token	*expander(t_token *token_list, t_env *env_list)
 {
 	t_token	*curr;
@@ -120,7 +119,6 @@ t_token	*expander(t_token *token_list, t_env *env_list)
 	curr = token_list;
 	while (curr)
 	{
-		// Expand in all tokens, not just ARG
 		if ((curr->quote == 0 || curr->quote == '"')
 			&& ft_strchr(curr->value, '$'))
 		{
@@ -130,7 +128,6 @@ t_token	*expander(t_token *token_list, t_env *env_list)
 		}
 		curr = curr->next;
 	}
-	// print_tokens(token_list); // You probably don't want to print here!
 	return (token_list);
 }
 

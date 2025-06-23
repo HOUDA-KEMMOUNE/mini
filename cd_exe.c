@@ -82,21 +82,23 @@ int	cd(t_token *tokens, t_env **env_list)
 	struct stat	st;
 	int			i;
 	int			is_whitespace_only;
+	char		*oldpwd;
+	char		*home;
+	size_t		home_len;
+	size_t		path_len;
 
 	is_whitespace_only = 1;
 	i = 0;
 	to_free = NULL;
 	if (!tokens || !tokens->next)
 		return (0);
-
 	path = tokens->next->value;
-	// If argument is only whitespace, treat as cd ~ (go HOME)
 	while (path[i])
 	{
 		if (!ft_isspace((unsigned char)path[i]))
 		{
 			is_whitespace_only = 0;
-			break;
+			break ;
 		}
 		i++;
 	}
@@ -106,17 +108,13 @@ int	cd(t_token *tokens, t_env **env_list)
 		if (!path)
 			return (print_cd_error("HOME not set", 5), 1);
 	}
-	// Too many arguments: error
 	if (tokens->next->next)
 	{
 		print_cd_error("cd", 1);
 		return (1);
 	}
-
-	// Handle cd -
 	if (strcmp(path, "-") == 0)
 	{
-		char *oldpwd;
 		oldpwd = get_env_value(*env_list, "OLDPWD");
 		if (!oldpwd || !*oldpwd)
 			return (print_cd_error("OLDPWD not set", 5), 1);
@@ -136,33 +134,29 @@ int	cd(t_token *tokens, t_env **env_list)
 		}
 		update_env(*env_list, "OLDPWD", cwd);
 		if (getcwd(cwd, sizeof(cwd)))
-    		update_env(*env_list, "PWD", cwd);
+			update_env(*env_list, "PWD", cwd);
 		return (0);
 	}
-
-	// Handle cd ~ and cd ~/something
 	if (path[0] == '~')
 	{
-		char *home = get_env_value(*env_list, "HOME");
+		home = get_env_value(*env_list, "HOME");
 		if (!home)
 			return (print_cd_error("HOME not set", 5), 1);
-		size_t home_len = strlen(home), path_len = strlen(path);
-		to_free = malloc(home_len + path_len); // +1 for '\0', -1 for '~'
+		home_len = strlen(home);
+		path_len = strlen(path);
+		to_free = malloc(home_len + path_len);
 		if (!to_free)
 			return (print_cd_error("malloc", 6), 1);
 		strcpy(to_free, home);
-		strcat(to_free, path + 1); // skip the ~
+		strcat(to_free, path + 1);
 		path = to_free;
 	}
-
-	// Save current directory
-	if (!getcwd(cwd, sizeof(cwd))) {
+	if (!getcwd(cwd, sizeof(cwd)))
+	{
 		free(to_free);
 		return (print_cd_error(path, 6), 1);
 	}
 	update_env(*env_list, "OLDPWD", cwd);
-
-	// Try to change directory
 	if (chdir(path) != 0)
 	{
 		if (access(path, F_OK) != 0)
@@ -174,8 +168,6 @@ int	cd(t_token *tokens, t_env **env_list)
 		free(to_free);
 		return (print_cd_error(path, 6), 1);
 	}
-
-	// Update new current directory
 	if (getcwd(cwd, sizeof(cwd)))
 		update_env(*env_list, "PWD", cwd);
 	free(to_free);
