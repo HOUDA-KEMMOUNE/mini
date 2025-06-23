@@ -32,16 +32,8 @@ int ft_count_args(t_token *token)
     int count = 0;
     while (token != NULL && ft_strncmp(token->value, "|", 1) != 0)
     {
-        if (token->type == WORD && token->type != FILE_NAME && token->type == HEREDOC)
-		{
-			if (token->type == HEREDOC)
-			{
-				token = token->next;
-				if (token->type == WORD)
-					break ;
-			}
+        if (token->type == WORD && token->type != FILE_NAME)
             count++;
-		}
         token = token->next;
     }
     return count;

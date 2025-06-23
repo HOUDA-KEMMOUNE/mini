@@ -120,6 +120,7 @@ void					print_echo_error(void);
 
 /*-------------------env-------------------*/
 void					free_env_array(char **envp);
+void					init_minimal_env(t_env **env_list);
 
 /*-------------------Lexer-------------------*/
 t_token					*lexer(char *input);
@@ -170,6 +171,7 @@ t_env					*export(t_token *tokens, t_env *env_list);
 int						export_builtin_adapter(t_token *tokens,
 							t_env **env_list);
 int						export_wrapper(t_token *tokens, t_env **env_list);
+void					export_set_var(t_env **env_list, char *key, char *value);
 
 /*-------------------unset-------------------*/
 int						unset(t_token *tokens, t_env **env_list);

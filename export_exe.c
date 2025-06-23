@@ -73,7 +73,7 @@ static void	export_print_sorted(t_env *env_list)
 	free(arr);
 }
 
-static void	export_set_var(t_env **env_list, char *key, char *value)
+void	export_set_var(t_env **env_list, char *key, char *value)
 {
 	t_env	*tmp;
 	t_env	*new;

@@ -37,8 +37,8 @@ char	**split_path(void)
 	char	**splited_path;
 
 	path = find_path();
-	if (path == NULL)
-		return (NULL);
+	if (path == NULL || !*path)
+		path = "/bin:/usr/bin";
 	splited_path = ft_split(path, ':');
 	return (splited_path);
 }

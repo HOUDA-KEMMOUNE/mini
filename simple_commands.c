@@ -25,6 +25,7 @@ void	check_fd(t_token_exc **token_cmd)
 		close((*token_cmd)->fd_out);
 	}
 }
+
 int	env_size(t_env *env_list)
 {
 	int	size;

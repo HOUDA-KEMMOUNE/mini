@@ -66,6 +66,8 @@ int	main(int argc, char **argv, char **envp)
 	line = NULL;
 	env_list = create_env_list(envp);
 	// init_shlvl(env_list);
+	if (envp[0] == NULL)
+		init_minimal_env(&env_list);
 	while (1)
 	{
 		// print prompt

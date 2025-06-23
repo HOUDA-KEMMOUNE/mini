@@ -15,7 +15,6 @@
 t_env	**env_func(void)
 {
 	static t_env	*env;
-
 	return (&env);
 }
 
@@ -84,6 +83,15 @@ char	*get_env_value(t_env *env, char *key)
 // 	new->next = NULL;
 // 	ft_envadd_back(env_func(), new);
 // }
+
+void	init_minimal_env(t_env **env_list)
+{
+	char cwd[4096];
+
+	if (getcwd(cwd, sizeof(cwd)))
+		export_set_var(env_list, "PWD", cwd);
+	export_set_var(env_list, "SHLVL", "1");
+}
 
 void	get_env(t_env *env_list)
 {
