@@ -1,9 +1,16 @@
-#include "minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   export_exe_helper.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/24 12:48:25 by akemmoun          #+#    #+#             */
+/*   Updated: 2025/06/24 12:57:11 by akemmoun         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-static int	cmp_env(t_env *a, t_env *b)
-{
-	return (ft_strcmp(a->key, b->key));
-}
+#include "minishell.h"
 
 t_env	*create_env_node(const char *key, const char *value)
 {
@@ -43,26 +50,45 @@ void	export_set_var(t_env **env_list, char *key, char *value)
 	{
 		if (ft_strcmp(tmp->key, key) == 0)
 		{
-			if (tmp->value)
-				free(tmp->value);
 			if (value)
+			{
+				if (tmp->value)
+					free(tmp->value);
 				tmp->value = ft_strdup(value);
-			else
-				tmp->value = NULL;
-			return;
+			}
+			return ;
 		}
 		tmp = tmp->next;
 	}
-	tmp = create_env_node(key, value);
+	if (value)
+		tmp = create_env_node(key, value);
+	else
+		tmp = create_env_node(key, "");
 	if (!tmp)
-		return;
+		return ;
 	tmp->next = *env_list;
 	*env_list = tmp;
 }
 
+void	print_env_arr(t_env **arr, int count)
+{
+	int	i;
+
+	i = 0;
+	while (i < count)
+	{
+		printf("declare -x %s", arr[i]->key);
+		if (arr[i]->value)
+			printf("=\"%s\"", arr[i]->value);
+		printf("\n");
+		i++;
+	}
+}
+
 void	export_print_sorted_helper(t_env **arr, int count)
 {
-	int	i, j;
+	int		i;
+	int		j;
 	t_env	*swap;
 
 	i = 0;
@@ -81,15 +107,7 @@ void	export_print_sorted_helper(t_env **arr, int count)
 		}
 		i++;
 	}
-	i = 0;
-	while (i < count)
-	{
-		printf("declare -x %s", arr[i]->key);
-		if (arr[i]->value)
-			printf("=\"%s\"", arr[i]->value);
-		printf("\n");
-		i++;
-	}
+	print_env_arr(arr, count);
 }
 
 void	export_print_sorted(t_env *env_list)

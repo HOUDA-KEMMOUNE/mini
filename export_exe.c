@@ -6,11 +6,16 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 22:03:42 by akemmoun          #+#    #+#             */
-/*   Updated: 2025/06/22 14:36:50 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/06/24 12:58:02 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	cmp_env(t_env *a, t_env *b)
+{
+	return (ft_strcmp(a->key, b->key));
+}
 
 // static void	export_print_sorted(t_env *env_list)
 // {

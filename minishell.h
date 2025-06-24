@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 15:59:11 by hkemmoun          #+#    #+#             */
-/*   Updated: 2025/06/15 15:33:36 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/06/24 12:57:52 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,6 +172,7 @@ int						export_builtin_adapter(t_token *tokens,
 void					export_set_var(t_env **env_list, char *key, char *value);
 void					export_print_sorted(t_env *env_list);
 void					export_set_var(t_env **env_list, char *key, char *value);
+int						cmp_env(t_env *a, t_env *b);
 
 /*-------------------unset-------------------*/
 int						unset(t_token *tokens, t_env **env_list);
