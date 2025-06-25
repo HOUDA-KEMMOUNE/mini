@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 15:59:11 by hkemmoun          #+#    #+#             */
-/*   Updated: 2025/06/24 12:57:52 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/06/25 10:05:44 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,7 +205,8 @@ void					free_token_list(t_token *tok);
 void					free_token_exc_list(t_token_exc *cmd);
 void					minishell_cleanup(t_env *env, t_token *tokens,
 							t_token_exc *tokens_exec, t_echo *echo);
-
+void					free_args(char **arr);
+							
 /*----------------cd-----------------*/
 char					**token_to_args(t_token *tokens);
 int						cd(t_token *tokens, t_env **env_list);

@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/14 11:39:52 by akemmoun          #+#    #+#             */
-/*   Updated: 2025/06/22 14:40:57 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/06/25 10:05:08 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,53 +49,24 @@ void	free_token_list(t_token *tok)
 	}
 }
 
-void free_args(char **arr)
+void	free_token_exc_list(t_token_exc *cmd)
 {
-    int i = 0;
-    if (!arr)
-        return;
-    while (arr[i])
-        free(arr[i++]);
-    free(arr);
-}
+	t_token_exc	*tmp;
 
-// void free_str_array_shallow(char **arr)
-// {
-//     if (arr)
-// 		free(arr);
-// }
-
-void free_token_exc_list(t_token_exc *cmd)
-{
-    t_token_exc *tmp;
-    while (cmd)
-    {
-        tmp = cmd->next;
-        // Do NOT free strings inside args, just the array
-        if (cmd->args)
-            free_args(cmd->args);
-        if (cmd->cmd_path)
-            free(cmd->cmd_path);
-        if (cmd->file)
-            free(cmd->file);
-        if (cmd->delimiter)
-            free(cmd->delimiter);
-        // If value/cmd are NOT strdup'd, do NOT free them here!
-        free(cmd);
-        cmd = tmp;
-    }
-}
-
-void	free_env_array(char **envp)
-{
-	int	i;
-
-	i = 0;
-	if (!envp)
-		return ;
-	while (envp[i])
-		free(envp[i++]);
-	free(envp);
+	while (cmd)
+	{
+		tmp = cmd->next;
+		if (cmd->args)
+			free_args(cmd->args);
+		if (cmd->cmd_path)
+			free(cmd->cmd_path);
+		if (cmd->file)
+			free(cmd->file);
+		if (cmd->delimiter)
+			free(cmd->delimiter);
+		free(cmd);
+		cmd = tmp;
+	}
 }
 
 void	minishell_cleanup(t_env *env, t_token *tokens, t_token_exc *tokens_exec,
