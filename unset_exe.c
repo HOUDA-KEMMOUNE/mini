@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/14 11:05:09 by akemmoun          #+#    #+#             */
-/*   Updated: 2025/06/19 18:15:47 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/06/25 14:11:45 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,34 +37,38 @@ void	unset_env_var(t_env **env, const char *name)
 	}
 }
 
+int	is_valid_unset_name(char *name)
+{
+	int	j;
+
+	if (!is_notForbidden_char(name[0], 1))
+		return (0);
+	j = 1;
+	while (name[j])
+	{
+		if (!is_notForbidden_char(name[j], 0))
+			return (0);
+		j++;
+	}
+	return (1);
+}
+
 int	unset(t_token *tokens, t_env **env_list)
 {
+	t_token	*arg;
 	char	*name;
-	int		valid;
 
-	t_token *arg = tokens->next; // skip "unset" itself
+	arg = tokens->next;
 	while (arg)
 	{
 		name = arg->value;
-		// Validate identifier
-		if (!is_notForbidden_char(name[0], 1))
+		if (!is_valid_unset_name(name))
 		{
 			fprintf(stderr, "unset: `%s': not a valid identifier\n", name);
 			arg = arg->next;
 			continue ;
 		}
-		valid = 1;
-		for (int j = 1; name[j]; j++)
-		{
-			if (!is_notForbidden_char(name[j], 0))
-			{
-				fprintf(stderr, "unset: `%s': not a valid identifier\n", name);
-				valid = 0;
-				break ;
-			}
-		}
-		if (valid)
-			unset_env_var(env_list, name);
+		unset_env_var(env_list, name);
 		arg = arg->next;
 	}
 	return (0);

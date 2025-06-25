@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 15:59:11 by hkemmoun          #+#    #+#             */
-/*   Updated: 2025/06/25 12:39:36 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/06/25 14:06:55 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -219,6 +219,8 @@ int						ft_cd_exec(t_token **tokens, t_env *env_list);
 int						pwd(t_token *tokens, t_env **env_list);
 
 /*------------tokens_exec_helper1---------------*/
+void					tokens_exc_helper(t_token **token, \
+						t_token_exc **token_list);
 void					tokens_exc_helper1(t_token_exc **new, t_token **token);
 void					tokens_exc_helper2(t_token_exc **new,
 							t_token_exc **token_list);
@@ -226,6 +228,9 @@ int						ft_count_args(t_token *token);
 void					tokens_exc_redio(t_token *token,
 							t_token_exc **token_list);
 void					filename_node(t_token **token);
+void					fill_args(t_token **token, char **args_tmp, \
+						int count_args);
+void					command_node(t_token **token, t_token_exc **new);
 
 /*------------cmd_paths---------------*/
 void					path(t_token_exc **token_list);
