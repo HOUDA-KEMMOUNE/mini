@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 15:59:11 by hkemmoun          #+#    #+#             */
-/*   Updated: 2025/06/25 14:06:55 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/06/25 15:20:10 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -253,4 +253,8 @@ int						check_heredoc(t_token **token, t_token_exc **command);
 int						creat_tmpfile(char **file_name);
 void					fill_heredoc_file(int fd, char *delimiter);
 
+
+/*------------SC helpers---------------*/
+void					simple_cmd_parent(t_token_exc **token_cmd, char **envp, int status);
+void					simple_cmd_child(t_token_exc **token_cmd, char **envp);
 #endif

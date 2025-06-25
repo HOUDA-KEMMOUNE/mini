@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/01 15:07:23 by hkemmoun          #+#    #+#             */
-/*   Updated: 2025/06/22 10:48:57 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/06/25 15:18:11 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ void	simple_cmd(t_token *token, t_token_exc **token_cmd)
 	int		pid;
 	t_env	*env;
 	char	**envp;
-	int		(fd), (j);
+	int		status;
 
 	env = *env_func();
 	pid = fork();
@@ -77,52 +77,12 @@ void	simple_cmd(t_token *token, t_token_exc **token_cmd)
 		return ;
 	envp = env_to_array(env);
 	signal(SIGINT, SIG_IGN);
-	signal(SIGQUIT, SIG_IGN); // to ignore CTRL+backslash
-	if (pid == 0)             // child
-	{
-		signal(SIGINT, SIG_DFL);
-		signal(SIGQUIT, SIG_DFL); // to ignore CTRL+backslash
-		check_fd(token_cmd);
-		if ((*token_cmd)->heredoc_file != NULL
-			&& (*token_cmd)->count_heredoc > 0)
-		{
-			int	last = (*token_cmd)->count_heredoc - 1;
-			fd = open((*token_cmd)->heredoc_file[last], O_RDONLY);
-			if (fd >= 0)
-			{
-				dup2(fd, STDIN_FILENO);
-				close(fd);
-			}
-
-		}
-		execve((*token_cmd)->cmd_path, (*token_cmd)->args, envp);
-		perror("execve failed");
-		free_env_array(envp);
-		exit(0);
-	}
+	signal(SIGQUIT, SIG_IGN);
+	if (pid == 0)
+		simple_cmd_child(token_cmd, envp);
 	else if (pid > 0)
 	{
-		int status;
 		waitpid(pid, &status, 0);
-		free_env_array(envp);
-		if ((*token_cmd)->heredoc_file != NULL)
-		{
-			j = 0;
-			while (j < (*token_cmd)->count_heredoc)
-			{
-				unlink((*token_cmd)->heredoc_file[j]);
-				free((*token_cmd)->heredoc_file[j]);
-				(*token_cmd)->heredoc_file[j] = NULL;
-				j++;
-			}
-		}
-		if (WIFSIGNALED(status))
-		{
-			int sig = WTERMSIG(status);
-			if (sig == SIGINT)
-				write(1, "\n", 1); // print newline (like bash)
-			else if (sig == SIGQUIT)
-				write(1, "Quit (core dumped)\n", 19); // print quit message
-		}
+		simple_cmd_parent(token_cmd, envp, status);
 	}
 }
