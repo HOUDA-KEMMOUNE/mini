@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 15:59:11 by hkemmoun          #+#    #+#             */
-/*   Updated: 2025/06/25 10:05:44 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/06/25 12:21:39 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -236,7 +236,11 @@ void					check_fd(t_token_exc **token_cmd);
 char					**env_to_array(t_env *env_list);
 // void	env_to_array_helper(t_env *env_list);
 int						env_size(t_env *env_list);
-
+void					free_split_path(char **splited_path);
+int						set_cmd_path(char **splited_path, \
+									char *new_cmd, t_token_exc **token_list);
+void					print_cmd_error(const char *cmd);
+									
 /*------------heredoc---------------*/
 void	heredoc(t_token **token, t_token_exc **command);
 int		check_heredoc(t_token **token, t_token_exc **command);

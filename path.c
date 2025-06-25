@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/01 15:23:13 by hkemmoun          #+#    #+#             */
-/*   Updated: 2025/06/22 10:02:33 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/06/25 12:21:10 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	is_builtin(t_token_exc **token_list)
 		|| (ft_strncmp((*token_list)->cmd, "unset", 5) == 0)
 		|| (ft_strncmp((*token_list)->cmd, "env", 3) == 0)
 		|| (ft_strncmp((*token_list)->cmd, "exit", 4) == 0))
-		return (0); // builtin
+		return (0);
 	else
 		return (1);
 }
@@ -70,55 +70,25 @@ int	check_first_cmd(t_token_exc *token_list)
 		return (1);
 }
 
-void print_cmd_error(const char *cmd)
-{
-    struct stat st;
-
-    if (!cmd || cmd[0] == 0)
-        return; // Don't print anything for empty
-
-    if (stat(cmd, &st) == 0 && S_ISDIR(st.st_mode))
-        printf("minishell: %s: Is a directory\n", cmd);
-	else
-        printf("%s: command not found\n", cmd);
-}
-
-
 void	path(t_token_exc **token_list)
 {
-    char    **splited_path;
-    char    *new_cmd;
-    char    *tmp;
-    int     flag;
-    int     i;
+	char	**splited_path;
+	char	*new_cmd;
+	int		flag;
 
-    splited_path = split_path();
-    flag = 0;
-    if (!splited_path)
-        return ;
-    (*token_list)->cmd_path = NULL;
-    new_cmd = ft_strjoin("/", (*token_list)->cmd);
-    for (i = 0; splited_path[i]; i++)
-    {
-        tmp = ft_strjoin(splited_path[i], new_cmd);
-        if (access(tmp, F_OK) == 0)
-        {
-            flag = 1;
-            (*token_list)->cmd_path = tmp;
-            break;
-        }
-        free(tmp);
-    }
-    free(new_cmd);
-    for (i = 0; splited_path[i]; i++)
-        free(splited_path[i]);
-    free(splited_path);
+	splited_path = split_path();
+	flag = 0;
+	if (!splited_path)
+		return ;
+	(*token_list)->cmd_path = NULL;
+	new_cmd = ft_strjoin("/", (*token_list)->cmd);
+	flag = set_cmd_path(splited_path, new_cmd, token_list);
+	free(new_cmd);
+	free_split_path(splited_path);
 	if (flag == 0 && check_first_cmd(*token_list) == 1)
 	{
 		if (!(*token_list)->cmd || (*token_list)->cmd[0] == '\0')
-        	return;
+			return ;
 		print_cmd_error((*token_list)->cmd);
-		return ;
 	}
-	// printf("path's command --> %s\n", (*token_list)->cmd_path);
 }
