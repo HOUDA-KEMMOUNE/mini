@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 15:59:11 by hkemmoun          #+#    #+#             */
-/*   Updated: 2025/06/25 12:21:39 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/06/25 12:39:36 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,11 +64,11 @@ typedef struct s_token
 }						t_token;
 
 // to call builtins
-typedef int				(*builtin_ptr)(t_token *, t_env **);
+typedef int	(*t_builtin_ptr)(t_token *, t_env **);
 typedef struct s_built
 {
-	char				*cmd;
-	builtin_ptr			ptr;
+	char					*cmd;
+	t_builtin_ptr			ptr;
 }						t_built;
 
 typedef struct s_meta_char
@@ -108,7 +108,6 @@ typedef struct s_echo
 //     char *cmd;
 //     int (*ptr)(t_token *tokens, t_env *env);
 // } t_built;
-
 // globel env
 t_env					**env_func(void);
 
@@ -169,9 +168,11 @@ void					echo(t_token **token, t_echo **echo_struct,
 int						export_internal(t_token *tokens, t_env **env_list);
 int						export_builtin_adapter(t_token *tokens,
 							t_env **env_list);
-void					export_set_var(t_env **env_list, char *key, char *value);
+void					export_set_var(t_env **env_list, \
+						char *key, char *value);
 void					export_print_sorted(t_env *env_list);
-void					export_set_var(t_env **env_list, char *key, char *value);
+void					export_set_var(t_env **env_list, \
+						char *key, char *value);
 int						cmp_env(t_env *a, t_env *b);
 
 /*-------------------unset-------------------*/
@@ -206,7 +207,7 @@ void					free_token_exc_list(t_token_exc *cmd);
 void					minishell_cleanup(t_env *env, t_token *tokens,
 							t_token_exc *tokens_exec, t_echo *echo);
 void					free_args(char **arr);
-							
+
 /*----------------cd-----------------*/
 char					**token_to_args(t_token *tokens);
 int						cd(t_token *tokens, t_env **env_list);
@@ -240,11 +241,11 @@ void					free_split_path(char **splited_path);
 int						set_cmd_path(char **splited_path, \
 									char *new_cmd, t_token_exc **token_list);
 void					print_cmd_error(const char *cmd);
-									
+
 /*------------heredoc---------------*/
-void	heredoc(t_token **token, t_token_exc **command);
-int		check_heredoc(t_token **token, t_token_exc **command);
-int		creat_tmpfile(char **file_name);
-void	fill_heredoc_file(int fd, char *delimiter);
+void					heredoc(t_token **token, t_token_exc **command);
+int						check_heredoc(t_token **token, t_token_exc **command);
+int						creat_tmpfile(char **file_name);
+void					fill_heredoc_file(int fd, char *delimiter);
 
 #endif
