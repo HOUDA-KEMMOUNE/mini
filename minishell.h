@@ -253,6 +253,11 @@ int						check_heredoc(t_token **token, t_token_exc **command);
 int						creat_tmpfile(char **file_name);
 void					fill_heredoc_file(int fd, char *delimiter);
 
+/*------------redirections---------------*/
+void					change_redout(t_token **token, t_token_exc **command);
+void					check_redirections(t_token **token, t_token_exc **command);
+void					change_redout_echo(t_token **token, t_echo **echo_struct);
+
 /*------------SC helpers---------------*/
 void					simple_cmd_parent(t_token_exc **token_cmd, \
 						char **envp, int status);
