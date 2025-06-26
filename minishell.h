@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 15:59:11 by hkemmoun          #+#    #+#             */
-/*   Updated: 2025/06/25 15:20:10 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/06/26 11:41:16 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,7 +141,7 @@ void					ft_cd(t_token **token, t_env *env_list);
 void					ft_ls(t_token **token, t_env *env_list);
 void					ft_export(t_token **token);
 void					ft_unset(t_token **token);
-int						is_notForbidden_char(char c, int is_first);
+int						is_notforbidden_char(char c, int is_first);
 int						check_commande(char *input);
 void					ft_count(char *s, int *count);
 void					ft_count_dotes(t_token **token);
@@ -253,8 +253,8 @@ int						check_heredoc(t_token **token, t_token_exc **command);
 int						creat_tmpfile(char **file_name);
 void					fill_heredoc_file(int fd, char *delimiter);
 
-
 /*------------SC helpers---------------*/
-void					simple_cmd_parent(t_token_exc **token_cmd, char **envp, int status);
+void					simple_cmd_parent(t_token_exc **token_cmd, \
+						char **envp, int status);
 void					simple_cmd_child(t_token_exc **token_cmd, char **envp);
 #endif

@@ -6,11 +6,32 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 13:12:23 by akemmoun          #+#    #+#             */
-/*   Updated: 2025/05/14 13:12:25 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/06/26 11:44:02 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static void	print_unset_error(char *var, char invalid_char)
+{
+	if (invalid_char == ')')
+	{
+		ft_putstr_fd("syntax error near unexpected token `)'\n", 1);
+		return ;
+	}
+	else if (invalid_char == '(')
+	{
+		ft_putstr_fd("syntax error near unexpected token `('\n", 1);
+		return ;
+	}
+	else
+	{
+		ft_putstr_fd("unset: `", 1);
+		ft_putstr_fd(var, 1);
+		ft_putstr_fd("': not a valid identifier\n", 1);
+		return ;
+	}
+}
 
 static void	after_dollar(char *var)
 {
@@ -24,24 +45,36 @@ static void	after_dollar(char *var)
 			i++;
 		else if (var[i] == '(' || var[i] == ')')
 		{
-			if (var[i] == ')')
-			{
-				ft_putstr_fd("syntax error near unexpected token `)'\n", 1);
-				return ;
-			}
-			else
-			{
-				ft_putstr_fd("syntax error near unexpected token `('\n", 1);
-				return ;
-			}
+			print_unset_error(var, var[i]);
+			return ;
 		}
 		else
 		{
-			ft_putstr_fd("unset: `", 1);
-			ft_putstr_fd(var, 1);
-			ft_putstr_fd("': not a valid identifier\n", 1);
+			print_unset_error(var, var[i]);
 			return ;
 		}
+	}
+}
+
+static void	check_var_first_char(t_token **token, int *i)
+{
+	char	*var;
+
+	var = (*token)->value;
+	if ((var[*i] == '_') || (var[*i] >= 'a' && var[*i] <= 'z') \
+	|| (var[*i] >= 'A' && var[*i] <= 'Z'))
+		(*i)++;
+	else if (var[*i] == '$')
+	{
+		after_dollar(&var[*i]);
+		(*i)++;
+	}
+	else
+	{
+		ft_putstr_fd("unset: not an identifier: ", 1);
+		ft_putstr_fd(var, 1);
+		ft_putstr_fd("\n", 1);
+		return ;
 	}
 }
 
@@ -52,21 +85,7 @@ static void	check_var(t_token **token)
 
 	var = (*token)->value;
 	i = 0;
-	if ((var[i] == '_') || (var[i] >= 'a' && var[i] <= 'z') || (var[i] >= 'A'
-			&& var[i] <= 'Z'))
-		i++;
-	else if (var[i] == '$')
-	{
-		after_dollar(&var[i]);
-		i++;
-	}
-	else
-	{
-		ft_putstr_fd("unset: not an identifier: ", 1);
-		ft_putstr_fd(var, 1);
-		ft_putstr_fd("\n", 1);
-		return ;
-	}
+	check_var_first_char(token, &i);
 	while (var[i])
 	{
 		if (var[i] == '=')
@@ -74,7 +93,7 @@ static void	check_var(t_token **token)
 			ft_putstr_fd("unset: `=': not a valid identifier\n", 1);
 			return ;
 		}
-		else if (is_notForbidden_char(var[i], 1) == 0)
+		else if (is_notforbidden_char(var[i], 1) == 0)
 		{
 			ft_putstr_fd("unset: not an identifier: ", 1);
 			ft_putstr_fd(var, 1);

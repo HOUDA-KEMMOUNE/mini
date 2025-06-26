@@ -6,7 +6,7 @@
 /*   By: akemmoun <akemmoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/14 11:05:09 by akemmoun          #+#    #+#             */
-/*   Updated: 2025/06/25 14:11:45 by akemmoun         ###   ########.fr       */
+/*   Updated: 2025/06/26 11:31:03 by akemmoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,12 @@ int	is_valid_unset_name(char *name)
 {
 	int	j;
 
-	if (!is_notForbidden_char(name[0], 1))
+	if (!is_notforbidden_char(name[0], 1))
 		return (0);
 	j = 1;
 	while (name[j])
 	{
-		if (!is_notForbidden_char(name[j], 0))
+		if (!is_notforbidden_char(name[j], 0))
 			return (0);
 		j++;
 	}

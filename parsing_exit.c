@@ -21,11 +21,11 @@ static int	ft_isalpha_exit(char *str)
 	{
 		if ((str[i] >= 'a' && str[i] <= 'z') || (str[i] >= 'A'
 				&& str[i] <= 'Z'))
-			return (0); // l2omoor ba2at bil fachal ❌
+			return (0);
 		else
 			i++;
 	}
-	return (1); // l2omore madbota ✅
+	return (1);
 }
 
 void	ft_exit(t_token **token)
