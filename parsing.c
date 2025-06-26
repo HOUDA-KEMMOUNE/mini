@@ -24,11 +24,39 @@ void	ft_data_init(t_echo **echo_struct)
 	(*echo_struct)->msg = NULL;
 }
 
+int	handle_special_char(char tmp)
+{
+	if (tmp == '|')
+	{
+		write(1, "minishell: parse error near `|'\n",
+			ft_strlen("minishell: parse error near `|'\n"));
+		return (1);
+	}
+	else if (tmp == '(')
+	{
+		write(1, "minishell: unclosed parenthesis `('\n",
+			ft_strlen("minishell: unclosed parenthesis `('\n"));
+		return (1);
+	}
+	else if (tmp == ')')
+	{
+		write(1, "minishell: unclosed parenthesis `)'\n",
+			ft_strlen("minishell: unclosed parenthesis `)'\n"));
+		return (1);
+	}
+	else if (tmp == 39)
+	{
+		write(1, "minishell: parse error near `\''\n",
+			ft_strlen("minishell: parse error near `\''\n"));
+		return (1);
+	}
+	return (0);
+}
+
 void	check_first_token(t_token **token)
 {
 	t_token	*token_tmp;
 	char	*first_token;
-	char	tmp;
 	int		len;
 
 	if (!token)
@@ -36,35 +64,7 @@ void	check_first_token(t_token **token)
 	token_tmp = (*token);
 	first_token = token_tmp->value;
 	len = ft_strlen(first_token);
-	if (len == 1)
-	{
-		tmp = *first_token;
-		if (tmp == '|')
-		{
-			write(1, "minishell: parse error near `|'\n",
-				ft_strlen("minishell: parse error near `|'\n"));
-			return ;
-		}
-		else if (tmp == '(')
-		{
-			write(1, "minishell: unclosed parenthesis `('\n",
-				ft_strlen("minishell: unclosed parenthesis `('\n"));
-			return ;
-		}
-		else if (tmp == ')')
-		{
-			write(1, "minishell: unclosed parenthesis `)'\n",
-				ft_strlen("minishell: unclosed parenthesis `)'\n"));
-			return ;
-		}
-		else if (tmp == 39)
-		{
-			write(1, "minishell: parse error near `\''\n",
-				ft_strlen("minishell: unclosed parenthesis `\''\n"));
-			return ;
-		}
-	}
-	else
+	if (len == 1 && handle_special_char(*first_token))
 		return ;
 }
 

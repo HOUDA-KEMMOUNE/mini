@@ -22,9 +22,7 @@ void	add_token(t_token **head, char *value, t_token_type type, char quote)
 	if (!new)
 		return ;
 	ft_memset(new, 0, sizeof(t_token));
-	// printf("value ---> %s\n", value);
 	new->value = ft_strdup(value);
-	// new->type = type;
 	new->quote = quote;
 	new->next = NULL;
 	if (*head == NULL)
@@ -51,6 +49,7 @@ void	word_case(char *input, int *i, t_token **token_list)
 		if (!is_quote_closed(input, quote, *i + 1))
 		{
 			print_error("Unclosed quote");
+			(*i)++;
 			return ;
 		}
 		(*i)++;
@@ -78,10 +77,11 @@ void	word_case(char *input, int *i, t_token **token_list)
 void	add_type(t_token **token_list)
 {
 	static t_meta_char	arr[] = {{"|", PIPE}, {">", REDIR_OUT}, {"<", REDIR_IN},
-			{">>", APPEND}, {"<<", HEREDOC}};
+	{">>", APPEND}, {"<<", HEREDOC}};
 	t_token				*head;
+	int					i;
+	int					flag;
 
-	int(i), (flag);
 	i = 0;
 	flag = 0;
 	head = (*token_list);
@@ -108,7 +108,6 @@ void	char_to_str(char c, int n, t_token **token_list)
 {
 	char	str[3];
 
-	// char	*result;
 	if (n == 0)
 	{
 		str[0] = c;
@@ -120,9 +119,7 @@ void	char_to_str(char c, int n, t_token **token_list)
 		str[1] = c;
 		str[2] = '\0';
 	}
-	// result = str;
 	add_token(token_list, str, PIPE, 0);
-	// return (result);
 }
 
 t_token	*lexer(char *input)
@@ -130,7 +127,6 @@ t_token	*lexer(char *input)
 	t_token	*token_list;
 	int		i;
 
-	// char	*str;
 	i = 0;
 	token_list = NULL;
 	while (input[i])
@@ -157,54 +153,6 @@ t_token	*lexer(char *input)
 	return (token_list);
 }
 
-// t_token *lexer(char *input)
-// {
-// 	t_token *token_list;
-// 	int i;
-
-// 	i = 0;
-// 	token_list = NULL;
-// 	while (input[i])
-// 	{
-// 		while (input[i] == ' ' || input[i] == '\t')
-// 			i++;
-// 		if (input[i] == '|')
-// 		{
-// 			add_token(&token_list, "|", PIPE, 0);
-// 			i++;
-// 		}
-// 		else if (input[i] == '>')
-// 		{
-// 			if (input[i+1] == '>')
-// 			{
-// 				add_token(&token_list, ">>", APPEND, 0);
-// 				i += 2;
-// 			}
-// 			else
-// 			{
-// 				add_token(&token_list, ">", REDIR_OUT, 0);
-// 				i++;
-// 			}
-// 		}
-// 		else if (input[i] == '<')
-// 		{
-// 			if (input[i+1] == '<')
-// 			{
-// 				add_token(&token_list, "<<", HEREDOC, 0);
-// 				i += 2;
-// 			}
-// 			else
-// 			{
-// 				add_token(&token_list, "<", REDIR_IN, 0);
-// 				i++;
-// 			}
-// 		}
-// 		else
-// 			word_case(input, &i, &token_list);
-// 	}
-// 	return (token_list);
-// }
-
 int	syntax_err_msg(t_token **token, t_token_exc **commande)
 {
 	ft_putstr_fd("minishell: syntax error near unexpected token `",
@@ -213,16 +161,6 @@ int	syntax_err_msg(t_token **token, t_token_exc **commande)
 	ft_putstr_fd("'\n", (*commande)->fd_out);
 	return (1);
 }
-// void	check_cmd_type(t_token **token, t_token_exc **commande)
-// {
-// 	while ((*token))
-// 	{
-// 		if ((*token)->type = CMD)
-// 		{
-
-// 		}
-// 	}
-// }
 
 void	retype_lexer(t_token **token, t_token_exc **commande)
 {
@@ -249,5 +187,4 @@ void	retype_lexer(t_token **token, t_token_exc **commande)
 		i++;
 		(*token) = (*token)->next;
 	}
-	// check_cmd_type(token, commande);
 }
