@@ -47,12 +47,14 @@ static void	ft_count_dotes_env(t_token **token)
 		ft_putstr_fd("env: '", 1);
 		ft_putstr_fd(s, 1);
 		ft_putstr_fd("': Permission denied\n", 1);
+		return ;
 	}
-	else if (count > 2)
+	if (count > 2)
 	{
 		ft_putstr_fd("env: '", 1);
 		ft_putstr_fd(s, 1);
 		ft_putstr_fd("': No such file or directory\n", 1);
+		return ;
 	}
 }
 

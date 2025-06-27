@@ -56,7 +56,6 @@ static void	check_var(t_token **token)
 {
 	char	*var;
 	char	*eq;
-	int		valid;
 
 	var = (*token)->value;
 	eq = ft_strchr(var, '=');
@@ -71,7 +70,7 @@ static void	check_var(t_token **token)
 			*eq = '=';
 		return ;
 	}
-	valid = check_var_valid_char(var, eq);
+	check_var_valid_char(var, eq);
 	if (eq)
 		*eq = '=';
 }

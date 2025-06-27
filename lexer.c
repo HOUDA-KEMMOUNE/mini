@@ -36,41 +36,14 @@ void	add_token(t_token **head, char *value, t_token_type type, char quote)
 	}
 }
 
-void	word_case(char *input, int *i, t_token **token_list)
+int	word_case(char *input, int *i, t_token **token_list)
 {
-	int		start;
-	char	*word;
-	char	quote;
-
-	quote = 0;
 	if (input[*i] == '"' || input[*i] == '\'')
-	{
-		quote = input[*i];
-		if (!is_quote_closed(input, quote, *i + 1))
-		{
-			print_error("Unclosed quote");
-			(*i)++;
-			return ;
-		}
-		(*i)++;
-		start = *i;
-		while (input[*i] && input[*i] != quote)
-			(*i)++;
-		word = ft_substr(input, start, *i - start);
-		add_token(token_list, word, WORD, quote);
-		free(word);
-		if (input[*i] == quote)
-			(*i)++;
-	}
+		return (handle_quoted_word(input, i, token_list));
 	else
 	{
-		start = *i;
-		while (input[*i] && input[*i] != ' ' && input[*i] != '\t'
-			&& input[*i] != '|' && input[*i] != '>' && input[*i] != '<')
-			(*i)++;
-		word = ft_substr(input, start, *i - start);
-		add_token(token_list, word, WORD, 0);
-		free(word);
+		handle_regular_word(input, i, token_list);
+		return (0);
 	}
 }
 
@@ -79,87 +52,44 @@ void	add_type(t_token **token_list)
 	static t_meta_char	arr[] = {{"|", PIPE}, {">", REDIR_OUT}, {"<", REDIR_IN},
 	{">>", APPEND}, {"<<", HEREDOC}};
 	t_token				*head;
-	int					i;
-	int					flag;
 
-	i = 0;
-	flag = 0;
 	head = (*token_list);
 	while ((*token_list))
 	{
-		while (i < 5)
-		{
-			if (strcmp((*token_list)->value, arr[i].value) == 0)
-			{
-				flag = 1;
-				(*token_list)->type = arr[i].type;
-			}
-			i++;
-		}
-		if (flag == 0)
-			(*token_list)->type = WORD;
-		i = 0;
+		assign_token_type(token_list, arr);
 		(*token_list) = (*token_list)->next;
 	}
 	(*token_list) = head;
-}
-
-void	char_to_str(char c, int n, t_token **token_list)
-{
-	char	str[3];
-
-	if (n == 0)
-	{
-		str[0] = c;
-		str[1] = '\0';
-	}
-	else if (n == 1)
-	{
-		str[0] = c;
-		str[1] = c;
-		str[2] = '\0';
-	}
-	add_token(token_list, str, PIPE, 0);
 }
 
 t_token	*lexer(char *input)
 {
 	t_token	*token_list;
 	int		i;
+	int		error;
 
 	i = 0;
 	token_list = NULL;
-	while (input[i])
+	error = 0;
+	while (input[i] && !error)
 	{
 		while (input[i] == ' ' || input[i] == '\t')
 			i++;
+		if (input[i] == '\0')
+			break ;
 		if (input[i] == '|' || input[i] == '>' || input[i] == '<'
 			|| (input[i] == '>' && input[i + 1] == '>') || (input[i] == '<'
 				&& input[i + 1] == '<'))
-		{
-			if ((input[i] == '>' && input[i + 1] == '>') || (input[i] == '<'
-					&& input[i + 1] == '<'))
-			{
-				char_to_str(input[i], 1, &token_list);
-				i++;
-			}
-			else
-				char_to_str(input[i], 0, &token_list);
-			i++;
-		}
+			error = process_operators(input, &i, &token_list);
 		else
-			word_case(input, &i, &token_list);
+			error = word_case(input, &i, &token_list);
+	}
+	if (error)
+	{
+		free_token_list(token_list);
+		return (NULL);
 	}
 	return (token_list);
-}
-
-int	syntax_err_msg(t_token **token, t_token_exc **commande)
-{
-	ft_putstr_fd("minishell: syntax error near unexpected token `",
-		(*commande)->fd_out);
-	ft_putstr_fd((*token)->value, (*commande)->fd_out);
-	ft_putstr_fd("'\n", (*commande)->fd_out);
-	return (1);
 }
 
 void	retype_lexer(t_token **token, t_token_exc **commande)
@@ -175,13 +105,7 @@ void	retype_lexer(t_token **token, t_token_exc **commande)
 			(*token)->type = CMD;
 		else if (((*token)->type == REDIR_IN) || ((*token)->type == REDIR_OUT)
 			|| ((*token)->type == APPEND))
-		{
-			(*token) = (*token)->next;
-			if ((*token)->type == WORD)
-				(*token)->type = FILE_NAME;
-			else if (syntax_err_msg(&(*token), &(*commande)) == 1)
-				return ;
-		}
+			handle_redirection_tokens(token, commande);
 		else if ((*token)->type == WORD)
 			(*token)->type = ARG;
 		i++;

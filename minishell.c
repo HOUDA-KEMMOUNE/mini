@@ -12,6 +12,8 @@
 
 #include "minishell.h"
 
+
+
 // void	print_type(t_token *list);
 int	se_redirections(t_token **token)
 {
@@ -45,7 +47,6 @@ int	se_redirections(t_token **token)
 void	change_redout(t_token **token, t_token_exc **command)
 {
 	t_token		*token_tmp;
-	char		*tmp;
 	int			fd;
 
 	if (!token || !(*token) || !command || !(*command))
@@ -53,11 +54,9 @@ void	change_redout(t_token **token, t_token_exc **command)
 	token_tmp = (*token);
 	while (token_tmp)
 	{
-		tmp = token_tmp->value;
 		if (token_tmp->type == FILE_NAME && ft_strncmp(token_tmp->value,
 			"/dev/stdout", ft_strlen("/dev/stdout")) != 0)
 		{
-			tmp = token_tmp->value;
 			fd = open(token_tmp->value, O_CREAT | O_WRONLY | O_TRUNC, 0640);
 		}
 		token_tmp = token_tmp->next;
@@ -126,6 +125,11 @@ int	main(int argc, char **argv, char **envp)
 		}
 		add_history(line);
 		tokens = lexer(line);
+		if (tokens == NULL)
+		{
+			free(line);
+			continue ;
+		}
 		add_type(&tokens);
 		tokens = expander(tokens, env_list);
 		tokens_exec = tokens_exc_handler(tokens);

@@ -32,6 +32,7 @@
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 10
 # endif
+
 // #include <readline/history.h>
 
 typedef enum e_token_type
@@ -111,6 +112,27 @@ typedef struct s_echo
 // globel env
 t_env					**env_func(void);
 
+/*-------------------lexer utils-------------------*/
+int						handle_quoted_word(char *input, int *i,
+							t_token **token_list);
+void					handle_regular_word(char *input, int *i,
+							t_token **token_list);
+void					handle_double_operator(char *input, int *i,
+							t_token **token_list);
+void					handle_single_operator(char *input, int *i,
+							t_token **token_list);
+int						syntax_err_msg(t_token **token,
+							t_token_exc **commande);
+void					assign_token_type(t_token **token_list,
+							t_meta_char *arr);
+void					char_to_str(char c, int n, t_token **token_list);
+
+/*-------------------lexer helper-------------------*/
+int						process_operators(char *input, int *i,
+							t_token **token_list);
+void					handle_redirection_tokens(t_token **token,
+							t_token_exc **commande);
+
 /*-------------------errors-------------------*/
 int						is_quote_closed(char *input, char quote, int start);
 void					print_error(char *msg);
@@ -123,7 +145,7 @@ void					init_minimal_env(t_env **env_list);
 
 /*-------------------Lexer-------------------*/
 t_token					*lexer(char *input);
-void					word_case(char *input, int *i, t_token **token_list);
+int						word_case(char *input, int *i, t_token **token_list);
 void					add_token(t_token **head, char *value,
 							t_token_type type, char quote);
 void					retype_lexer(t_token **token, t_token_exc **commande);
@@ -162,7 +184,16 @@ void					ft_pwd(t_token **token);
 t_token_exc				*tokens_exc_handler(t_token *token);
 void					echo(t_token **token, t_echo **echo_struct,
 							t_env *env_list);
-// void					init_shlvl(t_env *env);
+
+/*-------------------echo helpers-------------------*/
+void					echo_handle_empty_cmd(t_echo *echo_struct_tmp);
+int						echo_handle_n_flag(t_token **token_tmp);
+void					echo_write_char_by_char(t_token *token_tmp,
+							t_echo *echo_struct_tmp);
+void					echo_process_args(t_token **token, t_token *token_tmp,
+							t_echo *echo_struct_tmp, t_env *env_list);
+void					echo_process_main_logic(t_token **token, t_token *head,
+							t_echo *echo_struct_tmp, t_env *env_list);
 
 /*-------------------export-------------------*/
 int						export_internal(t_token *tokens, t_env **env_list);
@@ -213,11 +244,12 @@ void					free_args(char **arr);
 char					**token_to_args(t_token *tokens);
 int						cd(t_token *tokens, t_env **env_list);
 int						ft_cd_exec(t_token **tokens, t_env *env_list);
-char					*determine_path(t_token *tokens, t_env *env_list, char **to_free);
+char					*determine_path(t_token *tokens, t_env *env_list,
+							char **to_free);
 int						handle_basic_cd(const char *path, t_env **env_list);
 char					*expand_tilde(const char *path, t_env *env_list);
 int						handle_cd_dash(t_env **env_list);
-int	is_whitespace_only(const char *str);
+int						is_whitespace_only(const char *str);
 
 // void    pwd(t_token **token);
 
@@ -225,8 +257,8 @@ int	is_whitespace_only(const char *str);
 int						pwd(t_token *tokens, t_env **env_list);
 
 /*------------tokens_exec_helper1---------------*/
-void					tokens_exc_helper(t_token **token, \
-						t_token_exc **token_list);
+void					tokens_exc_helper(t_token **token,
+							t_token_exc **token_list);
 void					tokens_exc_helper1(t_token_exc **new, t_token **token);
 void					tokens_exc_helper2(t_token_exc **new,
 							t_token_exc **token_list);
@@ -234,8 +266,8 @@ int						ft_count_args(t_token *token);
 void					tokens_exc_redio(t_token *token,
 							t_token_exc **token_list);
 void					filename_node(t_token **token);
-void					fill_args(t_token **token, char **args_tmp, \
-						int count_args);
+void					fill_args(t_token **token, char **args_tmp,
+							int count_args);
 void					command_node(t_token **token, t_token_exc **new);
 
 /*------------cmd_paths---------------*/
@@ -249,8 +281,8 @@ char					**env_to_array(t_env *env_list);
 // void	env_to_array_helper(t_env *env_list);
 int						env_size(t_env *env_list);
 void					free_split_path(char **splited_path);
-int						set_cmd_path(char **splited_path, \
-									char *new_cmd, t_token_exc **token_list);
+int						set_cmd_path(char **splited_path,
+							char *new_cmd, t_token_exc **token_list);
 void					print_cmd_error(const char *cmd);
 
 /*------------heredoc---------------*/
@@ -261,12 +293,14 @@ void					fill_heredoc_file(int fd, char *delimiter);
 
 /*------------redirections---------------*/
 void					change_redout(t_token **token, t_token_exc **command);
-void					check_redirections(t_token **token, t_token_exc **command);
-void					change_redout_echo(t_token **token, t_echo **echo_struct);
+void					check_redirections(t_token **token, \
+						t_token_exc **command);
+void					change_redout_echo(t_token **token, \
+						t_echo **echo_struct);
 
 /*------------SC helpers---------------*/
-void					simple_cmd_parent(t_token_exc **token_cmd, \
-						char **envp, int status);
+void					simple_cmd_parent(t_token_exc **token_cmd,
+							char **envp, int status);
 void					simple_cmd_child(t_token_exc **token_cmd, char **envp);
 
 /*------------cd helpers---------------*/

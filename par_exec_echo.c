@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   par_exec_echo.c                                     :+:      :+:    :+:   */
+/*   par_exec_echo.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hkemmoun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,32 +12,35 @@
 
 #include "minishell.h"
 
+static void	echo_handle_redir_out(t_token *token_tmp, t_echo **echo_struct)
+{
+	token_tmp = token_tmp->next;
+	(*echo_struct)->fd = open(token_tmp->value,
+			O_CREAT | O_WRONLY | O_TRUNC, 0640);
+}
+
+static void	echo_handle_append(t_token *token_tmp, t_echo **echo_struct)
+{
+	token_tmp = token_tmp->next;
+	(*echo_struct)->fd = open(token_tmp->value,
+			O_CREAT | O_RDWR | O_APPEND, 0640);
+}
+
 static void	redir_out_append(t_token **token, t_echo **echo_struct)
 {
 	t_token	*token_tmp;
 
-	// int		i;
 	if (!token || !(*token))
 		return ;
 	token_tmp = (*token);
-	// i = 0;
 	while (token_tmp)
 	{
 		if ((token_tmp->type == REDIR_OUT) || (token_tmp->type == APPEND))
 		{
-			// token_tmp = token_tmp->next;
 			if (token_tmp->type == REDIR_OUT)
-			{
-				token_tmp = token_tmp->next;
-				(*echo_struct)->fd = open(token_tmp->value,
-						O_CREAT | O_WRONLY | O_TRUNC, 0640);
-			}
+				echo_handle_redir_out(token_tmp, echo_struct);
 			else if (token_tmp->type == APPEND)
-			{
-				token_tmp = token_tmp->next;
-				(*echo_struct)->fd = open(token_tmp->value,
-						O_CREAT | O_RDWR | O_APPEND, 0640);
-			}
+				echo_handle_append(token_tmp, echo_struct);
 			if ((*echo_struct)->fd <= 0)
 			{
 				ft_putstr_fd("Sorry, We can't open this file :(\n", 1);
@@ -53,7 +56,6 @@ void	echo(t_token **token, t_echo **echo_struct, t_env *env_list)
 	t_echo	*echo_struct_tmp;
 	t_token	*token_tmp;
 	t_token	*head;
-	char	*s;
 
 	if ((!token) || (ft_strncmp((*token)->value, "echo", 4) != 0))
 		return ;
@@ -62,53 +64,5 @@ void	echo(t_token **token, t_echo **echo_struct, t_env *env_list)
 	echo_struct_tmp = (*echo_struct);
 	redir_out_append(token, &echo_struct_tmp);
 	if (ft_strncmp(token_tmp->value, "echo", 4) == 0)
-	{
-		if (token_tmp->next == NULL)
-		{
-			ft_putstr_fd("\n", echo_struct_tmp->fd);
-			return ;
-		}
-		token_tmp = token_tmp->next;
-		if (ft_strncmp(token_tmp->value, "-n", 2) == 0)
-		{
-			if (token_tmp->next == NULL)
-				return ;
-			token_tmp = token_tmp->next;
-		}
-		if ((token_tmp->type == ARG) || (token_tmp->type == REDIR_OUT)
-			|| (token_tmp->type == APPEND))
-		{
-			while (token_tmp)
-			{
-				if (token_tmp->type == PIPE)
-					break ;
-				if (ft_strchr(token_tmp->value, '$'))
-				{
-					(*token) = echo_expander(*token, env_list,
-							echo_struct_tmp->fd);
-					return ;
-				}
-				s = token_tmp->value;
-				while (*s)
-				{
-					if ((ft_strncmp(s, ">", 1) == 0) || (ft_strncmp(s, ">>",
-								2) == 0))
-						break ;
-					write(echo_struct_tmp->fd, s, 1);
-					s++;
-				}
-				if ((token_tmp->next != NULL))
-					write(echo_struct_tmp->fd, " ", 1);
-				if ((ft_strncmp(token_tmp->value, ">", 1) == 0)
-					|| (ft_strncmp(token_tmp->value, ">>", 2) == 0))
-					token_tmp = token_tmp->next->next;
-				else
-					token_tmp = token_tmp->next;
-			}
-			if (ft_strncmp(head->value, "-n", 2) != 0)
-				write(echo_struct_tmp->fd, "\n", 1);
-		}
-		else
-			return ;
-	}
+		echo_process_main_logic(token, head, echo_struct_tmp, env_list);
 }
