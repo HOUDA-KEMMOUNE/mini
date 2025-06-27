@@ -171,8 +171,9 @@ int						export_builtin_adapter(t_token *tokens,
 void					export_set_var(t_env **env_list, \
 						char *key, char *value);
 void					export_print_sorted(t_env *env_list);
-void					export_set_var(t_env **env_list, \
-						char *key, char *value);
+void					export_print_sorted_helper(t_env **arr, int count);
+void					execute_export_args(t_token *current, t_env **env_list);
+int						is_valid_identifier(const char *str);
 int						cmp_env(t_env *a, t_env *b);
 
 /*-------------------unset-------------------*/
@@ -212,6 +213,11 @@ void					free_args(char **arr);
 char					**token_to_args(t_token *tokens);
 int						cd(t_token *tokens, t_env **env_list);
 int						ft_cd_exec(t_token **tokens, t_env *env_list);
+char					*determine_path(t_token *tokens, t_env *env_list, char **to_free);
+int						handle_basic_cd(const char *path, t_env **env_list);
+char					*expand_tilde(const char *path, t_env *env_list);
+int						handle_cd_dash(t_env **env_list);
+int	is_whitespace_only(const char *str);
 
 // void    pwd(t_token **token);
 
@@ -262,4 +268,10 @@ void					change_redout_echo(t_token **token, t_echo **echo_struct);
 void					simple_cmd_parent(t_token_exc **token_cmd, \
 						char **envp, int status);
 void					simple_cmd_child(t_token_exc **token_cmd, char **envp);
+
+/*------------cd helpers---------------*/
+void					print_cd_error(const char *arg, int error_type);
+void					print_cd_error2(const char *arg, int error_type);
+void					update_env(t_env *env, char *key, char *new_value);
+int						ft_isspace(int c);
 #endif

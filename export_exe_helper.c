@@ -61,53 +61,13 @@ void	export_set_var(t_env **env_list, char *key, char *value)
 		tmp = tmp->next;
 	}
 	if (value)
+	{
 		tmp = create_env_node(key, value);
-	else
-		tmp = create_env_node(key, "");
-	if (!tmp)
-		return ;
-	tmp->next = *env_list;
-	*env_list = tmp;
-}
-
-void	print_env_arr(t_env **arr, int count)
-{
-	int	i;
-
-	i = 0;
-	while (i < count)
-	{
-		printf("declare -x %s", arr[i]->key);
-		if (arr[i]->value)
-			printf("=\"%s\"", arr[i]->value);
-		printf("\n");
-		i++;
+		if (!tmp)
+			return ;
+		tmp->next = *env_list;
+		*env_list = tmp;
 	}
-}
-
-void	export_print_sorted_helper(t_env **arr, int count)
-{
-	int		i;
-	int		j;
-	t_env	*swap;
-
-	i = 0;
-	while (i < count - 1)
-	{
-		j = 0;
-		while (j < count - i - 1)
-		{
-			if (cmp_env(arr[j], arr[j + 1]) > 0)
-			{
-				swap = arr[j];
-				arr[j] = arr[j + 1];
-				arr[j + 1] = swap;
-			}
-			j++;
-		}
-		i++;
-	}
-	print_env_arr(arr, count);
 }
 
 void	export_print_sorted(t_env *env_list)
@@ -137,4 +97,28 @@ void	export_print_sorted(t_env *env_list)
 	}
 	export_print_sorted_helper(arr, count);
 	free(arr);
+}
+
+void	execute_export_args(t_token *current, t_env **env_list)
+{
+	char	*eq;
+	char	*key_backup;
+
+	while (current)
+	{
+		eq = ft_strchr(current->value, '=');
+		if (eq)
+		{
+			*eq = '\0';
+			key_backup = ft_strdup(current->value);
+			*eq = '=';
+			export_set_var(env_list, key_backup, eq + 1);
+			free(key_backup);
+		}
+		else
+		{
+			export_set_var(env_list, current->value, NULL);
+		}
+		current = current->next;
+	}
 }

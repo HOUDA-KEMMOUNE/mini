@@ -17,9 +17,8 @@ int	check_heredoc(t_token **token, t_token_exc **command)
 	t_token		*token_tmp;
 	t_token_exc	*command_tmp;
 	int			check;	
-	
+
 	check = 0;
-	// i = 0;
 	token_tmp = (*token);
 	command_tmp = (*command);
 	while (token_tmp)
@@ -93,7 +92,7 @@ void	heredoc(t_token **token, t_token_exc **command)
 	t_token		*token_tmp;
 	char		*file_name;
 	int			(fd), (i);
-\
+
 	if (!token || !(*token) || !command || !(*command))
 		return ;
 	command_tmp = (*command);

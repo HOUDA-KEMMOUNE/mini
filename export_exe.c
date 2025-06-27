@@ -12,115 +12,61 @@
 
 #include "minishell.h"
 
-int	cmp_env(t_env *a, t_env *b)
+static int	validate_with_equals(t_token *current)
 {
-	return (ft_strcmp(a->key, b->key));
+	char	*eq;
+	char	*key_backup;
+
+	eq = ft_strchr(current->value, '=');
+	*eq = '\0';
+	key_backup = ft_strdup(current->value);
+	*eq = '=';
+	if (!is_valid_identifier(key_backup))
+	{
+		ft_putstr_fd("export: `", 2);
+		ft_putstr_fd(current->value, 2);
+		ft_putstr_fd("': not a valid identifier\n", 2);
+		free(key_backup);
+		return (1);
+	}
+	free(key_backup);
+	return (0);
 }
 
-// static void	export_print_sorted(t_env *env_list)
-// {
-// 	t_env	*tmp;
-// 	int		count;
-// 	int		i;
-// 	t_env	**arr;
-// 	int		j;
-// 	t_env	*swap;
-// 	int		k;
+static int	validate_single_arg(t_token *current)
+{
+	char	*eq;
 
-// 	tmp = env_list;
-// 	count = 0;
-// 	while (tmp)
-// 	{
-// 		count++;
-// 		tmp = tmp->next;
-// 	}
-// 	arr = NULL;
-// 	if (count > 0)
-// 		arr = (t_env **)malloc(sizeof(t_env *) * count);
-// 	tmp = env_list;
-// 	i = 0;
-// 	while (i < count)
-// 	{
-// 		arr[i] = tmp;
-// 		tmp = tmp->next;
-// 		i++;
-// 	}
-// 	i = 0;
-// 	while (i < count - 1)
-// 	{
-// 		j = 0;
-// 		while (j < count - i - 1)
-// 		{
-// 			if (cmp_env(arr[j], arr[j + 1]) > 0)
-// 			{
-// 				swap = arr[j];
-// 				arr[j] = arr[j + 1];
-// 				arr[j + 1] = swap;
-// 			}
-// 			j++;
-// 		}
-// 		i++;
-// 	}
-// 	k = 0;
-// 	while (k < count)
-// 	{
-// 		printf("declare -x %s", arr[k]->key);
-// 		if (arr[k]->value)
-// 			printf("=\"%s\"", arr[k]->value);
-// 		printf("\n");
-// 		k++;
-// 	}
-// 	free(arr);
-// }
+	eq = ft_strchr(current->value, '=');
+	if (eq)
+		return (validate_with_equals(current));
+	else if (!is_valid_identifier(current->value))
+	{
+		ft_putstr_fd("export: `", 2);
+		ft_putstr_fd(current->value, 2);
+		ft_putstr_fd("': not a valid identifier\n", 2);
+		return (1);
+	}
+	return (0);
+}
 
-// void	export_set_var(t_env **env_list, char *key, char *value)
-// {
-// 	t_env	*tmp;
-// 	t_env	*new;
+static int	validate_export_args(t_token *current)
+{
+	int	error_occurred;
 
-// 	tmp = *env_list;
-// 	while (tmp)
-// 	{
-// 		if (ft_strcmp(tmp->key, key) == 0)
-// 		{
-// 			if (tmp->value)
-// 				free(tmp->value);
-// 			if (value)
-// 				tmp->value = ft_strdup(value);
-// 			else
-// 				tmp->value = NULL;
-// 			return ;
-// 		}
-// 		tmp = tmp->next;
-// 	}
-// 	new = malloc(sizeof(t_env));
-// 	if (!new)
-// 		return ;
-// 	ft_memset(new, 0, sizeof(t_env));
-// 	new->key = ft_strdup(key);
-// 	if (!new->key)
-// 	{
-// 		free(new);
-// 		return ;
-// 	}
-// 	if (value)
-// 		new->value = ft_strdup(value);
-// 	else
-// 		new->value = NULL;
-// 	if (value && !new->value)
-// 	{
-// 		free(new->key);
-// 		free(new);
-// 		return ;
-// 	}
-// 	new->next = *env_list;
-// 	*env_list = new;
-// }
+	error_occurred = 0;
+	while (current)
+	{
+		if (validate_single_arg(current))
+			error_occurred = 1;
+		current = current->next;
+	}
+	return (error_occurred);
+}
 
 int	export_internal(t_token *tokens, t_env **env_list)
 {
 	t_token	*current;
-	char	*eq;
 
 	current = tokens->next;
 	if (!current)
@@ -128,21 +74,9 @@ int	export_internal(t_token *tokens, t_env **env_list)
 		export_print_sorted(*env_list);
 		return (0);
 	}
-	while (current)
-	{
-		eq = ft_strchr(current->value, '=');
-		if (eq)
-		{
-			*eq = '\0';
-			export_set_var(env_list, current->value, eq + 1);
-			*eq = '=';
-		}
-		else
-		{
-			export_set_var(env_list, current->value, NULL);
-		}
-		current = current->next;
-	}
+	if (validate_export_args(current))
+		return (1);
+	execute_export_args(current, env_list);
 	return (0);
 }
 
