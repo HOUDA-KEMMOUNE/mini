@@ -155,7 +155,7 @@ void					add_type(t_token **token_list);
 
 /*-------------------Parsing-------------------*/
 void					parsing(char *input, t_token **token,
-							t_echo **echo_struct, t_env *env_list);
+							t_env *env_list);
 int						se_redirections(t_token **token);
 int						check_first_cmd(t_token_exc *token_list);
 void					ft_data_init(t_echo **echo_struct);
@@ -285,6 +285,10 @@ int						check_heredoc(t_token **token, t_token_exc **command);
 int						creat_tmpfile(char **file_name);
 void					fill_heredoc_file(int fd, char *delimiter);
 
+/*------------pipes---------------*/
+void					pipes(t_token **token, t_token_exc **command);
+int						count_cmd(t_token_exc **command);
+
 /*------------redirections---------------*/
 void					change_redout(t_token **token, t_token_exc **command);
 void					check_redirections(t_token **token, \
@@ -302,4 +306,5 @@ void					print_cd_error(const char *arg, int error_type);
 void					print_cd_error2(const char *arg, int error_type);
 void					update_env(t_env *env, char *key, char *new_value);
 int						ft_isspace(int c);
+
 #endif

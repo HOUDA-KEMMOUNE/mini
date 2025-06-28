@@ -68,13 +68,13 @@ void	check_first_token(t_token **token)
 		return ;
 }
 
-void	parsing(char *input, t_token **token, t_echo **echo_struct,
+void	parsing(char *input, t_token **token,
 		t_env *env_list)
 {
 	if (!input || !token)
 		return ;
 	check_first_token(token);
-	ft_data_init(echo_struct);
+	// ft_data_init(echo_struct);
 	// echo(token, echo_struct, env_list);
 	ft_export(token);
 	ft_unset(token);

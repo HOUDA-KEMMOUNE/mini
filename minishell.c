@@ -12,8 +12,6 @@
 
 #include "minishell.h"
 
-
-
 // void	print_type(t_token *list);
 int	se_redirections(t_token **token)
 {
@@ -47,11 +45,12 @@ int	se_redirections(t_token **token)
 void change_redout(t_token **token, t_token_exc **command)
 {
     t_token *token_tmp;
-    int fd = -1;
+    int fd;
 
     if (!token || !(*token) || !command || !(*command))
         return;
     token_tmp = (*token);
+	fd = -1;
     while (token_tmp) {
         if (token_tmp->type == REDIR_OUT || token_tmp->type == APPEND)
 		{
@@ -148,7 +147,8 @@ int	main(int argc, char **argv, char **envp)
 		{
 			if (se_redirections(&tokens) <= 0)
 				goto cleanup;
-			parsing(line, &tokens, &echo_struct, env_list);
+			parsing(line, &tokens, env_list);
+			pipes(&tokens, &tokens_exec);
 			tokens_exc_redio(tokens, &tokens_exec);
 			check_redirections(&tokens, &tokens_exec);
 			echo(&tokens, &tokens_exec);
