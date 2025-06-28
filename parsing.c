@@ -75,7 +75,8 @@ void	parsing(char *input, t_token **token, t_echo **echo_struct,
 		return ;
 	check_first_token(token);
 	ft_data_init(echo_struct);
-	echo(token, echo_struct, env_list);
+	// echo(token, echo_struct, env_list);
+	ft_export(token);
 	ft_unset(token);
 	ft_env(token, env_list);
 	ft_exit(token);

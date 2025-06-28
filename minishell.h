@@ -182,18 +182,19 @@ char					*get_env_value(t_env *env, char *key);
 void					get_env(t_env *env_list);
 void					ft_pwd(t_token **token);
 t_token_exc				*tokens_exc_handler(t_token *token);
-void					echo(t_token **token, t_echo **echo_struct,
-							t_env *env_list);
+// void					echo(t_token **token, t_echo **echo_struct,
+// 							t_env *env_list);
 
 /*-------------------echo helpers-------------------*/
-void					echo_handle_empty_cmd(t_echo *echo_struct_tmp);
-int						echo_handle_n_flag(t_token **token_tmp);
-void					echo_write_char_by_char(t_token *token_tmp,
-							t_echo *echo_struct_tmp);
-void					echo_process_args(t_token **token, t_token *token_tmp,
-							t_echo *echo_struct_tmp, t_env *env_list);
-void					echo_process_main_logic(t_token **token, t_token *head,
-							t_echo *echo_struct_tmp, t_env *env_list);
+void					echo(t_token **token, t_token_exc **command);
+// void					echo_handle_empty_cmd(t_echo *echo_struct_tmp);
+// int						echo_handle_n_flag(t_token **token_tmp);
+// void					echo_write_char_by_char(t_token *token_tmp,
+// 							t_echo *echo_struct_tmp);
+// void					echo_process_args(t_token **token, t_token *token_tmp,
+// 							t_echo *echo_struct_tmp, t_env *env_list);
+// void					echo_process_main_logic(t_token **token, t_token *head,
+// 							t_echo *echo_struct_tmp, t_env *env_list);
 
 /*-------------------export-------------------*/
 int						export_internal(t_token *tokens, t_env **env_list);

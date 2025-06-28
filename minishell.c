@@ -44,24 +44,29 @@ int	se_redirections(t_token **token)
 }
 
 
-void	change_redout(t_token **token, t_token_exc **command)
+void change_redout(t_token **token, t_token_exc **command)
 {
-	t_token		*token_tmp;
-	int			fd;
+    t_token *token_tmp;
+    int fd = -1;
 
-	if (!token || !(*token) || !command || !(*command))
-		return ;
-	token_tmp = (*token);
-	while (token_tmp)
-	{
-		if (token_tmp->type == FILE_NAME && ft_strncmp(token_tmp->value,
-			"/dev/stdout", ft_strlen("/dev/stdout")) != 0)
+    if (!token || !(*token) || !command || !(*command))
+        return;
+    token_tmp = (*token);
+    while (token_tmp) {
+        if (token_tmp->type == REDIR_OUT || token_tmp->type == APPEND)
 		{
-			fd = open(token_tmp->value, O_CREAT | O_WRONLY | O_TRUNC, 0640);
-		}
-		token_tmp = token_tmp->next;
-	}
-	(*command)->fd_out = fd;
+            token_tmp = token_tmp->next;
+            if (token_tmp && ft_strncmp(token_tmp->value, "/dev/stdout", 12) != 0)
+			{
+				if (token_tmp->type == REDIR_OUT)
+                	fd = open(token_tmp->value, O_CREAT | O_WRONLY | O_TRUNC, 0640);
+				else
+                	fd = open(token_tmp->value, O_CREAT | O_WRONLY | O_APPEND, 0640);
+                (*command)->fd_out = fd;
+            }
+        }
+        token_tmp = token_tmp->next;
+    }
 }
 
 void	check_redirections(t_token **token, t_token_exc **command)
@@ -146,6 +151,7 @@ int	main(int argc, char **argv, char **envp)
 			parsing(line, &tokens, &echo_struct, env_list);
 			tokens_exc_redio(tokens, &tokens_exec);
 			check_redirections(&tokens, &tokens_exec);
+			echo(&tokens, &tokens_exec);
 			heredoc(&tokens, &tokens_exec);
 			if (is_builtin(&tokens_exec) == 1)
 			{
