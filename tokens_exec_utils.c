@@ -38,35 +38,28 @@ void tokens_exc_helper(t_token **token, t_token_exc **token_list)
     token_tmp = (*token);
     while (token_tmp)
     {
-        head = token_tmp; // Start of this command segment
+        head = token_tmp;
         new = malloc(sizeof(t_token_exc));
         if (!new)
             return;
         ft_memset(new, 0, sizeof(t_token_exc));
-
-        // Set cmd to the first WORD in this segment
         while (token_tmp && token_tmp->type != WORD && token_tmp->type != PIPE)
             token_tmp = token_tmp->next;
         if (token_tmp && token_tmp->type == WORD)
             new->cmd = token_tmp->value;
         else
             new->cmd = NULL;
-
         new->fd_in = 0;
         new->fd_out = 1;
         new->next = NULL;
-
-        // Build args for this segment
         command_node(&head, &new);
         add_token_exc_to_list(token_list, new);
-
-        // Move to next segment
         while (token_tmp && token_tmp->type != PIPE)
             token_tmp = token_tmp->next;
         if (token_tmp && token_tmp->type == PIPE)
             token_tmp = token_tmp->next;
     }
-    filename_node(token); // If you need this, keep it
+    filename_node(token);
 }
 
 void	fill_args(t_token **token, char **args_tmp, int count_args)

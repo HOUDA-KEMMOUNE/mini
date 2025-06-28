@@ -33,12 +33,14 @@ int	count_cmd(t_token_exc **command)
 void	pipes(t_token **token, t_token_exc **command)
 {
 	t_token *token_tmp;
+	int		count;
+	// int		pipes_arr[count - 1];
 
 	if (!token || !(*token) || !command || !(*command))
 		return;
 	token_tmp = (*token);
-	if (count_cmd(command) <= 0)
+	count = count_cmd(command);
+	if (count <= 0)
 		return ;
-	int count = count_cmd(command);
 	// printf("count === %d (pipes)\n", count);
 }
