@@ -74,3 +74,14 @@ void	tokens_exc_redio(t_token *token, t_token_exc **token_list)
 		token_tmp = token_tmp->next;
 	}
 }
+
+void	handle_heredoc_token(t_token **token)
+{
+	(*token) = (*token)->next;
+	if ((*token) && ((*token)->type == DELIMITER
+			|| (*token)->type == ARG || (*token)->type == CMD))
+	{
+		(*token) = (*token)->next;
+		return ;
+	}
+}

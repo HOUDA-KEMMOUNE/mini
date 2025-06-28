@@ -21,21 +21,47 @@ void	print_tokens(t_token *tokens)
 	}
 }
 
+/* Helper function to skip heredoc delimiter tokens */
+static int	should_skip_expansion(t_token *prev, t_token *curr)
+{
+	(void)curr;
+	if (prev && prev->type == HEREDOC)
+		return (1);
+	return (0);
+}
+
+/* Helper function to expand token if it contains variables */
+static void	expand_token_if_needed(t_token *curr, t_env *env_list)
+{
+	char	*expanded;
+
+	if ((curr->quote == 0 || curr->quote == '"')
+		&& ft_strchr(curr->value, '$'))
+	{
+		expanded = expand_variable(curr->value, env_list);
+		free(curr->value);
+		curr->value = expanded;
+	}
+}
+
 t_token	*expander(t_token *token_list, t_env *env_list)
 {
 	t_token	*curr;
-	char	*expanded;
+	t_token	*prev;
 
 	curr = token_list;
+	prev = NULL;
 	while (curr)
 	{
-		if ((curr->quote == 0 || curr->quote == '"')
-			&& ft_strchr(curr->value, '$'))
+		if (should_skip_expansion(prev, curr))
 		{
-			expanded = expand_variable(curr->value, env_list);
-			free(curr->value);
-			curr->value = expanded;
+			curr = curr->next;
+			if (curr)
+				prev = curr;
+			continue ;
 		}
+		expand_token_if_needed(curr, env_list);
+		prev = curr;
 		curr = curr->next;
 	}
 	return (token_list);

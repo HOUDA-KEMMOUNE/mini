@@ -62,3 +62,13 @@ void	simple_cmd_parent(t_token_exc **token_cmd, char **envp, int status)
 			write(1, "Quit (core dumped)\n", 19);
 	}
 }
+
+void	handle_word_token(t_token **token, char **args_tmp, int *i, int *flag)
+{
+	if (*flag == 0)
+		(*token)->type = CMD;
+	else
+		(*token)->type = ARG;
+	args_tmp[(*i)++] = ft_strdup((*token)->value);
+	*flag = 1;
+}

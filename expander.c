@@ -70,6 +70,7 @@ char	*expand_variable(char *value, t_env *env_list)
 	char	*var_name;
 	char	*env_value;
 	char	*key;
+	size_t	var_len;
 
 	if (expand_pid_special(value))
 		return (expand_pid_special(value));
@@ -77,10 +78,11 @@ char	*expand_variable(char *value, t_env *env_list)
 	if (!dollar)
 		return (ft_strdup(value));
 	var_name = dollar + 1;
-	key = extract_var_name(var_name, &(size_t){0});
+	key = extract_var_name(var_name, &var_len);
 	env_value = get_env_value(env_list, key);
 	if (!env_value)
 		env_value = "";
 	free(key);
-	return (build_expanded_string(value, dollar - value, env_value, var_name));
+	return (build_expanded_string(value, dollar - value, \
+			env_value, var_name + var_len));
 }

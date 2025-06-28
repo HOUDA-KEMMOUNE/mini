@@ -35,3 +35,46 @@ void	free_args(char **arr)
 		free(arr[i++]);
 	free(arr);
 }
+
+void	free_delimiter_array(t_token_exc *cmd)
+{
+	int	j;
+
+	if (cmd->delimiter)
+	{
+		j = 0;
+		while (j < cmd->count_heredoc)
+		{
+			if (cmd->delimiter[j])
+				free(cmd->delimiter[j]);
+			j++;
+		}
+		free(cmd->delimiter);
+	}
+}
+
+void	free_heredoc_file_array(t_token_exc *cmd)
+{
+	int	j;
+
+	if (cmd->heredoc_file)
+	{
+		j = 0;
+		while (j < cmd->count_heredoc)
+		{
+			if (cmd->heredoc_file[j])
+			{
+				unlink(cmd->heredoc_file[j]);
+				free(cmd->heredoc_file[j]);
+			}
+			j++;
+		}
+		free(cmd->heredoc_file);
+	}
+}
+
+void	free_heredoc_arrays(t_token_exc *cmd)
+{
+	free_delimiter_array(cmd);
+	free_heredoc_file_array(cmd);
+}

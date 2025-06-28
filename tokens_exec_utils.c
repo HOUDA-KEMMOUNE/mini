@@ -27,6 +27,24 @@ void	add_token_exc_to_list(t_token_exc **token_list, t_token_exc *new)
 	temp->next = new;
 }
 
+static void	set_command_value(t_token **token_tmp, t_token_exc *new)
+{
+	if (*token_tmp && (*token_tmp)->type == HEREDOC)
+	{
+		new->cmd = NULL;
+	}
+	else
+	{
+		while (*token_tmp && (*token_tmp)->type != WORD
+			&& (*token_tmp)->type != PIPE)
+			*token_tmp = (*token_tmp)->next;
+		if (*token_tmp && (*token_tmp)->type == WORD)
+			new->cmd = (*token_tmp)->value;
+		else
+			new->cmd = NULL;
+	}
+}
+
 void	process_command_token(t_token **token_tmp, t_token_exc **token_list)
 {
 	t_token		*head;
@@ -37,13 +55,7 @@ void	process_command_token(t_token **token_tmp, t_token_exc **token_list)
 	if (!new)
 		return ;
 	ft_memset(new, 0, sizeof(t_token_exc));
-	while (*token_tmp && (*token_tmp)->type != WORD
-		&& (*token_tmp)->type != PIPE)
-		*token_tmp = (*token_tmp)->next;
-	if (*token_tmp && (*token_tmp)->type == WORD)
-		new->cmd = (*token_tmp)->value;
-	else
-		new->cmd = NULL;
+	set_command_value(token_tmp, new);
 	new->fd_in = 0;
 	new->fd_out = 1;
 	new->next = NULL;
@@ -80,13 +92,13 @@ void	fill_args(t_token **token, char **args_tmp, int count_args)
 	{
 		if ((*token)->type == WORD)
 		{
-			if (flag == 0)
-				(*token)->type = CMD;
-			else
-				(*token)->type = ARG;
 			if (i < count_args)
-				args_tmp[i++] = ft_strdup((*token)->value);
-			flag = 1;
+				handle_word_token(token, args_tmp, &i, &flag);
+		}
+		else if ((*token)->type == HEREDOC)
+		{
+			handle_heredoc_token(token);
+			continue ;
 		}
 		(*token) = (*token)->next;
 	}

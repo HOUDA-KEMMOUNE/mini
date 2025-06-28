@@ -52,6 +52,20 @@ int	process_command_line(char *line, t_shell_data *data)
 		free(line);
 		return (1);
 	}
+	
+	// Handle the case where there's a command but it's NULL (heredoc without command)
+	if (data->tokens_exec && data->tokens_exec->cmd == NULL)
+	{
+		// Check if there are any heredocs to process
+		if (data->tokens && data->tokens->type == HEREDOC)
+		{
+			heredoc(&data->tokens, &data->tokens_exec);
+		}
+		cleanup_resources(&line, &data->tokens,
+			&data->tokens_exec, &data->echo_struct);
+		return (1);
+	}
+	
 	if (data->tokens_exec == NULL || data->tokens_exec->cmd == NULL
 		|| data->tokens_exec->cmd[0] == '\0')
 	{

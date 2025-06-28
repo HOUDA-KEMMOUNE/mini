@@ -62,8 +62,7 @@ void	free_token_exc_list(t_token_exc *cmd)
 			free(cmd->cmd_path);
 		if (cmd->file)
 			free(cmd->file);
-		if (cmd->delimiter)
-			free(cmd->delimiter);
+		free_heredoc_arrays(cmd);
 		free(cmd);
 		cmd = tmp;
 	}

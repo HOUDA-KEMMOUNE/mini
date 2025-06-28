@@ -26,8 +26,10 @@ int	check_heredoc(t_token **token, t_token_exc **command)
 		if (token_tmp->type == HEREDOC)
 		{
 			token_tmp = token_tmp->next;
-			if (token_tmp->type == ARG
-				|| token_tmp->type == CMD)
+			if (token_tmp && (token_tmp->type == ARG
+				|| token_tmp->type == CMD
+				|| token_tmp->type == WORD
+				|| token_tmp->type == DELIMITER))
 			{
 				token_tmp->type = DELIMITER;
 				check++;
@@ -69,7 +71,10 @@ int	creat_tmpfile(char **file_name)
 void	fill_heredoc_file(int fd, char *delimiter)
 {
 	char	*line;
+	char	*expanded_line;
+	t_env	*env_list;
 
+	env_list = *env_func();
 	while (1)
 	{
 		line = readline("> ");
@@ -80,7 +85,14 @@ void	fill_heredoc_file(int fd, char *delimiter)
 			free(line);
 			break ;
 		}
-		ft_putstr_fd(line, fd);
+		if (ft_strchr(line, '$'))
+		{
+			expanded_line = expand_variable(line, env_list);
+			ft_putstr_fd(expanded_line, fd);
+			free(expanded_line);
+		}
+		else
+			ft_putstr_fd(line, fd);
 		ft_putstr_fd("\n", fd);
 		free(line);
 	}

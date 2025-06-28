@@ -238,6 +238,9 @@ void					free_env_list(t_env *env);
 void					free_echo_struct(t_echo *echo);
 void					free_token_list(t_token *tok);
 void					free_token_exc_list(t_token_exc *cmd);
+void					free_delimiter_array(t_token_exc *cmd);
+void					free_heredoc_file_array(t_token_exc *cmd);
+void					free_heredoc_arrays(t_token_exc *cmd);
 void					minishell_cleanup(t_env *env, t_token *tokens,
 							t_token_exc *tokens_exec, t_echo *echo);
 void					free_args(char **arr);
@@ -264,6 +267,7 @@ void					tokens_exc_helper(t_token **token,
 void					tokens_exc_helper1(t_token_exc **new, t_token **token);
 void					tokens_exc_helper2(t_token_exc **new,
 							t_token_exc **token_list);
+void					handle_heredoc_token(t_token **token);
 int						ft_count_args(t_token *token);
 void					tokens_exc_redio(t_token *token,
 							t_token_exc **token_list);
@@ -308,6 +312,8 @@ void					change_redout_echo(t_token **token, \
 void					simple_cmd_parent(t_token_exc **token_cmd,
 							char **envp, int status);
 void					simple_cmd_child(t_token_exc **token_cmd, char **envp);
+void					handle_word_token(t_token **token, char **args_tmp,
+							int *i, int *flag);
 
 /*------------data structures---------------*/
 typedef struct s_shell_data
