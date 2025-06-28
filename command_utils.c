@@ -44,6 +44,40 @@ int	handle_command_execution(t_shell_data *data, char *line)
 	return (1);
 }
 
+static int	handle_null_command(t_shell_data *data, char **line)
+{
+	if (data->tokens_exec && data->tokens_exec->cmd == NULL)
+	{
+		if (data->tokens && data->tokens->type == HEREDOC)
+		{
+			heredoc(&data->tokens, &data->tokens_exec);
+		}
+		cleanup_resources(line, &data->tokens, &data->tokens_exec);
+		return (1);
+	}
+	if (data->tokens_exec == NULL || data->tokens_exec->cmd == NULL
+		|| data->tokens_exec->cmd[0] == '\0')
+	{
+		cleanup_resources(line, &data->tokens, &data->tokens_exec);
+		return (1);
+	}
+	return (0);
+}
+
+static int	execute_and_cleanup(t_shell_data *data, char **line)
+{
+	if (data->tokens)
+	{
+		if (!handle_command_execution(data, *line))
+		{
+			cleanup_resources(line, &data->tokens, &data->tokens_exec);
+			return (1);
+		}
+	}
+	cleanup_resources(line, &data->tokens, &data->tokens_exec);
+	return (0);
+}
+
 int	process_command_line(char *line, t_shell_data *data)
 {
 	process_input_line(line, data);
@@ -52,37 +86,7 @@ int	process_command_line(char *line, t_shell_data *data)
 		free(line);
 		return (1);
 	}
-	
-	// Handle the case where there's a command but it's NULL (heredoc without command)
-	if (data->tokens_exec && data->tokens_exec->cmd == NULL)
-	{
-		// Check if there are any heredocs to process
-		if (data->tokens && data->tokens->type == HEREDOC)
-		{
-			heredoc(&data->tokens, &data->tokens_exec);
-		}
-		cleanup_resources(&line, &data->tokens,
-			&data->tokens_exec);
+	if (handle_null_command(data, &line))
 		return (1);
-	}
-	
-	if (data->tokens_exec == NULL || data->tokens_exec->cmd == NULL
-		|| data->tokens_exec->cmd[0] == '\0')
-	{
-		cleanup_resources(&line, &data->tokens,
-			&data->tokens_exec);
-		return (1);
-	}
-	if (data->tokens)
-	{
-		if (!handle_command_execution(data, line))
-		{
-			cleanup_resources(&line, &data->tokens,
-				&data->tokens_exec);
-			return (1);
-		}
-	}
-	cleanup_resources(&line, &data->tokens,
-		&data->tokens_exec);
-	return (0);
+	return (execute_and_cleanup(data, &line));
 }
