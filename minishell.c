@@ -12,7 +12,6 @@
 
 #include "minishell.h"
 
-// void	print_type(t_token *list);
 int	se_redirections(t_token **token)
 {
 	t_token	*token_tmp;
@@ -41,136 +40,14 @@ int	se_redirections(t_token **token)
 	return (1);
 }
 
-
-void change_redout(t_token **token, t_token_exc **command)
-{
-    t_token *token_tmp;
-    int fd;
-
-    if (!token || !(*token) || !command || !(*command))
-        return;
-    token_tmp = (*token);
-	fd = -1;
-    while (token_tmp) {
-        if (token_tmp->type == REDIR_OUT || token_tmp->type == APPEND)
-		{
-            token_tmp = token_tmp->next;
-            if (token_tmp && ft_strncmp(token_tmp->value, "/dev/stdout", 12) != 0)
-			{
-				if (token_tmp->type == REDIR_OUT)
-                	fd = open(token_tmp->value, O_CREAT | O_WRONLY | O_TRUNC, 0640);
-				else
-                	fd = open(token_tmp->value, O_CREAT | O_WRONLY | O_APPEND, 0640);
-                (*command)->fd_out = fd;
-            }
-        }
-        token_tmp = token_tmp->next;
-    }
-}
-
-void	check_redirections(t_token **token, t_token_exc **command)
-{
-	t_token		*token_tmp;
-	int			redir;
-
-	if (!token || !(*token) || !command || !(*command))
-		return ;
-	token_tmp = (*token);
-	redir = 0;
-	while (token_tmp->next != NULL)
-	{
-		if (token_tmp->type == REDIR_OUT)
-			redir++;
-		token_tmp = token_tmp->next;
-	}
-	if (redir == 0 && ft_strncmp(token_tmp->value,
-		"/dev/stdout", ft_strlen("/dev/stdout")) != 0)
-		return ;
-	else
-		change_redout(token, command);
-}
-
 int	main(int argc, char **argv, char **envp)
 {
-	t_env		*env_list;
-	t_token		*tokens;
-	t_token_exc	*tokens_exec;
-	t_echo		*echo_struct;
-	char		*line;
+	t_shell_data	data;
 
 	(void)argc;
 	(void)argv;
-	env_list = NULL;
-	tokens = NULL;
-	tokens_exec = NULL;
-	echo_struct = NULL;
-	line = NULL;
-	env_list = create_env_list(envp);
-	// init_shlvl(env_list);
-	if (envp[0] == NULL)
-		init_minimal_env(&env_list);
-	while (1)
-	{
-		// print prompt
-		signal(SIGINT, handler_sigint);
-		signal(SIGQUIT, SIG_IGN); // to ignore CTRL+backslash
-		//"\033[1;34mminishell>\033[0m "
-		line = readline("\033[1;32mminishell>\033[0m ");
-		if (!line)
-		{
-			ft_putstr_fd("exit\n", 1);
-			minishell_cleanup(env_list, tokens, tokens_exec, echo_struct);
-			exit(0);
-		}
-		if (*line == '\0')
-		{
-			free(line);
-			continue ;
-		}
-		add_history(line);
-		tokens = lexer(line);
-		if (tokens == NULL)
-		{
-			free(line);
-			continue ;
-		}
-		add_type(&tokens);
-		tokens = expander(tokens, env_list);
-		tokens_exec = tokens_exc_handler(tokens);
-
-		if (tokens_exec == NULL || tokens_exec->cmd == NULL || tokens_exec->cmd[0] == '\0')
-		{
-			goto cleanup;
-		}
-
-		if (tokens)
-		{
-			if (se_redirections(&tokens) <= 0)
-				goto cleanup;
-			parsing(line, &tokens, env_list);
-			pipes(&tokens, &tokens_exec);
-			tokens_exc_redio(tokens, &tokens_exec);
-			check_redirections(&tokens, &tokens_exec);
-			echo(&tokens, &tokens_exec);
-			heredoc(&tokens, &tokens_exec);
-			if (is_builtin(&tokens_exec) == 1)
-			{
-				path(&tokens_exec);
-				if (tokens_exec->cmd_path)
-					simple_cmd(tokens, &tokens_exec);
-				goto cleanup;
-			}
-			if (run_builtin(tokens->value, tokens, &env_list))
-				goto cleanup;
-		}
-		cleanup:
-			free(line);
-			free_token_list(tokens);
-			free_token_exc_list(tokens_exec);
-			free_echo_struct(echo_struct);
-			line = NULL;
-			tokens = NULL;
-			tokens_exec = NULL;
-			echo_struct = NULL;
-	}
+	init_shell_vars(&data);
+	init_environment(envp, &data.env_list);
+	run_shell_loop(&data);
+	return (0);
 }

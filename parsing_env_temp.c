@@ -24,6 +24,24 @@ static void	ft_count_env(char *s, int *count)
 	}
 }
 
+static void	ft_print_env_errors(char *s, int count)
+{
+	if (count == 1 || count == 2)
+	{
+		ft_putstr_fd("env: '", 1);
+		ft_putstr_fd(s, 1);
+		ft_putstr_fd("': Permission denied\n", 1);
+		return ;
+	}
+	if (count > 2)
+	{
+		ft_putstr_fd("env: '", 1);
+		ft_putstr_fd(s, 1);
+		ft_putstr_fd("': No such file or directory\n", 1);
+		return ;
+	}
+}
+
 static void	ft_count_dotes_env(t_token **token)
 {
 	t_token	*token_tmp;
@@ -39,23 +57,10 @@ static void	ft_count_dotes_env(t_token **token)
 	{
 		s = token_tmp->value;
 		ft_count_env(s, &count);
+		ft_print_env_errors(s, count);
 	}
 	else
 		return ;
-	if (count == 1 || count == 2)
-	{
-		ft_putstr_fd("env: '", 1);
-		ft_putstr_fd(s, 1);
-		ft_putstr_fd("': Permission denied\n", 1);
-		return ;
-	}
-	if (count > 2)
-	{
-		ft_putstr_fd("env: '", 1);
-		ft_putstr_fd(s, 1);
-		ft_putstr_fd("': No such file or directory\n", 1);
-		return ;
-	}
 }
 
 static void	handle_env_errors(t_token *token_tmp, t_env *env_list)

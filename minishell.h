@@ -152,6 +152,10 @@ void					retype_lexer(t_token **token, t_token_exc **commande);
 int						syntax_err_msg(t_token **token, t_token_exc **commande);
 void					char_to_str(char c, int n, t_token **token_list);
 void					add_type(t_token **token_list);
+void					skip_whitespace(char *input, int *i);
+int						is_operator(char *input, int i);
+int						process_token(char *input, int *i, \
+						t_token **token_list);
 
 /*-------------------Parsing-------------------*/
 void					parsing(char *input, t_token **token,
@@ -188,6 +192,10 @@ t_token_exc				*tokens_exc_handler(t_token *token);
 /*-------------------echo helpers-------------------*/
 void					echo(t_token **token, t_token_exc **command);
 void					echo_helper(int *i, t_token_exc **command);
+void					echo_handle_empty_cmd(t_echo *echo_struct_tmp);
+int						echo_handle_n_flag(t_token **token_tmp);
+void					echo_write_char_by_char(t_token *token_tmp, \
+						t_echo *echo_struct_tmp);
 
 /*-------------------export-------------------*/
 int						export_internal(t_token *tokens, t_env **env_list);
@@ -301,10 +309,36 @@ void					simple_cmd_parent(t_token_exc **token_cmd,
 							char **envp, int status);
 void					simple_cmd_child(t_token_exc **token_cmd, char **envp);
 
+/*------------data structures---------------*/
+typedef struct s_shell_data
+{
+	t_env		*env_list;
+	t_token		*tokens;
+	t_token_exc	*tokens_exec;
+	t_echo		*echo_struct;
+}						t_shell_data;
+
 /*------------cd helpers---------------*/
 void					print_cd_error(const char *arg, int error_type);
 void					print_cd_error2(const char *arg, int error_type);
 void					update_env(t_env *env, char *key, char *new_value);
 int						ft_isspace(int c);
+
+/*------------minishell helpers---------------*/
+void					init_shell_vars(t_shell_data *data);
+int						handle_empty_input(char **line);
+void					cleanup_resources(char **line, t_token **tokens,
+							t_token_exc **tokens_exec, t_echo **echo_struct);
+
+/*------------command processing---------------*/
+void					process_input_line(char *line, t_shell_data *data);
+int						handle_command_execution(t_shell_data *data,
+							char *line);
+int						process_command_line(char *line, t_shell_data *data);
+
+/*------------shell loop---------------*/
+void					init_environment(char **envp, t_env **env_list);
+int						handle_eof_input(char *line, t_shell_data *data);
+void					run_shell_loop(t_shell_data *data);
 
 #endif

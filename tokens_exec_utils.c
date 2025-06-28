@@ -27,39 +27,46 @@ void	add_token_exc_to_list(t_token_exc **token_list, t_token_exc *new)
 	temp->next = new;
 }
 
-void tokens_exc_helper(t_token **token, t_token_exc **token_list)
+void	process_command_token(t_token **token_tmp, t_token_exc **token_list)
 {
-    t_token     *token_tmp;
-    t_token     *head;
-    t_token_exc *new;
+	t_token		*head;
+	t_token_exc	*new;
 
-    if (!token || !(*token))
-        return;
-    token_tmp = (*token);
-    while (token_tmp)
-    {
-        head = token_tmp;
-        new = malloc(sizeof(t_token_exc));
-        if (!new)
-            return;
-        ft_memset(new, 0, sizeof(t_token_exc));
-        while (token_tmp && token_tmp->type != WORD && token_tmp->type != PIPE)
-            token_tmp = token_tmp->next;
-        if (token_tmp && token_tmp->type == WORD)
-            new->cmd = token_tmp->value;
-        else
-            new->cmd = NULL;
-        new->fd_in = 0;
-        new->fd_out = 1;
-        new->next = NULL;
-        command_node(&head, &new);
-        add_token_exc_to_list(token_list, new);
-        while (token_tmp && token_tmp->type != PIPE)
-            token_tmp = token_tmp->next;
-        if (token_tmp && token_tmp->type == PIPE)
-            token_tmp = token_tmp->next;
-    }
-    filename_node(token);
+	head = *token_tmp;
+	new = malloc(sizeof(t_token_exc));
+	if (!new)
+		return ;
+	ft_memset(new, 0, sizeof(t_token_exc));
+	while (*token_tmp && (*token_tmp)->type != WORD
+		&& (*token_tmp)->type != PIPE)
+		*token_tmp = (*token_tmp)->next;
+	if (*token_tmp && (*token_tmp)->type == WORD)
+		new->cmd = (*token_tmp)->value;
+	else
+		new->cmd = NULL;
+	new->fd_in = 0;
+	new->fd_out = 1;
+	new->next = NULL;
+	command_node(&head, &new);
+	add_token_exc_to_list(token_list, new);
+	while (*token_tmp && (*token_tmp)->type != PIPE)
+		*token_tmp = (*token_tmp)->next;
+	if (*token_tmp && (*token_tmp)->type == PIPE)
+		*token_tmp = (*token_tmp)->next;
+}
+
+void	tokens_exc_helper(t_token **token, t_token_exc **token_list)
+{
+	t_token	*token_tmp;
+
+	if (!token || !(*token))
+		return ;
+	token_tmp = (*token);
+	while (token_tmp)
+	{
+		process_command_token(&token_tmp, token_list);
+	}
+	filename_node(token);
 }
 
 void	fill_args(t_token **token, char **args_tmp, int count_args)

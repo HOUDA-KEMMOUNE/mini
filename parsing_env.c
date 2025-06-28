@@ -24,24 +24,8 @@ static void	ft_count_env(char *s, int *count)
 	}
 }
 
-static void	ft_count_dotes_env(t_token **token)
+static void	ft_print_env_error(char *s, int count)
 {
-	t_token	*token_tmp;
-	char	*s;
-	int		count;
-
-	if ((!token))
-		return ;
-	count = 0;
-	token_tmp = (*token);
-	token_tmp = token_tmp->next;
-	if (token_tmp->type == WORD)
-	{
-		s = token_tmp->value;
-		ft_count_env(s, &count);
-	}
-	else
-		return ;
 	if (count == 1 || count == 2)
 	{
 		ft_putstr_fd("env: '", 1);
@@ -54,6 +38,23 @@ static void	ft_count_dotes_env(t_token **token)
 		ft_putstr_fd(s, 1);
 		ft_putstr_fd("': No such file or directory\n", 1);
 	}
+}
+
+static void	ft_count_dotes_env(t_token **token)
+{
+	t_token	*token_tmp;
+	char	*s;
+	int		count;
+
+	count = 0;
+	if (!token)
+		return ;
+	token_tmp = (*token)->next;
+	if (!token_tmp || token_tmp->type != WORD)
+		return ;
+	s = token_tmp->value;
+	ft_count_env(s, &count);
+	ft_print_env_error(s, count);
 }
 
 static void	handle_env_errors(t_token *token_tmp, t_env *env_list)

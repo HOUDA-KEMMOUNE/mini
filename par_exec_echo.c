@@ -25,7 +25,7 @@ void	echo_helper(int *i, t_token_exc **command)
 	i_tmp = *i;
 	if ((i_tmp == 0 && ft_strncmp(arg[i_tmp], "echo", 4) == 0)
 		|| (i_tmp == 1 && ft_strncmp(arg[i_tmp], "-n", 4) == 0))
-			i_tmp++;
+		i_tmp++;
 	else
 	{
 		ft_putstr_fd(arg[i_tmp], (*command)->fd_out);

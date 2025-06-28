@@ -73,16 +73,10 @@ t_token	*lexer(char *input)
 	error = 0;
 	while (input[i] && !error)
 	{
-		while (input[i] == ' ' || input[i] == '\t')
-			i++;
+		skip_whitespace(input, &i);
 		if (input[i] == '\0')
 			break ;
-		if (input[i] == '|' || input[i] == '>' || input[i] == '<'
-			|| (input[i] == '>' && input[i + 1] == '>') || (input[i] == '<'
-				&& input[i + 1] == '<'))
-			error = process_operators(input, &i, &token_list);
-		else
-			error = word_case(input, &i, &token_list);
+		error = process_token(input, &i, &token_list);
 	}
 	if (error)
 	{
@@ -90,25 +84,4 @@ t_token	*lexer(char *input)
 		return (NULL);
 	}
 	return (token_list);
-}
-
-void	retype_lexer(t_token **token, t_token_exc **commande)
-{
-	int	i;
-
-	if (!token || !(*token) || !commande || !(*commande))
-		return ;
-	i = 0;
-	while ((*token))
-	{
-		if (((*token)->type == WORD) && (i == 0))
-			(*token)->type = CMD;
-		else if (((*token)->type == REDIR_IN) || ((*token)->type == REDIR_OUT)
-			|| ((*token)->type == APPEND))
-			handle_redirection_tokens(token, commande);
-		else if ((*token)->type == WORD)
-			(*token)->type = ARG;
-		i++;
-		(*token) = (*token)->next;
-	}
 }
