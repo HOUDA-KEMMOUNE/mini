@@ -187,6 +187,7 @@ t_token_exc				*tokens_exc_handler(t_token *token);
 
 /*-------------------echo helpers-------------------*/
 void					echo(t_token **token, t_token_exc **command);
+void					echo_helper(int *i, t_token_exc **command);
 // void					echo_handle_empty_cmd(t_echo *echo_struct_tmp);
 // int						echo_handle_n_flag(t_token **token_tmp);
 // void					echo_write_char_by_char(t_token *token_tmp,
