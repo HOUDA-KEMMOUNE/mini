@@ -19,13 +19,15 @@ int	run_builtin(char *cmd, t_token *tokens, t_env **env_list)
 	{"pwd", pwd},
 	{"export", export_builtin_adapter},
 	{"unset", unset},
+	{"env", env_builtin},
+	{"echo", echo_builtin},
 	{NULL, NULL}
 	};
-	t_built			arr[5];
+	t_built			arr[7];
 	int				i;
 
 	i = 0;
-	while (i < 5)
+	while (i < 7)
 	{
 		arr[i] = builtins[i];
 		i++;

@@ -100,6 +100,14 @@ void	fill_args(t_token **token, char **args_tmp, int count_args)
 			handle_heredoc_token(token);
 			continue ;
 		}
+		else if ((*token)->type == REDIR_IN || (*token)->type == REDIR_OUT || 
+				(*token)->type == APPEND)
+		{
+			(*token) = (*token)->next; // Skip redirection operator
+			if ((*token))
+				(*token) = (*token)->next; // Skip filename
+			continue ;
+		}
 		(*token) = (*token)->next;
 	}
 	args_tmp[i] = NULL;

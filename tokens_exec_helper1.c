@@ -66,8 +66,6 @@ void	tokens_exc_redio(t_token *token, t_token_exc **token_list)
 	token_tmp = token;
 	while (token_tmp)
 	{
-		if (ft_strncmp((*token_list)->cmd, "echo", 4) == 0)
-			return ;
 		type = token_tmp->type;
 		if (type == REDIR_OUT || type == APPEND || type == REDIR_IN)
 			handle_redir(token_tmp, token_list, type);

@@ -196,6 +196,7 @@ void					echo_helper(int *i, t_token_exc **command);
 int						check_simple_echo(t_token **token,
 							t_token_exc **command);
 int						check_echo_flag(char *s);
+int						echo_builtin(t_token *tokens, t_env **env_list);
 
 /*-------------------export-------------------*/
 int						export_internal(t_token *tokens, t_env **env_list);
@@ -208,6 +209,9 @@ void					export_print_sorted_helper(t_env **arr, int count);
 void					execute_export_args(t_token *current, t_env **env_list);
 int						is_valid_identifier(const char *str);
 int						cmp_env(t_env *a, t_env *b);
+
+/*-------------------env-------------------*/
+int						env_builtin(t_token *tokens, t_env **env_list);
 
 /*-------------------unset-------------------*/
 int						unset(t_token *tokens, t_env **env_list);

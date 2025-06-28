@@ -21,6 +21,14 @@ int	ft_count_args(t_token *token)
 	{
 		if (token->type == WORD && token->type != FILE_NAME)
 			count++;
+		else if (token->type == REDIR_IN || token->type == REDIR_OUT || 
+				token->type == APPEND || token->type == HEREDOC)
+		{
+			token = token->next; // Skip redirection operator
+			if (token)
+				token = token->next; // Skip filename/delimiter
+			continue ;
+		}
 		token = token->next;
 	}
 	return (count);

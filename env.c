@@ -80,3 +80,10 @@ void	get_env(t_env *env_list)
 		tmp = tmp->next;
 	}
 }
+
+int	env_builtin(t_token *tokens, t_env **env_list)
+{
+	(void)tokens;
+	get_env(*env_list);
+	return (0);
+}

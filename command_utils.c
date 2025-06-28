@@ -24,13 +24,15 @@ void	process_input_line(char *line, t_shell_data *data)
 
 int	handle_command_execution(t_shell_data *data, char *line)
 {
+	int original_stdout;
+	int result;
+	
 	if (se_redirections(&data->tokens) <= 0)
 		return (0);
 	parsing(line, &data->tokens, data->env_list);
 	pipes(&data->tokens, &data->tokens_exec);
 	tokens_exc_redio(data->tokens, &data->tokens_exec);
 	check_redirections(&data->tokens, &data->tokens_exec);
-	echo(&data->tokens, &data->tokens_exec);
 	heredoc(&data->tokens, &data->tokens_exec);
 	if (is_builtin(&data->tokens_exec) == 1)
 	{
@@ -39,7 +41,26 @@ int	handle_command_execution(t_shell_data *data, char *line)
 			simple_cmd(data->tokens, &data->tokens_exec);
 		return (0);
 	}
-	if (run_builtin(data->tokens->value, data->tokens, &data->env_list))
+	
+	// Handle built-in commands with proper redirection
+	original_stdout = -1;
+	if (data->tokens_exec->fd_out != 1)
+	{
+		original_stdout = dup(STDOUT_FILENO);
+		dup2(data->tokens_exec->fd_out, STDOUT_FILENO);
+		close(data->tokens_exec->fd_out);
+	}
+	
+	result = run_builtin(data->tokens->value, data->tokens, &data->env_list);
+	
+	// Restore original stdout if it was redirected
+	if (original_stdout != -1)
+	{
+		dup2(original_stdout, STDOUT_FILENO);
+		close(original_stdout);
+	}
+	
+	if (result)
 		return (0);
 	return (1);
 }
