@@ -17,7 +17,6 @@ void	init_shell_vars(t_shell_data *data)
 	data->env_list = NULL;
 	data->tokens = NULL;
 	data->tokens_exec = NULL;
-	data->echo_struct = NULL;
 }
 
 int	handle_empty_input(char **line)
@@ -31,14 +30,12 @@ int	handle_empty_input(char **line)
 }
 
 void	cleanup_resources(char **line, t_token **tokens,
-			t_token_exc **tokens_exec, t_echo **echo_struct)
+			t_token_exc **tokens_exec)
 {
 	free(*line);
 	free_token_list(*tokens);
 	free_token_exc_list(*tokens_exec);
-	free_echo_struct(*echo_struct);
 	*line = NULL;
 	*tokens = NULL;
 	*tokens_exec = NULL;
-	*echo_struct = NULL;
 }

@@ -27,18 +27,19 @@ int	count_cmd(t_token_exc **command)
 		// printf("command->cmd === %s (count_cmd/pipes)\n", command_tmp->cmd);
 		command_tmp = command_tmp->next;
 	}
+	// (*command)->count_cmd = count;
 	return (count);
 }
 
 void	pipes(t_token **token, t_token_exc **command)
 {
-	int		count;
-	// int		pipes_arr[count - 1];
+	// int		count;
+	// int		pipes_arr[];
 
 	if (!token || !(*token) || !command || !(*command))
 		return;
-	count = count_cmd(command);
-	if (count <= 0)
-		return ;
+	// count = count_cmd(command);
+	// if ( <= 0)
+	// 	return ;
 	// printf("count === %d (pipes)\n", count);
 }

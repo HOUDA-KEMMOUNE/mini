@@ -89,19 +89,20 @@ typedef struct s_token_exc
 	char				**delimiter;
 	char				**heredoc_file;
 	int					count_heredoc;
+	int					count_cmd;
 	int					fd_in;
 	int					fd_out;
 	// t_token_type		type;
 	struct s_token_exc	*next;
 }						t_token_exc;
 
-typedef struct s_echo
-{
-	int					fd;
-	char				*file;
-	char				*input;
-	char				**msg;
-}						t_echo;
+// typedef struct s_echo
+// {
+// 	int					fd;
+// 	char				*file;
+// 	char				*input;
+// 	char				**msg;
+// }						t_echo;
 
 // to call builtins
 // typedef struct s_built
@@ -162,7 +163,7 @@ void					parsing(char *input, t_token **token,
 							t_env *env_list);
 int						se_redirections(t_token **token);
 int						check_first_cmd(t_token_exc *token_list);
-void					ft_data_init(t_echo **echo_struct);
+// void					ft_data_init(t_echo **echo_struct);
 void					ft_cd(t_token **token, t_env *env_list);
 void					ft_ls(t_token **token, t_env *env_list);
 void					ft_export(t_token **token);
@@ -234,14 +235,13 @@ int						run_builtin(char *cmd, t_token *tokens,
 
 /*----------------free-----------------*/
 void					free_env_list(t_env *env);
-void					free_echo_struct(t_echo *echo);
 void					free_token_list(t_token *tok);
 void					free_token_exc_list(t_token_exc *cmd);
 void					free_delimiter_array(t_token_exc *cmd);
 void					free_heredoc_file_array(t_token_exc *cmd);
 void					free_heredoc_arrays(t_token_exc *cmd);
 void					minishell_cleanup(t_env *env, t_token *tokens,
-							t_token_exc *tokens_exec, t_echo *echo);
+							t_token_exc *tokens_exec);
 void					free_args(char **arr);
 
 /*----------------cd-----------------*/
@@ -304,8 +304,6 @@ int						count_cmd(t_token_exc **command);
 void					change_redout(t_token **token, t_token_exc **command);
 void					check_redirections(t_token **token, \
 						t_token_exc **command);
-void					change_redout_echo(t_token **token, \
-						t_echo **echo_struct);
 
 /*------------SC helpers---------------*/
 void					simple_cmd_parent(t_token_exc **token_cmd,
@@ -320,7 +318,6 @@ typedef struct s_shell_data
 	t_env		*env_list;
 	t_token		*tokens;
 	t_token_exc	*tokens_exec;
-	t_echo		*echo_struct;
 }						t_shell_data;
 
 /*------------cd helpers---------------*/
@@ -333,7 +330,7 @@ int						ft_isspace(int c);
 void					init_shell_vars(t_shell_data *data);
 int						handle_empty_input(char **line);
 void					cleanup_resources(char **line, t_token **tokens,
-							t_token_exc **tokens_exec, t_echo **echo_struct);
+							t_token_exc **tokens_exec);
 
 /*------------command processing---------------*/
 void					process_input_line(char *line, t_shell_data *data);

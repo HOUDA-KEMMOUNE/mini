@@ -26,16 +26,6 @@ void	free_env_list(t_env *env)
 	}
 }
 
-void	free_echo_struct(t_echo *echo)
-{
-	if (!echo)
-		return ;
-	free(echo->file);
-	free(echo->input);
-	free(echo->msg);
-	free(echo);
-}
-
 void	free_token_list(t_token *tok)
 {
 	t_token	*tmp;
@@ -68,11 +58,9 @@ void	free_token_exc_list(t_token_exc *cmd)
 	}
 }
 
-void	minishell_cleanup(t_env *env, t_token *tokens, t_token_exc *tokens_exec,
-		t_echo *echo)
+void	minishell_cleanup(t_env *env, t_token *tokens, t_token_exc *tokens_exec)
 {
 	free_env_list(env);
 	free_token_list(tokens);
 	free_token_exc_list(tokens_exec);
-	free_echo_struct(echo);
 }

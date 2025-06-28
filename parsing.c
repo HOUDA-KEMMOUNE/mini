@@ -12,18 +12,6 @@
 
 #include "minishell.h"
 
-void	ft_data_init(t_echo **echo_struct)
-{
-	*echo_struct = malloc(sizeof(t_echo));
-	if (!echo_struct)
-		return ;
-	ft_memset(*echo_struct, 0, sizeof(t_echo));
-	(*echo_struct)->fd = 1;
-	(*echo_struct)->file = NULL;
-	(*echo_struct)->input = NULL;
-	(*echo_struct)->msg = NULL;
-}
-
 int	handle_special_char(char tmp)
 {
 	if (tmp == '|')

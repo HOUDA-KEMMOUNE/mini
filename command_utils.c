@@ -62,7 +62,7 @@ int	process_command_line(char *line, t_shell_data *data)
 			heredoc(&data->tokens, &data->tokens_exec);
 		}
 		cleanup_resources(&line, &data->tokens,
-			&data->tokens_exec, &data->echo_struct);
+			&data->tokens_exec);
 		return (1);
 	}
 	
@@ -70,7 +70,7 @@ int	process_command_line(char *line, t_shell_data *data)
 		|| data->tokens_exec->cmd[0] == '\0')
 	{
 		cleanup_resources(&line, &data->tokens,
-			&data->tokens_exec, &data->echo_struct);
+			&data->tokens_exec);
 		return (1);
 	}
 	if (data->tokens)
@@ -78,11 +78,11 @@ int	process_command_line(char *line, t_shell_data *data)
 		if (!handle_command_execution(data, line))
 		{
 			cleanup_resources(&line, &data->tokens,
-				&data->tokens_exec, &data->echo_struct);
+				&data->tokens_exec);
 			return (1);
 		}
 	}
 	cleanup_resources(&line, &data->tokens,
-		&data->tokens_exec, &data->echo_struct);
+		&data->tokens_exec);
 	return (0);
 }
