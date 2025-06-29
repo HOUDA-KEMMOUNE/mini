@@ -12,21 +12,6 @@
 
 #include "minishell.h"
 
-void	add_token_exc_to_list(t_token_exc **token_list, t_token_exc *new)
-{
-	t_token_exc	*temp;
-
-	if ((*token_list) == NULL)
-	{
-		(*token_list) = new;
-		return ;
-	}
-	temp = (*token_list);
-	while (temp->next)
-		temp = temp->next;
-	temp->next = new;
-}
-
 static void	set_command_value(t_token **token_tmp, t_token_exc *new)
 {
 	if (*token_tmp && (*token_tmp)->type == HEREDOC)
@@ -81,34 +66,40 @@ void	tokens_exc_helper(t_token **token, t_token_exc **token_list)
 	filename_node(token);
 }
 
+static void	process_token_type(t_token **token, char **args_tmp, \
+								int *i, int count_args)
+{
+	static int	flag;
+
+	if ((*token)->type == WORD)
+	{
+		if (*i < count_args)
+			handle_word_token(token, args_tmp, i, &flag);
+	}
+	else if ((*token)->type == HEREDOC)
+	{
+		handle_heredoc_token(token);
+		return ;
+	}
+	else if ((*token)->type == REDIR_IN || (*token)->type == REDIR_OUT || \
+			(*token)->type == APPEND)
+	{
+		(*token) = (*token)->next;
+		if ((*token))
+			(*token) = (*token)->next;
+		return ;
+	}
+	(*token) = (*token)->next;
+}
+
 void	fill_args(t_token **token, char **args_tmp, int count_args)
 {
 	int	i;
-	int	flag;
 
 	i = 0;
-	flag = 0;
 	while ((*token) && ft_strncmp((*token)->value, "|", 1) != 0)
 	{
-		if ((*token)->type == WORD)
-		{
-			if (i < count_args)
-				handle_word_token(token, args_tmp, &i, &flag);
-		}
-		else if ((*token)->type == HEREDOC)
-		{
-			handle_heredoc_token(token);
-			continue ;
-		}
-		else if ((*token)->type == REDIR_IN || (*token)->type == REDIR_OUT || 
-				(*token)->type == APPEND)
-		{
-			(*token) = (*token)->next; // Skip redirection operator
-			if ((*token))
-				(*token) = (*token)->next; // Skip filename
-			continue ;
-		}
-		(*token) = (*token)->next;
+		process_token_type(token, args_tmp, &i, count_args);
 	}
 	args_tmp[i] = NULL;
 }

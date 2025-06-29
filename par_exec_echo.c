@@ -12,21 +12,6 @@
 
 #include "minishell.h"
 
-int	check_echo_flag(char *s)
-{
-	int		i;
-
-	i = 0;
-	while (s[i])
-	{
-		if ((s[i] == '-' && i == 0) || (s[i] == 'n' && i != 0))
-			i++;
-		else
-			break ;
-	}
-	return (i);
-}
-
 int	check_simple_echo(t_token **token, t_token_exc **command)
 {
 	t_token		*token_tmp;
@@ -95,6 +80,34 @@ void	echo(t_token **token, t_token_exc **command)
 		ft_putstr_fd("\n", (*command)->fd_out);
 }
 
+static void	process_echo_tokens(t_token *current, int *first_arg)
+{
+	while (current)
+	{
+		if (current->type == REDIR_OUT || current->type == REDIR_IN || \
+			current->type == APPEND || current->type == HEREDOC)
+		{
+			current = current->next;
+			if (current)
+				current = current->next;
+			continue ;
+		}
+		if (current->type == FILE_NAME)
+		{
+			current = current->next;
+			continue ;
+		}
+		if (current->type == WORD || current->type == ARG)
+		{
+			if (!(*first_arg))
+				ft_putstr_fd(" ", 1);
+			ft_putstr_fd(current->value, 1);
+			*first_arg = 0;
+		}
+		current = current->next;
+	}
+}
+
 int	echo_builtin(t_token *tokens, t_env **env_list)
 {
 	t_token		*current;
@@ -102,51 +115,16 @@ int	echo_builtin(t_token *tokens, t_env **env_list)
 	int			first_arg;
 
 	(void)env_list;
-	current = tokens->next; // Skip "echo"
+	current = tokens->next;
 	newline = 1;
 	first_arg = 1;
-
-	// Check for -n flag
 	if (current && current->value && ft_strncmp(current->value, "-n", 2) == 0)
 	{
 		newline = 0;
 		current = current->next;
 	}
-
-	// Print arguments, but skip redirection operators and filenames
-	while (current)
-	{
-		// Skip redirection operators and their associated filenames
-		if (current->type == REDIR_OUT || current->type == REDIR_IN || 
-			current->type == APPEND || current->type == HEREDOC)
-		{
-			current = current->next; // Skip operator
-			if (current)
-				current = current->next; // Skip filename/delimiter
-			continue;
-		}
-		
-		// Skip filenames that follow redirection operators
-		if (current->type == FILE_NAME)
-		{
-			current = current->next;
-			continue;
-		}
-
-		// Print regular arguments
-		if (current->type == WORD || current->type == ARG)
-		{
-			if (!first_arg)
-				ft_putstr_fd(" ", 1);
-			ft_putstr_fd(current->value, 1);
-			first_arg = 0;
-		}
-		
-		current = current->next;
-	}
-
+	process_echo_tokens(current, &first_arg);
 	if (newline)
 		ft_putstr_fd("\n", 1);
-
 	return (0);
 }

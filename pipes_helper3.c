@@ -62,7 +62,8 @@ int	check_pipe(t_token **token)
 			token_tmp = token_tmp->next;
 			if (ft_strncmp(token_tmp->value, "|", 1) == 0)
 			{
-				ft_putstr_fd("minishell: syntax error near unexpected token `|'\n", 1);
+				ft_putstr_fd("minishell: syntax error \
+				near unexpected token `|'\n", 1);
 				return (-1);
 			}
 		}

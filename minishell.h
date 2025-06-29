@@ -120,6 +120,7 @@ typedef struct s_shell_data
 // } t_built;
 // globel env
 t_env					**env_func(void);
+int						*exit_status_func(void);
 
 /*-------------------lexer utils-------------------*/
 int						handle_quoted_word(char *input, int *i,
@@ -229,6 +230,9 @@ void					unset_env_var(t_env **env, const char *name);
 int						ft_strcmp(const char *s1, const char *s2);
 void					ft_envadd_back(t_env **lst, t_env *new);
 void					ft_append(t_token **token);
+void					add_token_exc_to_list(t_token_exc **token_list,
+							t_token_exc *new);
+int						check_echo_flag(char *s);
 
 /*-------------------signals-------------------*/
 void					handler_sigint(int sig_num);
@@ -307,26 +311,34 @@ void					heredoc(t_token **token, t_token_exc **command);
 int						check_heredoc(t_token **token, t_token_exc **command);
 int						creat_tmpfile(char **file_name);
 void					fill_heredoc_file(int fd, char *delimiter);
-void					process_heredoc_line(int fd, char *line, t_env *env_list);
+void					process_heredoc_line(int fd, char *line, \
+						t_env *env_list);
 void					setup_heredoc_arrays(t_token_exc *command_tmp);
-void					collect_delimiters(t_token *token_tmp, t_token_exc *command_tmp);
+void					collect_delimiters(t_token *token_tmp, \
+						t_token_exc *command_tmp);
 void					create_heredoc_files(t_token_exc *command_tmp);
 
 /*------------pipes---------------*/
-int						pipes(t_token **token, t_token_exc **command, t_env *env_list);
+int						pipes(t_token **token, t_token_exc **command, \
+						t_env *env_list);
 int						check_pipe(t_token **token);
 int						count_cmd(t_token_exc **command);
-void					execute_pipeline_command(t_token_exc *cmd, char **envp, t_env **env_list);
+void					execute_pipeline_command(t_token_exc *cmd, \
+						char **envp, t_env **env_list);
 void					close_all_pipes(int pipe_fds[][2], int pipe_count);
-void					close_unused_pipes(int pipe_fds[][2], int pipe_count, int cmd_index);
-void					setup_child_pipes(t_token_exc *cmd, int pipe_fds[][2], int cmd_index, int pipe_count);
+void					close_unused_pipes(int pipe_fds[][2], \
+						int pipe_count, int cmd_index);
+void					setup_child_pipes(t_token_exc *cmd, \
+						int pipe_fds[][2], int cmd_index, int pipe_count);
 int						wait_for_children(pid_t pids[], int count);
 int						create_pipes(int pipe_fds[][2], int count);
-int						execute_pipeline(int pipe_fds[][2], pid_t pids[], t_token_exc *cmd_current, \
-						int count);
-int						handle_fork_error(int pipe_fds[][2], int count, pid_t pids[], int i);
+int						execute_pipeline(int pipe_fds[][2], pid_t pids[], \
+						t_token_exc *cmd_current, int count);
+int						handle_fork_error(int pipe_fds[][2], int count, \
+						pid_t pids[], int i);
 void					setup_file_descriptors(t_token_exc *cmd);
-void					create_builtin_args(t_token *builtin_token, t_token_exc *cmd);
+void					create_builtin_args(t_token *builtin_token, \
+						t_token_exc *cmd);
 void					execute_builtin(t_token_exc *cmd, t_env **env_list);
 void					execute_external(t_token_exc *cmd, char **envp);
 
@@ -338,10 +350,10 @@ void					check_pipeline_redirections(t_token **token, \
 						t_token_exc **command);
 void					apply_redirections_for_command_range(t_token *start, \
 						t_token *end, t_token_exc *command);
+void					apply_redirections_to_command(t_token *cmd_tokens, \
+						t_token_exc *command);
 void					open_file(int *fd, t_token **redir_token, \
 						t_token **token_tmp);
-
-
 
 /*------------SC helpers---------------*/
 void					simple_cmd_parent(t_token_exc **token_cmd,
@@ -349,7 +361,6 @@ void					simple_cmd_parent(t_token_exc **token_cmd,
 void					simple_cmd_child(t_token_exc **token_cmd, char **envp);
 void					handle_word_token(t_token **token, char **args_tmp,
 							int *i, int *flag);
-
 
 /*------------cd helpers---------------*/
 void					print_cd_error(const char *arg, int error_type);

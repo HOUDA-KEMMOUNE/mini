@@ -83,6 +83,10 @@ void	simple_cmd(t_token *token, t_token_exc **token_cmd)
 	else if (pid > 0)
 	{
 		waitpid(pid, &status, 0);
+		if (WIFEXITED(status))
+			*exit_status_func() = WEXITSTATUS(status);
+		else if (WIFSIGNALED(status))
+			*exit_status_func() = 128 + WTERMSIG(status);
 		simple_cmd_parent(token_cmd, envp, status);
 	}
 }

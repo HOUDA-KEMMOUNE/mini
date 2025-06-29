@@ -48,3 +48,51 @@ void	ft_envadd_back(t_env **lst, t_env *new)
 		temp = temp->next;
 	temp->next = new;
 }
+
+void	get_env(t_env *env_list)
+{
+	t_env	*tmp;
+
+	tmp = env_list;
+	while (tmp)
+	{
+		if (tmp->value)
+		{
+			ft_putstr_fd(tmp->key, 1);
+			ft_putstr_fd("=", 1);
+			ft_putstr_fd(tmp->value, 1);
+			ft_putstr_fd("\n", 1);
+		}
+		tmp = tmp->next;
+	}
+}
+
+void	add_token_exc_to_list(t_token_exc **token_list, t_token_exc *new)
+{
+	t_token_exc	*temp;
+
+	if ((*token_list) == NULL)
+	{
+		(*token_list) = new;
+		return ;
+	}
+	temp = (*token_list);
+	while (temp->next)
+		temp = temp->next;
+	temp->next = new;
+}
+
+int	check_echo_flag(char *s)
+{
+	int		i;
+
+	i = 0;
+	while (s[i])
+	{
+		if ((s[i] == '-' && i == 0) || (s[i] == 'n' && i != 0))
+			i++;
+		else
+			break ;
+	}
+	return (i);
+}

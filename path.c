@@ -21,7 +21,7 @@ char	*find_path(void)
 	tmp = NULL;
 	while (env)
 	{
-		if (ft_strncmp(env->key, "PATH", 4) == 0)
+		if (ft_strcmp(env->key, "PATH") == 0)
 		{
 			tmp = env->value;
 			break ;
@@ -37,9 +37,16 @@ char	**split_path(void)
 	char	**splited_path;
 
 	path = find_path();
+	printf("DEBUG: split_path - path found: %s\n", path ? path : "NULL");
 	if (path == NULL || !*path)
-		path = "/bin:/usr/bin";
+		return (NULL);  // Return NULL when PATH is unset, don't use fallback
 	splited_path = ft_split(path, ':');
+	if (splited_path) {
+		printf("DEBUG: split_path - directories:\n");
+		for (int i = 0; splited_path[i]; i++) {
+			printf("DEBUG:   [%d]: %s\n", i, splited_path[i]);
+		}
+	}
 	return (splited_path);
 }
 
@@ -78,17 +85,33 @@ void	path(t_token_exc **token_list)
 
 	splited_path = split_path();
 	flag = 0;
-	if (!splited_path)
-		return ;
 	(*token_list)->cmd_path = NULL;
-	new_cmd = ft_strjoin("/", (*token_list)->cmd);
-	flag = set_cmd_path(splited_path, new_cmd, token_list);
-	free(new_cmd);
-	free_split_path(splited_path);
+	
+	// Handle absolute/relative paths even when PATH is unset
+	if ((*token_list)->cmd && ft_strchr((*token_list)->cmd, '/'))
+	{
+		if (access((*token_list)->cmd, F_OK) == 0)
+		{
+			(*token_list)->cmd_path = ft_strdup((*token_list)->cmd);
+			flag = 1;
+		}
+	}
+	// Only search PATH if it exists and command doesn't contain '/'
+	else if (splited_path)
+	{
+		new_cmd = ft_strjoin("/", (*token_list)->cmd);
+		flag = set_cmd_path(splited_path, new_cmd, token_list);
+		free(new_cmd);
+	}
+	
+	if (splited_path)
+		free_split_path(splited_path);
+		
 	if (flag == 0 && check_first_cmd(*token_list) == 1)
 	{
 		if (!(*token_list)->cmd || (*token_list)->cmd[0] == '\0')
 			return ;
 		print_cmd_error((*token_list)->cmd);
+		*exit_status_func() = 127;
 	}
 }

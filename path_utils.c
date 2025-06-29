@@ -54,5 +54,5 @@ void	print_cmd_error(const char *cmd)
 	if (stat(cmd, &st) == 0 && S_ISDIR(st.st_mode))
 		printf("minishell: %s: Is a directory\n", cmd);
 	else
-		printf("%s: command not found\n", cmd);
+		printf("minishell: %s: No such file or directory\n", cmd);
 }

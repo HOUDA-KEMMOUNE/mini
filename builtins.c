@@ -12,9 +12,9 @@
 
 #include "minishell.h"
 
-int	run_builtin(char *cmd, t_token *tokens, t_env **env_list)
+static t_built	*init_builtins(void)
 {
-	const t_built	builtins[] = {
+	static t_built	builtins[] = {
 	{"cd", cd},
 	{"pwd", pwd},
 	{"export", export_builtin_adapter},
@@ -23,20 +23,21 @@ int	run_builtin(char *cmd, t_token *tokens, t_env **env_list)
 	{"echo", echo_builtin},
 	{NULL, NULL}
 	};
-	t_built			arr[7];
-	int				i;
 
+	return (builtins);
+}
+
+int	run_builtin(char *cmd, t_token *tokens, t_env **env_list)
+{
+	t_built	*builtins;
+	int		i;
+
+	builtins = init_builtins();
 	i = 0;
-	while (i < 7)
+	while (builtins[i].cmd)
 	{
-		arr[i] = builtins[i];
-		i++;
-	}
-	i = 0;
-	while (arr[i].cmd)
-	{
-		if (strcmp(cmd, arr[i].cmd) == 0)
-			return (arr[i].ptr(tokens, env_list));
+		if (strcmp(cmd, builtins[i].cmd) == 0)
+			return (builtins[i].ptr(tokens, env_list));
 		i++;
 	}
 	return (0);

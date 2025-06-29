@@ -12,44 +12,11 @@
 
 #include "minishell.h"
 
-void	process_input_line(char *line, t_shell_data *data)
+static int	execute_builtin_with_redirection(t_shell_data *data)
 {
-	data->tokens = lexer(line);
-	if (data->tokens == NULL)
-		return ;
-	if (check_pipe(&data->tokens) < 0)
-		return ;
-	add_type(&data->tokens);
-	data->tokens = expander(data->tokens, data->env_list);
-	data->tokens_exec = tokens_exc_handler(data->tokens);
-}
+	int	original_stdout;
+	int	result;
 
-int	handle_command_execution(t_shell_data *data, char *line)
-{
-	int original_stdout;
-	int result;
-	
-	if (se_redirections(&data->tokens) <= 0)
-		return (0);
-	parsing(line, &data->tokens, data->env_list);
-	// Skip old redirection handler for pipelines - use pipeline-aware one instead
-	if (count_cmd(&data->tokens_exec) <= 1)
-		tokens_exc_redio(data->tokens, &data->tokens_exec);
-	check_pipeline_redirections(&data->tokens, &data->tokens_exec);
-	heredoc(&data->tokens, &data->tokens_exec);
-	
-	// Check if this is a pipeline and handle it
-	if (pipes(&data->tokens, &data->tokens_exec, data->env_list))
-		return (0);  // Pipeline was handled successfully
-	if (is_builtin(&data->tokens_exec) == 1)
-	{
-		path(&data->tokens_exec);
-		if (data->tokens_exec->cmd_path)
-			simple_cmd(data->tokens, &data->tokens_exec);
-		return (0);
-	}
-	
-	// Handle built-in commands with proper redirection
 	original_stdout = -1;
 	if (data->tokens_exec->fd_out != 1)
 	{
@@ -57,19 +24,37 @@ int	handle_command_execution(t_shell_data *data, char *line)
 		dup2(data->tokens_exec->fd_out, STDOUT_FILENO);
 		close(data->tokens_exec->fd_out);
 	}
-	
 	result = run_builtin(data->tokens->value, data->tokens, &data->env_list);
-	
-	// Restore original stdout if it was redirected
+	*exit_status_func() = result;
 	if (original_stdout != -1)
 	{
 		dup2(original_stdout, STDOUT_FILENO);
 		close(original_stdout);
 	}
-	
 	if (result)
 		return (0);
 	return (1);
+}
+
+int	handle_command_execution(t_shell_data *data, char *line)
+{
+	if (se_redirections(&data->tokens) <= 0)
+		return (0);
+	parsing(line, &data->tokens, data->env_list);
+	if (count_cmd(&data->tokens_exec) <= 1)
+		tokens_exc_redio(data->tokens, &data->tokens_exec);
+	check_pipeline_redirections(&data->tokens, &data->tokens_exec);
+	heredoc(&data->tokens, &data->tokens_exec);
+	if (pipes(&data->tokens, &data->tokens_exec, data->env_list))
+		return (0);
+	if (is_builtin(&data->tokens_exec) == 1)
+	{
+		path(&data->tokens_exec);
+		if (data->tokens_exec->cmd_path)
+			simple_cmd(data->tokens, &data->tokens_exec);
+		return (0);
+	}
+	return (execute_builtin_with_redirection(data));
 }
 
 static int	handle_null_command(t_shell_data *data, char **line)

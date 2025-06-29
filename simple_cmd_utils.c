@@ -33,7 +33,7 @@ void	simple_cmd_child(t_token_exc **token_cmd, char **envp)
 	execve((*token_cmd)->cmd_path, (*token_cmd)->args, envp);
 	perror("execve failed");
 	free_env_array(envp);
-	exit(0);
+	exit(127);
 }
 
 void	simple_cmd_parent(t_token_exc **token_cmd, char **envp, int status)

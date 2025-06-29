@@ -19,11 +19,21 @@ t_env	**env_func(void)
 	return (&env);
 }
 
+int	*exit_status_func(void)
+{
+	static int	exit_status = 0;
+
+	return (&exit_status);
+}
+
 t_env	*create_env_list(char **envp)
 {
 	t_env	*new;
 	char	*equal_sign;
 
+	/* Reset the global environment first */
+	*env_func() = NULL;
+	
 	while (*envp)
 	{
 		equal_sign = ft_strchr(*envp, '=');
@@ -59,26 +69,10 @@ void	init_minimal_env(t_env **env_list)
 	char	cwd[4096];
 
 	if (getcwd(cwd, sizeof(cwd)))
-		export_set_var(env_list, "PWD", cwd);
-	export_set_var(env_list, "SHLVL", "1");
-}
-
-void	get_env(t_env *env_list)
-{
-	t_env	*tmp;
-
-	tmp = env_list;
-	while (tmp)
 	{
-		if (tmp->value)
-		{
-			ft_putstr_fd(tmp->key, 1);
-			ft_putstr_fd("=", 1);
-			ft_putstr_fd(tmp->value, 1);
-			ft_putstr_fd("\n", 1);
-		}
-		tmp = tmp->next;
+		export_set_var(env_list, "PWD", cwd);
 	}
+	export_set_var(env_list, "SHLVL", "1");
 }
 
 int	env_builtin(t_token *tokens, t_env **env_list)

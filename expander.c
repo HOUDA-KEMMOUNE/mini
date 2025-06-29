@@ -36,6 +36,30 @@ char	*expand_pid_special(const char *value)
 	return (result);
 }
 
+char	*expand_exit_status_special(const char *value)
+{
+	const char	*dollar;
+	char		exit_str[20];
+	size_t		prefix_len;
+	size_t		total_len;
+	char		*result;
+
+	dollar = strchr(value, '$');
+	if (!dollar || dollar[1] != '?')
+		return (NULL);
+	snprintf(exit_str, sizeof(exit_str), "%d", *exit_status_func());
+	prefix_len = dollar - value;
+	total_len = prefix_len + strlen(exit_str) + strlen(dollar + 2) + 1;
+	result = malloc(total_len);
+	if (!result)
+		return (NULL);
+	strncpy(result, value, prefix_len);
+	result[prefix_len] = '\0';
+	strcat(result, exit_str);
+	strcat(result, dollar + 2);
+	return (result);
+}
+
 char	*extract_var_name(const char *var_start, size_t *var_len_ptr)
 {
 	size_t	var_len;
@@ -74,6 +98,8 @@ char	*expand_variable(char *value, t_env *env_list)
 
 	if (expand_pid_special(value))
 		return (expand_pid_special(value));
+	if (expand_exit_status_special(value))
+		return (expand_exit_status_special(value));
 	dollar = ft_strchr(value, '$');
 	if (!dollar)
 		return (ft_strdup(value));
