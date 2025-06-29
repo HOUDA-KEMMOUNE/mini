@@ -47,3 +47,28 @@ int	create_pipes(int pipe_fds[][2], int count)
 	}
 	return (0);
 }
+
+int	check_pipe(t_token **token)
+{
+	t_token	*token_tmp;
+
+	if (!token || !(*token))
+		return (0);
+	token_tmp = (*token);
+	while (token_tmp)
+	{
+		if (ft_strncmp(token_tmp->value, "|", 1) == 0)
+		{
+			token_tmp = token_tmp->next;
+			if (ft_strncmp(token_tmp->value, "|", 1) == 0)
+			{
+				ft_putstr_fd("minishell: syntax error near unexpected token `|'\n", 1);
+				return (-1);
+			}
+		}
+		else if (ft_strncmp(token_tmp->value, "||", 1) == 0)
+			return (-1);
+		token_tmp = token_tmp->next;
+	}
+	return (1);
+}

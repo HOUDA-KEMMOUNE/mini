@@ -17,6 +17,8 @@ void	process_input_line(char *line, t_shell_data *data)
 	data->tokens = lexer(line);
 	if (data->tokens == NULL)
 		return ;
+	if (check_pipe(&data->tokens) < 0)
+		return ;
 	add_type(&data->tokens);
 	data->tokens = expander(data->tokens, data->env_list);
 	data->tokens_exec = tokens_exc_handler(data->tokens);

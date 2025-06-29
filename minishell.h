@@ -314,6 +314,7 @@ void					create_heredoc_files(t_token_exc *command_tmp);
 
 /*------------pipes---------------*/
 int						pipes(t_token **token, t_token_exc **command, t_env *env_list);
+int						check_pipe(t_token **token);
 int						count_cmd(t_token_exc **command);
 void					execute_pipeline_command(t_token_exc *cmd, char **envp, t_env **env_list);
 void					close_all_pipes(int pipe_fds[][2], int pipe_count);
