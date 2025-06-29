@@ -59,12 +59,11 @@ void	check_first_token(t_token **token)
 void	parsing(char *input, t_token **token,
 		t_env *env_list)
 {
-	(void)env_list; // Parameter no longer used after removing ft_env call
+	(void)env_list;
 	if (!input || !token)
 		return ;
 	check_first_token(token);
 	ft_export(token);
 	ft_unset(token);
-	// ft_env(token, env_list); // Removed: duplicate call - env builtin handles this
 	ft_exit(token);
 }
