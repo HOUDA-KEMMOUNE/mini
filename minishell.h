@@ -96,6 +96,14 @@ typedef struct s_token_exc
 	struct s_token_exc	*next;
 }						t_token_exc;
 
+/*------------data structures---------------*/
+typedef struct s_shell_data
+{
+	t_env		*env_list;
+	t_token		*tokens;
+	t_token_exc	*tokens_exec;
+}						t_shell_data;
+
 // typedef struct s_echo
 // {
 // 	int					fd;
@@ -301,12 +309,18 @@ int						creat_tmpfile(char **file_name);
 void					fill_heredoc_file(int fd, char *delimiter);
 
 /*------------pipes---------------*/
-void					pipes(t_token **token, t_token_exc **command);
+int						pipes(t_token **token, t_token_exc **command, t_env *env_list);
 int						count_cmd(t_token_exc **command);
+void					execute_pipeline_command(t_token_exc *cmd, char **envp, t_env **env_list);
+void					close_all_pipes(int pipe_fds[][2], int pipe_count);
+void					close_unused_pipes(int pipe_fds[][2], int pipe_count, int cmd_index);
+void					setup_child_pipes(t_token_exc *cmd, int pipe_fds[][2], int cmd_index, int pipe_count);
 
 /*------------redirections---------------*/
 void					change_redout(t_token **token, t_token_exc **command);
 void					check_redirections(t_token **token, \
+						t_token_exc **command);
+void					check_pipeline_redirections(t_token **token, \
 						t_token_exc **command);
 
 /*------------SC helpers---------------*/
@@ -316,13 +330,6 @@ void					simple_cmd_child(t_token_exc **token_cmd, char **envp);
 void					handle_word_token(t_token **token, char **args_tmp,
 							int *i, int *flag);
 
-/*------------data structures---------------*/
-typedef struct s_shell_data
-{
-	t_env		*env_list;
-	t_token		*tokens;
-	t_token_exc	*tokens_exec;
-}						t_shell_data;
 
 /*------------cd helpers---------------*/
 void					print_cd_error(const char *arg, int error_type);

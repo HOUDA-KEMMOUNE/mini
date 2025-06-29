@@ -30,10 +30,15 @@ int	handle_command_execution(t_shell_data *data, char *line)
 	if (se_redirections(&data->tokens) <= 0)
 		return (0);
 	parsing(line, &data->tokens, data->env_list);
-	pipes(&data->tokens, &data->tokens_exec);
-	tokens_exc_redio(data->tokens, &data->tokens_exec);
-	check_redirections(&data->tokens, &data->tokens_exec);
+	// Skip old redirection handler for pipelines - use pipeline-aware one instead
+	if (count_cmd(&data->tokens_exec) <= 1)
+		tokens_exc_redio(data->tokens, &data->tokens_exec);
+	check_pipeline_redirections(&data->tokens, &data->tokens_exec);
 	heredoc(&data->tokens, &data->tokens_exec);
+	
+	// Check if this is a pipeline and handle it
+	if (pipes(&data->tokens, &data->tokens_exec, data->env_list))
+		return (0);  // Pipeline was handled successfully
 	if (is_builtin(&data->tokens_exec) == 1)
 	{
 		path(&data->tokens_exec);
