@@ -15,8 +15,8 @@
 void	tokens_exc_helper1(t_token_exc **new, t_token **token)
 {
 	(*new)->cmd = (*token)->value;
-	(*new)->fd_in = 0;
-	(*new)->fd_out = 1;
+	(*new)->fd_in = STDIN_FILENO;
+	(*new)->fd_out = STDOUT_FILENO;
 	(*new)->next = NULL;
 }
 
@@ -35,51 +35,58 @@ void	tokens_exc_helper2(t_token_exc **new, t_token_exc **token_list)
 	}
 }
 
-void	handle_redir(t_token *token_tmp, t_token_exc **token_list, int type)
+int	open_file_by_type(char *filename, int type)
 {
 	int	fd;
 
-	token_tmp = token_tmp->next;
-	(*token_list)->file = ft_strdup(token_tmp->value);
 	if (type == REDIR_OUT)
-		fd = open(token_tmp->value, O_CREAT | O_WRONLY | O_TRUNC, 0640);
+		fd = open(filename, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	else if (type == APPEND)
-		fd = open(token_tmp->value, O_CREAT | O_WRONLY | O_APPEND, 0640);
+		fd = open(filename, O_CREAT | O_WRONLY | O_APPEND, 0644);
+	else if (type == REDIR_IN)
+		fd = open(filename, O_RDONLY);
 	else
-		fd = open(token_tmp->value, O_RDONLY);
+		return (-1);
+	if (fd < 0)
+	{
+		ft_putstr_fd("minishell: ", STDERR_FILENO);
+		perror(filename);
+		return (-1);
+	}
+	return (fd);
+}
+
+void	assign_fd_to_token(t_token_exc **token_list, int fd, int type)
+{
 	if (type == REDIR_OUT || type == APPEND)
+	{
+		if ((*token_list)->fd_out != STDOUT_FILENO)
+			close((*token_list)->fd_out);
 		(*token_list)->fd_out = fd;
-	else if (type == REDIR_IN && fd < 0)
+	}
+	else if (type == REDIR_IN)
 	{
-		ft_putstr_fd("minishell: ", 1);
-		perror((*token_list)->file);
+		if ((*token_list)->fd_in != STDIN_FILENO)
+			close((*token_list)->fd_in);
+		(*token_list)->fd_in = fd;
 	}
 }
 
-void	tokens_exc_redio(t_token *token, t_token_exc **token_list)
+int	handle_redir(t_token *token_tmp, t_token_exc **token_list, int type)
 {
-	t_token	*token_tmp;
-	int		type;
+	int	fd;
 
-	if (!token || !token_list || !(*token_list))
-		return ;
-	token_tmp = token;
-	while (token_tmp)
-	{
-		type = token_tmp->type;
-		if (type == REDIR_OUT || type == APPEND || type == REDIR_IN)
-			handle_redir(token_tmp, token_list, type);
-		token_tmp = token_tmp->next;
-	}
-}
-
-void	handle_heredoc_token(t_token **token)
-{
-	(*token) = (*token)->next;
-	if ((*token) && ((*token)->type == DELIMITER
-			|| (*token)->type == ARG || (*token)->type == CMD))
-	{
-		(*token) = (*token)->next;
-		return ;
-	}
+	if (!token_tmp || !token_tmp->next || !token_list || !(*token_list))
+		return (-1);
+	token_tmp = token_tmp->next;
+	if ((*token_list)->file)
+		free((*token_list)->file);
+	(*token_list)->file = ft_strdup(token_tmp->value);
+	if (!(*token_list)->file)
+		return (-1);
+	fd = open_file_by_type(token_tmp->value, type);
+	if (fd < 0)
+		return (-1);
+	assign_fd_to_token(token_list, fd, type);
+	return (0);
 }

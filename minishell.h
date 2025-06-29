@@ -233,6 +233,9 @@ void					ft_append(t_token **token);
 void					add_token_exc_to_list(t_token_exc **token_list,
 							t_token_exc *new);
 int						check_echo_flag(char *s);
+void					add_token_exc_to_list(t_token_exc **token_list,
+							t_token_exc *new);
+int						check_echo_flag(char *s);
 
 /*-------------------signals-------------------*/
 void					handler_sigint(int sig_num);
@@ -284,12 +287,18 @@ void					tokens_exc_helper2(t_token_exc **new,
 							t_token_exc **token_list);
 void					handle_heredoc_token(t_token **token);
 int						ft_count_args(t_token *token);
-void					tokens_exc_redio(t_token *token,
+int						tokens_exc_redio(t_token *token,
 							t_token_exc **token_list);
+int						handle_redir(t_token *token_tmp, \
+						t_token_exc **token_list, int type);
 void					filename_node(t_token **token);
 void					fill_args(t_token **token, char **args_tmp,
 							int count_args);
 void					command_node(t_token **token, t_token_exc **new);
+
+/*------------tokens_exec_utils---------------*/
+void					process_command_token(t_token **token_tmp, \
+						t_token_exc **token_list);
 
 /*------------cmd_paths---------------*/
 void					path(t_token_exc **token_list);
@@ -343,17 +352,21 @@ void					execute_builtin(t_token_exc *cmd, t_env **env_list);
 void					execute_external(t_token_exc *cmd, char **envp);
 
 /*------------redirections---------------*/
-void					change_redout(t_token **token, t_token_exc **command);
-void					check_redirections(t_token **token, \
+int						change_redout(t_token **token, t_token_exc **command);
+int						check_redirections(t_token **token, \
 						t_token_exc **command);
-void					check_pipeline_redirections(t_token **token, \
+int						check_pipeline_redirections(t_token **token, \
 						t_token_exc **command);
-void					apply_redirections_for_command_range(t_token *start, \
+int						apply_redirections_for_command_range(t_token *start, \
 						t_token *end, t_token_exc *command);
-void					apply_redirections_to_command(t_token *cmd_tokens, \
+int						apply_redirections_to_command(t_token *cmd_tokens, \
 						t_token_exc *command);
-void					open_file(int *fd, t_token **redir_token, \
+int						open_file_with_error_check(t_token **redir_token, \
 						t_token **token_tmp);
+int						process_output_redirection(t_token **token_tmp,
+							t_token_exc *command);
+int						process_input_redirection(t_token **token_tmp,
+							t_token_exc *command);
 
 /*------------SC helpers---------------*/
 void					simple_cmd_parent(t_token_exc **token_cmd,
@@ -376,6 +389,7 @@ void					cleanup_resources(char **line, t_token **tokens,
 
 /*------------command processing---------------*/
 void					process_input_line(char *line, t_shell_data *data);
+int						execute_builtin_with_redirection(t_shell_data *data);
 int						handle_command_execution(t_shell_data *data,
 							char *line);
 int						process_command_line(char *line, t_shell_data *data);
@@ -384,5 +398,28 @@ int						process_command_line(char *line, t_shell_data *data);
 void					init_environment(char **envp, t_env **env_list);
 int						handle_eof_input(char *line, t_shell_data *data);
 void					run_shell_loop(t_shell_data *data);
+
+/*------------helper functions---------------*/
+int						open_file_by_type(char *filename, int type);
+void					assign_fd_to_token(t_token_exc **token_list,
+							int fd, int type);
+
+/*------------token processing parameters---------------*/
+typedef struct s_token_process
+{
+	char	**args_tmp;
+	int		*i;
+	int		count_args;
+	int		*flag;
+}	t_token_process;
+
+void					process_token_type(t_token **token,
+							t_token_process *proc);
+
+/*------------redirection helpers---------------*/
+int						process_redirection_token(t_token **token_tmp,
+							t_token_exc **command);
+int						process_single_command_redirections(t_token **current_token,
+							t_token_exc **current_cmd);
 
 #endif

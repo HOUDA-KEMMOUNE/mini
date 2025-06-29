@@ -10,7 +10,7 @@ SRC = minishell.c lexer.c lexer_core.c lexer_utils.c lexer_support.c lexer_helpe
 	tokens_exec_helper1.c path.c simple_commands.c export_exe.c unset_exe.c free.c heredoc.c\
 	export_exe_helper.c export_exe_helper2.c free2.c path_utils.c tokens_exec_utils.c simple_cmd_utils.c\
 	cd_exe_helper.c pipes.c redirection_utils.c redirection_helpers.c main_helpers.c shell_loop.c command_utils.c pipes_helper.c pipes_helper2.c pipes_helper3.c\
-	heredoc_helper.c path_helpers.c
+	heredoc_helper.c path_helpers.c command_utils2.c echo_helper.c redirection_utils2.c tokens_exec_utils2.c redirection_utils3.c
 
 # Object files
 OBJ = $(SRC:.c=.o)

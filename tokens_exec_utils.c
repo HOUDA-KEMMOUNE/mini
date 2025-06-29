@@ -12,22 +12,60 @@
 
 #include "minishell.h"
 
+static int	skip_redirection_tokens(t_token **current)
+{
+	if (!current || !(*current))
+		return (0);
+	if ((*current)->type == REDIR_OUT || (*current)->type == REDIR_IN
+		|| (*current)->type == APPEND || (*current)->type == HEREDOC)
+	{
+		*current = (*current)->next;
+		if (*current && ((*current)->type == WORD
+				|| (*current)->type == FILE_NAME))
+			*current = (*current)->next;
+		return (1);
+	}
+	return (0);
+}
+
+static int	find_command_in_tokens(t_token *current, t_token_exc *new)
+{
+	while (current && current->type != PIPE)
+	{
+		if (skip_redirection_tokens(&current))
+			continue ;
+		else if (current->type == WORD)
+		{
+			new->cmd = current->value;
+			return (1);
+		}
+		else if (current)
+			current = current->next;
+	}
+	return (0);
+}
+
 static void	set_command_value(t_token **token_tmp, t_token_exc *new)
 {
-	if (*token_tmp && (*token_tmp)->type == HEREDOC)
+	t_token	*start;
+	t_token	*current;
+
+	if (!token_tmp || !(*token_tmp) || !new)
+	{
+		if (new)
+			new->cmd = NULL;
+		return ;
+	}
+	if ((*token_tmp)->type == HEREDOC)
 	{
 		new->cmd = NULL;
+		return ;
 	}
-	else
-	{
-		while (*token_tmp && (*token_tmp)->type != WORD
-			&& (*token_tmp)->type != PIPE)
-			*token_tmp = (*token_tmp)->next;
-		if (*token_tmp && (*token_tmp)->type == WORD)
-			new->cmd = (*token_tmp)->value;
-		else
-			new->cmd = NULL;
-	}
+	start = *token_tmp;
+	current = start;
+	if (!find_command_in_tokens(current, new))
+		new->cmd = NULL;
+	*token_tmp = start;
 }
 
 void	process_command_token(t_token **token_tmp, t_token_exc **token_list)
@@ -35,14 +73,16 @@ void	process_command_token(t_token **token_tmp, t_token_exc **token_list)
 	t_token		*head;
 	t_token_exc	*new;
 
+	if (!token_tmp || !(*token_tmp) || !token_list)
+		return ;
 	head = *token_tmp;
 	new = malloc(sizeof(t_token_exc));
 	if (!new)
 		return ;
 	ft_memset(new, 0, sizeof(t_token_exc));
 	set_command_value(token_tmp, new);
-	new->fd_in = 0;
-	new->fd_out = 1;
+	new->fd_in = STDIN_FILENO;
+	new->fd_out = STDOUT_FILENO;
 	new->next = NULL;
 	command_node(&head, &new);
 	add_token_exc_to_list(token_list, new);
@@ -50,56 +90,4 @@ void	process_command_token(t_token **token_tmp, t_token_exc **token_list)
 		*token_tmp = (*token_tmp)->next;
 	if (*token_tmp && (*token_tmp)->type == PIPE)
 		*token_tmp = (*token_tmp)->next;
-}
-
-void	tokens_exc_helper(t_token **token, t_token_exc **token_list)
-{
-	t_token	*token_tmp;
-
-	if (!token || !(*token))
-		return ;
-	token_tmp = (*token);
-	while (token_tmp)
-	{
-		process_command_token(&token_tmp, token_list);
-	}
-	filename_node(token);
-}
-
-static void	process_token_type(t_token **token, char **args_tmp, \
-								int *i, int count_args)
-{
-	static int	flag;
-
-	if ((*token)->type == WORD)
-	{
-		if (*i < count_args)
-			handle_word_token(token, args_tmp, i, &flag);
-	}
-	else if ((*token)->type == HEREDOC)
-	{
-		handle_heredoc_token(token);
-		return ;
-	}
-	else if ((*token)->type == REDIR_IN || (*token)->type == REDIR_OUT || \
-			(*token)->type == APPEND)
-	{
-		(*token) = (*token)->next;
-		if ((*token))
-			(*token) = (*token)->next;
-		return ;
-	}
-	(*token) = (*token)->next;
-}
-
-void	fill_args(t_token **token, char **args_tmp, int count_args)
-{
-	int	i;
-
-	i = 0;
-	while ((*token) && ft_strncmp((*token)->value, "|", 1) != 0)
-	{
-		process_token_type(token, args_tmp, &i, count_args);
-	}
-	args_tmp[i] = NULL;
 }

@@ -67,32 +67,36 @@ void	get_env(t_env *env_list)
 	}
 }
 
-void	add_token_exc_to_list(t_token_exc **token_list, t_token_exc *new)
+int	tokens_exc_redio(t_token *token, t_token_exc **token_list)
 {
-	t_token_exc	*temp;
+	t_token	*token_tmp;
+	int		type;
 
-	if ((*token_list) == NULL)
+	if (!token || !token_list || !(*token_list))
+		return (0);
+	token_tmp = token;
+	while (token_tmp)
 	{
-		(*token_list) = new;
-		return ;
+		type = token_tmp->type;
+		if (type == REDIR_OUT || type == APPEND || type == REDIR_IN)
+		{
+			if (handle_redir(token_tmp, token_list, type) == -1)
+				return (-1);
+		}
+		token_tmp = token_tmp->next;
 	}
-	temp = (*token_list);
-	while (temp->next)
-		temp = temp->next;
-	temp->next = new;
+	return (0);
 }
 
-int	check_echo_flag(char *s)
+void	handle_heredoc_token(t_token **token)
 {
-	int		i;
-
-	i = 0;
-	while (s[i])
+	if (!token || !(*token))
+		return ;
+	(*token) = (*token)->next;
+	if ((*token) && ((*token)->type == DELIMITER
+			|| (*token)->type == ARG || (*token)->type == CMD))
 	{
-		if ((s[i] == '-' && i == 0) || (s[i] == 'n' && i != 0))
-			i++;
-		else
-			break ;
+		(*token) = (*token)->next;
+		return ;
 	}
-	return (i);
 }

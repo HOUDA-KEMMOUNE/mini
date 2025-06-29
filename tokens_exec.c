@@ -65,12 +65,16 @@ void	command_node(t_token **token, t_token_exc **new)
 	t_token	*head;
 	char	**args_tmp;
 	int		count_args;
+	int		i;
 
 	head = (*token);
 	count_args = ft_count_args((*token));
 	args_tmp = malloc((count_args + 1) * sizeof(char *));
 	if (!args_tmp)
 		return ;
+	i = 0;
+	while (i <= count_args)
+		args_tmp[i++] = NULL;
 	fill_args(token, args_tmp, count_args);
 	(*token) = head;
 	(*new)->args = args_tmp;

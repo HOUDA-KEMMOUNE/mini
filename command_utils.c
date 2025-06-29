@@ -12,30 +12,6 @@
 
 #include "minishell.h"
 
-static int	execute_builtin_with_redirection(t_shell_data *data)
-{
-	int	original_stdout;
-	int	result;
-
-	original_stdout = -1;
-	if (data->tokens_exec->fd_out != 1)
-	{
-		original_stdout = dup(STDOUT_FILENO);
-		dup2(data->tokens_exec->fd_out, STDOUT_FILENO);
-		close(data->tokens_exec->fd_out);
-	}
-	result = run_builtin(data->tokens->value, data->tokens, &data->env_list);
-	*exit_status_func() = result;
-	if (original_stdout != -1)
-	{
-		dup2(original_stdout, STDOUT_FILENO);
-		close(original_stdout);
-	}
-	if (result)
-		return (0);
-	return (1);
-}
-
 int	handle_command_execution(t_shell_data *data, char *line)
 {
 	if (se_redirections(&data->tokens) <= 0)
@@ -59,11 +35,18 @@ int	handle_command_execution(t_shell_data *data, char *line)
 
 static int	handle_null_command(t_shell_data *data, char **line)
 {
-	if (data->tokens_exec && data->tokens_exec->cmd == NULL)
+	if (data->tokens_exec && data->tokens_exec->cmd == NULL && data->tokens)
 	{
-		if (data->tokens && data->tokens->type == HEREDOC)
-		{
+		if (data->tokens->type == HEREDOC)
 			heredoc(&data->tokens, &data->tokens_exec);
+		else
+		{
+			if (se_redirections(&data->tokens) > 0)
+			{
+				if (count_cmd(&data->tokens_exec) <= 1)
+					tokens_exc_redio(data->tokens, &data->tokens_exec);
+				check_pipeline_redirections(&data->tokens, &data->tokens_exec);
+			}
 		}
 		cleanup_resources(line, &data->tokens, &data->tokens_exec);
 		return (1);

@@ -12,21 +12,6 @@
 
 #include "minishell.h"
 
-int	check_simple_echo(t_token **token, t_token_exc **command)
-{
-	t_token		*token_tmp;
-
-	if (!token || !(*token) || !command || !(*command))
-		return (0);
-	token_tmp = (*token);
-	if (token_tmp->next == NULL)
-	{
-		ft_putstr_fd("\n", (*command)->fd_out);
-		return (0);
-	}
-	return (1);
-}
-
 void	echo_helper(int *i, t_token_exc **command)
 {
 	t_token_exc	*command_tmp;
@@ -67,16 +52,18 @@ void	echo(t_token **token, t_token_exc **command)
 		return ;
 	token_tmp = (*token);
 	command_tmp = (*command);
-	if (ft_strncmp(command_tmp->cmd, "echo", 4) != 0)
+	if (!command_tmp->cmd || ft_strncmp(command_tmp->cmd, "echo", 4) != 0)
 		return ;
 	if (check_simple_echo(token, command) == 0)
 		return ;
 	arg = command_tmp->args;
+	if (!arg)
+		return ;
 	i = 0;
 	while (arg[i])
 		echo_helper(&i, command);
-	token_tmp = token_tmp->next;
-	if (check_echo_flag(token_tmp->value) <= 1)
+	if (token_tmp && token_tmp->next
+		&& check_echo_flag(token_tmp->next->value) <= 1)
 		ft_putstr_fd("\n", (*command)->fd_out);
 }
 
@@ -84,8 +71,8 @@ static void	process_echo_tokens(t_token *current, int *first_arg)
 {
 	while (current)
 	{
-		if (current->type == REDIR_OUT || current->type == REDIR_IN || \
-			current->type == APPEND || current->type == HEREDOC)
+		if (current->type == REDIR_OUT || current->type == REDIR_IN
+			|| current->type == APPEND || current->type == HEREDOC)
 		{
 			current = current->next;
 			if (current)
@@ -118,7 +105,7 @@ int	echo_builtin(t_token *tokens, t_env **env_list)
 	current = tokens->next;
 	newline = 1;
 	first_arg = 1;
-	if (current && current->value && ft_strncmp(current->value, "-n", 2) == 0)
+	while (current && current->value && check_echo_flag(current->value) > 1)
 	{
 		newline = 0;
 		current = current->next;

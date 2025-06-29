@@ -38,13 +38,11 @@ int	execute_pipeline_fork(int pipe_fds[][2], pid_t pids[],
 int	execute_pipeline(int pipe_fds[][2], pid_t pids[], t_token_exc *cmd_current,
 		int count)
 {
-	int	status;
-
 	if (execute_pipeline_fork(pipe_fds, pids, cmd_current, count) == -1)
 		return (-1);
 	close_all_pipes(pipe_fds, count - 1);
-	status = wait_for_children(pids, count);
-	return (status);
+	wait_for_children(pids, count);
+	return (1);
 }
 
 int	setup_pipeline_execution(t_token_exc **command, t_env *env_list)
@@ -84,7 +82,6 @@ int	pipes(t_token **token, t_token_exc **command, t_env *env_list)
 		return (0);
 	}
 	result = execute_pipeline(pipe_fds, pids, *command, count);
-	*exit_status_func() = result;
 	free_args(envp);
 	return (result);
 }
