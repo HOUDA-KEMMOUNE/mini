@@ -307,6 +307,10 @@ void					heredoc(t_token **token, t_token_exc **command);
 int						check_heredoc(t_token **token, t_token_exc **command);
 int						creat_tmpfile(char **file_name);
 void					fill_heredoc_file(int fd, char *delimiter);
+void					process_heredoc_line(int fd, char *line, t_env *env_list);
+void					setup_heredoc_arrays(t_token_exc *command_tmp);
+void					collect_delimiters(t_token *token_tmp, t_token_exc *command_tmp);
+void					create_heredoc_files(t_token_exc *command_tmp);
 
 /*------------pipes---------------*/
 int						pipes(t_token **token, t_token_exc **command, t_env *env_list);
@@ -315,6 +319,15 @@ void					execute_pipeline_command(t_token_exc *cmd, char **envp, t_env **env_lis
 void					close_all_pipes(int pipe_fds[][2], int pipe_count);
 void					close_unused_pipes(int pipe_fds[][2], int pipe_count, int cmd_index);
 void					setup_child_pipes(t_token_exc *cmd, int pipe_fds[][2], int cmd_index, int pipe_count);
+int						wait_for_children(pid_t pids[], int count);
+int						create_pipes(int pipe_fds[][2], int count);
+int						execute_pipeline(int pipe_fds[][2], pid_t pids[], t_token_exc *cmd_current, \
+						int count);
+int						handle_fork_error(int pipe_fds[][2], int count, pid_t pids[], int i);
+void					setup_file_descriptors(t_token_exc *cmd);
+void					create_builtin_args(t_token *builtin_token, t_token_exc *cmd);
+void					execute_builtin(t_token_exc *cmd, t_env **env_list);
+void					execute_external(t_token_exc *cmd, char **envp);
 
 /*------------redirections---------------*/
 void					change_redout(t_token **token, t_token_exc **command);
@@ -322,6 +335,12 @@ void					check_redirections(t_token **token, \
 						t_token_exc **command);
 void					check_pipeline_redirections(t_token **token, \
 						t_token_exc **command);
+void					apply_redirections_for_command_range(t_token *start, \
+						t_token *end, t_token_exc *command);
+void					open_file(int *fd, t_token **redir_token, \
+						t_token **token_tmp);
+
+
 
 /*------------SC helpers---------------*/
 void					simple_cmd_parent(t_token_exc **token_cmd,

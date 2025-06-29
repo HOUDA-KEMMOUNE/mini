@@ -12,66 +12,9 @@
 
 #include "minishell.h"
 
-int	check_heredoc(t_token **token, t_token_exc **command)
-{
-	t_token		*token_tmp;
-	t_token_exc	*command_tmp;
-	int			check;	
-
-	check = 0;
-	token_tmp = (*token);
-	command_tmp = (*command);
-	while (token_tmp)
-	{
-		if (token_tmp->type == HEREDOC)
-		{
-			token_tmp = token_tmp->next;
-			if (token_tmp && (token_tmp->type == ARG
-				|| token_tmp->type == CMD
-				|| token_tmp->type == WORD
-				|| token_tmp->type == DELIMITER))
-			{
-				token_tmp->type = DELIMITER;
-				check++;
-			}
-		}
-		token_tmp = token_tmp->next;
-	}
-	(*command) = command_tmp;
-	return (check);
-}
-
-int	creat_tmpfile(char **file_name)
-{
-	int			fd;
-	char		*tmp;
-	char		*tmp_file;
-	char		*num;
-	static int	i;
-
-	tmp = "/tmp/minishell_heredoc";
-	num = ft_itoa(i);
-	tmp_file = ft_strjoin(tmp, num);
-	free(num);
-	fd = open(tmp_file, O_CREAT | O_EXCL | O_RDWR, 0600);
-	while (fd < 0)
-	{
-		free(tmp_file);
-		i++;
-		num = ft_itoa(i);
-		tmp_file = ft_strjoin(tmp, num);
-		free(num);
-		fd = open(tmp_file, O_CREAT | O_EXCL | O_RDWR, 0600);
-	}
-	i++;
-	(*file_name) = tmp_file;
-	return (fd);
-}
-
 void	fill_heredoc_file(int fd, char *delimiter)
 {
 	char	*line;
-	char	*expanded_line;
 	t_env	*env_list;
 
 	env_list = *env_func();
@@ -85,16 +28,27 @@ void	fill_heredoc_file(int fd, char *delimiter)
 			free(line);
 			break ;
 		}
-		if (ft_strchr(line, '$'))
-		{
-			expanded_line = expand_variable(line, env_list);
-			ft_putstr_fd(expanded_line, fd);
-			free(expanded_line);
-		}
-		else
-			ft_putstr_fd(line, fd);
-		ft_putstr_fd("\n", fd);
+		process_heredoc_line(fd, line, env_list);
 		free(line);
+	}
+}
+
+void	create_heredoc_files(t_token_exc *command_tmp)
+{
+	int		i;
+	int		fd;
+	char	*file_name;
+
+	i = 0;
+	while (i < command_tmp->count_heredoc)
+	{
+		fd = creat_tmpfile(&file_name);
+		command_tmp->heredoc_file[i] = ft_strdup(file_name);
+		fill_heredoc_file(fd, command_tmp->delimiter[i]);
+		if (fd >= 0)
+			close(fd);
+		free(file_name);
+		i++;
 	}
 }
 
@@ -102,47 +56,15 @@ void	heredoc(t_token **token, t_token_exc **command)
 {
 	t_token_exc	*command_tmp;
 	t_token		*token_tmp;
-	char		*file_name;
-	int			(fd), (i);
 
 	if (!token || !(*token) || !command || !(*command))
 		return ;
 	command_tmp = (*command);
 	token_tmp = (*token);
-
 	command_tmp->count_heredoc = check_heredoc(token, command);
 	if (command_tmp->count_heredoc == 0)
 		return ;
-	
-	command_tmp->delimiter = malloc((command_tmp->count_heredoc + 1) * sizeof(char *));
-    command_tmp->heredoc_file = malloc((command_tmp->count_heredoc + 1) * sizeof(char *));
-    command_tmp->delimiter[command_tmp->count_heredoc] = NULL;
-    command_tmp->heredoc_file[command_tmp->count_heredoc] = NULL;
-
-	i = 0;
-	while (token_tmp && i < command_tmp->count_heredoc)
-	{
-		if (token_tmp->type == HEREDOC)
-		{
-			token_tmp = token_tmp->next;
-			if (token_tmp->type == DELIMITER || token_tmp->type == ARG
-				|| token_tmp->type == CMD)
-			{
-				command_tmp->delimiter[i] = ft_strdup(token_tmp->value);
-                i++;
-			}
-		}
-		token_tmp = token_tmp->next;
-	}
-	i = 0;
-	while (i < command_tmp->count_heredoc)
-	{
-		fd = creat_tmpfile(&file_name);
-		command_tmp->heredoc_file[i] = ft_strdup(file_name);
-		fill_heredoc_file(fd, command_tmp->delimiter[i]); //TODO
-		if (fd >= 0)
-			close(fd);
-		free (file_name);
-		i++;
-	}
+	setup_heredoc_arrays(command_tmp);
+	collect_delimiters(token_tmp, command_tmp);
+	create_heredoc_files(command_tmp);
 }

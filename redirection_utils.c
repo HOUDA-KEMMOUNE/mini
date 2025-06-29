@@ -12,11 +12,18 @@
 
 #include "minishell.h"
 
-void	apply_redirections_for_command_range(t_token *start, t_token *end, t_token_exc *command);
+void	open_file(int *fd, t_token **redir_token, t_token **token_tmp)
+{
+	if ((*redir_token)->type == REDIR_OUT)
+		*fd = open((*token_tmp)->value, O_CREAT | O_WRONLY | O_TRUNC, 0640);
+	else
+		*fd = open((*token_tmp)->value, O_CREAT | O_WRONLY | O_APPEND, 0640);
+}
 
 void	change_redout(t_token **token, t_token_exc **command)
 {
 	t_token	*token_tmp;
+	t_token	*redir_token;
 	int		fd;
 
 	if (!token || !(*token) || !command || !(*command))
@@ -27,15 +34,12 @@ void	change_redout(t_token **token, t_token_exc **command)
 	{
 		if (token_tmp->type == REDIR_OUT || token_tmp->type == APPEND)
 		{
-			t_token *redir_token = token_tmp;
+			redir_token = token_tmp;
 			token_tmp = token_tmp->next;
 			if (token_tmp && ft_strncmp(token_tmp->value,
 					"/dev/stdout", 12) != 0)
 			{
-				if (redir_token->type == REDIR_OUT)
-					fd = open(token_tmp->value, O_CREAT | O_WRONLY | O_TRUNC, 0640);
-				else
-					fd = open(token_tmp->value, O_CREAT | O_WRONLY | O_APPEND, 0640);
+				open_file(&fd, &redir_token, &token_tmp);
 				(*command)->fd_out = fd;
 			}
 		}
