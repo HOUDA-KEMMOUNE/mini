@@ -21,7 +21,6 @@ void	print_tokens(t_token *tokens)
 	}
 }
 
-/* Helper function to skip heredoc delimiter tokens */
 static int	should_skip_expansion(t_token *prev, t_token *curr)
 {
 	(void)curr;
@@ -30,7 +29,6 @@ static int	should_skip_expansion(t_token *prev, t_token *curr)
 	return (0);
 }
 
-/* Helper function to expand token if it contains variables */
 static void	expand_token_if_needed(t_token *curr, t_env *env_list)
 {
 	char	*expanded;
