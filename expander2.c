@@ -33,8 +33,7 @@ static void	expand_token_if_needed(t_token *curr, t_env *env_list)
 {
 	char	*expanded;
 
-	if ((curr->quote == 0 || curr->quote == '"')
-		&& ft_strchr(curr->value, '$'))
+	if ((curr->quote == 0 || curr->quote == '"') && ft_strchr(curr->value, '$'))
 	{
 		expanded = expand_variable(curr->value, env_list);
 		free(curr->value);
@@ -65,27 +64,24 @@ t_token	*expander(t_token *token_list, t_env *env_list)
 	return (token_list);
 }
 
-t_token	*echo_expander(t_token *token_list, t_env *env_list, int fd)
+char	*expand_all_variables(const char *value, t_env *env_list)
 {
-	t_token	*curr;
-	char	*expanded;
+	char		*result;
+	const char	*start;
+	const char	*dollar;
 
-	curr = token_list;
-	while (curr)
+	result = ft_strdup("");
+	start = value;
+	dollar = ft_strchr(start, '$');
+	while (dollar)
 	{
-		if (curr->type == ARG)
-		{
-			if ((curr->quote == 0 || curr->quote == '"')
-				&& ft_strchr(curr->value, '$'))
-			{
-				expanded = expand_variable(curr->value, env_list);
-				free(curr->value);
-				curr->value = expanded;
-				ft_putstr_fd(curr->value, fd);
-				ft_putstr_fd("\n", fd);
-			}
-		}
-		curr = curr->next;
+		result = ft_strjoin_free(result, ft_substr(start, 0, dollar - start));
+		if (is_special_var(dollar))
+			start = expand_special_var(dollar, &result);
+		else
+			start = expand_normal_var(dollar, &result, env_list);
+		dollar = ft_strchr(start, '$');
 	}
-	return (token_list);
+	result = ft_strjoin_free(result, ft_strdup(start));
+	return (result);
 }

@@ -189,6 +189,8 @@ t_token					*expander(t_token *token_list, t_env *env_list);
 t_token					*echo_expander(t_token *token_list, t_env *env_list,
 							int fd);
 char					*expand_variable(char *value, t_env *env_list);
+char					*expand_all_variables(const char *value, \
+						t_env *env_list);
 
 /*-------------------execution-------------------*/
 t_env					*create_env_list(char **envp);
@@ -421,5 +423,12 @@ int						process_redirection_token(t_token **token_tmp,
 							t_token_exc **command);
 int						process_single_command_redirections(t_token \
 						**current_token, t_token_exc **current_cmd);
+char					*ft_strjoin_free(char *s1, const char *s2);
+int						is_special_var(const char *dollar);
+const char				*expand_special_var(const char *dollar, char **result);
+const char				*expand_normal_var(const char *dollar, \
+						char **result, t_env *env_list);
+char					*extract_var_name(const char *var_start, \
+						size_t *var_len_ptr);
 
 #endif

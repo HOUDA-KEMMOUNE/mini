@@ -4,7 +4,7 @@ CFLAGS = -Wall -Wextra -Werror -fPIE
 LIBS = -lreadline
 
 # Source files
-SRC = minishell.c lexer.c lexer_core.c lexer_utils.c lexer_support.c lexer_helper.c lexer_errors.c error_msg.c parsing_cd.c expander.c expander2.c parsing_export.c\
+SRC = minishell.c lexer.c lexer_core.c lexer_utils.c lexer_support.c lexer_helper.c lexer_errors.c error_msg.c parsing_cd.c expander.c expander2.c expander_helpers.c parsing_export.c\
 	par_exec_echo.c env.c env_utils.c parsing_env.c parsing_unset.c parsing.c parsing_exit.c parsing_ls.c\
 	helpers.c signal_hand.c get_next_line.c append.c pwd_exec.c builtins.c cd_exe.c tokens_exec.c\
 	tokens_exec_helper1.c path.c simple_commands.c export_exe.c unset_exe.c free.c heredoc.c\

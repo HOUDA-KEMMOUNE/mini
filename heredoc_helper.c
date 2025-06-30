@@ -74,7 +74,7 @@ void	process_heredoc_line(int fd, char *line, t_env *env_list)
 
 	if (ft_strchr(line, '$'))
 	{
-		expanded_line = expand_variable(line, env_list);
+		expanded_line = expand_all_variables(line, env_list);
 		ft_putstr_fd(expanded_line, fd);
 		free(expanded_line);
 	}
