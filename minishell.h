@@ -419,7 +419,7 @@ void					process_token_type(t_token **token,
 /*------------redirection helpers---------------*/
 int						process_redirection_token(t_token **token_tmp,
 							t_token_exc **command);
-int						process_single_command_redirections(t_token **current_token,
-							t_token_exc **current_cmd);
+int						process_single_command_redirections(t_token \
+						**current_token, t_token_exc **current_cmd);
 
 #endif
