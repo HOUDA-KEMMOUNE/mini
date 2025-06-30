@@ -78,11 +78,19 @@ int	cd(t_token *tokens, t_env **env_list)
 {
 	char	*path;
 	char	*to_free;
+	char	*home;
 	int		result;
 
 	to_free = NULL;
-	if (!tokens || !tokens->next)
+	if (!tokens)
 		return (0);
+	if (!tokens->next)
+	{
+		home = get_env_value(*env_list, "HOME");
+		if (!home)
+			return (print_cd_error("HOME not set", 5), 1);
+		return (handle_basic_cd(home, env_list));
+	}
 	if (tokens->next->next)
 		return (print_cd_error("cd", 1), 1);
 	if (strcmp(tokens->next->value, "-") == 0)

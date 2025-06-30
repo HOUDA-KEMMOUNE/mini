@@ -41,7 +41,7 @@ int	execute_pipeline(int pipe_fds[][2], pid_t pids[], t_token_exc *cmd_current,
 	if (execute_pipeline_fork(pipe_fds, pids, cmd_current, count) == -1)
 		return (-1);
 	close_all_pipes(pipe_fds, count - 1);
-	wait_for_children(pids, count);
+	*exit_status_func() = wait_for_children(pids, count);
 	return (1);
 }
 

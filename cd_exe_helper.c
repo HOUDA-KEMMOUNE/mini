@@ -30,15 +30,22 @@ int	handle_cd_dash(t_env **env_list)
 {
 	char		cwd[4096];
 	char		*oldpwd;
+	char		*current_pwd;
 	struct stat	st;
 
 	oldpwd = get_env_value(*env_list, "OLDPWD");
 	if (!oldpwd || !*oldpwd)
 		return (print_cd_error("OLDPWD not set", 5), 1);
-	write(1, oldpwd, strlen(oldpwd));
+	write(1, oldpwd, ft_strlen(oldpwd));
 	write(1, "\n", 1);
-	if (!getcwd(cwd, sizeof(cwd)))
-		return (print_cd_error(oldpwd, 6), 1);
+	if (getcwd(cwd, sizeof(cwd)))
+		update_env(*env_list, "OLDPWD", cwd);
+	else
+	{
+		current_pwd = get_env_value(*env_list, "PWD");
+		if (current_pwd)
+			update_env(*env_list, "OLDPWD", current_pwd);
+	}
 	if (chdir(oldpwd) != 0)
 	{
 		if (access(oldpwd, F_OK) != 0)
@@ -49,7 +56,6 @@ int	handle_cd_dash(t_env **env_list)
 			return (print_cd_error(oldpwd, 4), 1);
 		return (print_cd_error(oldpwd, 6), 1);
 	}
-	update_env(*env_list, "OLDPWD", cwd);
 	if (getcwd(cwd, sizeof(cwd)))
 		update_env(*env_list, "PWD", cwd);
 	return (0);
@@ -79,11 +85,17 @@ char	*expand_tilde(const char *path, t_env *env_list)
 int	handle_basic_cd(const char *path, t_env **env_list)
 {
 	char		cwd[4096];
+	char		*old_pwd;
 	struct stat	st;
 
-	if (!getcwd(cwd, sizeof(cwd)))
-		return (print_cd_error(path, 6), 1);
-	update_env(*env_list, "OLDPWD", cwd);
+	if (getcwd(cwd, sizeof(cwd)))
+		update_env(*env_list, "OLDPWD", cwd);
+	else
+	{
+		old_pwd = get_env_value(*env_list, "PWD");
+		if (old_pwd)
+			update_env(*env_list, "OLDPWD", old_pwd);
+	}
 	if (chdir(path) != 0)
 	{
 		if (access(path, F_OK) != 0)

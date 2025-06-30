@@ -19,6 +19,7 @@ void	handler_sigint(int sig_num)
 	rl_replace_line("", 0);
 	rl_on_new_line();
 	rl_redisplay();
+	*exit_status_func() = 130;
 }
 
 void	handler_sigint_child(int sig_num)

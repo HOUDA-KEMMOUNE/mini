@@ -31,13 +31,18 @@ int	run_builtin(char *cmd, t_token *tokens, t_env **env_list)
 {
 	t_built	*builtins;
 	int		i;
+	int		result;
 
 	builtins = init_builtins();
 	i = 0;
 	while (builtins[i].cmd)
 	{
 		if (strcmp(cmd, builtins[i].cmd) == 0)
-			return (builtins[i].ptr(tokens, env_list));
+		{
+			result = builtins[i].ptr(tokens, env_list);
+			*exit_status_func() = result;
+			return (result);
+		}
 		i++;
 	}
 	return (0);

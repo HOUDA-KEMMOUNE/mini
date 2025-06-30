@@ -21,8 +21,9 @@ t_env	**env_func(void)
 
 int	*exit_status_func(void)
 {
-	static int	exit_status = 0;
+	static int	exit_status;
 
+	exit_status = 0;
 	return (&exit_status);
 }
 
