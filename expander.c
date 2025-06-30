@@ -73,18 +73,18 @@ char	*extract_var_name(const char *var_start, size_t *var_len_ptr)
 }
 
 char	*build_expanded_string(const char *value, size_t prefix_len,
-		const char *env_value, const char *var_name)
+		const char *env_value, const char *suffix)
 {
 	char	*expanded_value;
 	size_t	total_len;
 
-	total_len = prefix_len + ft_strlen(env_value) + ft_strlen(var_name) + 1;
+	total_len = prefix_len + ft_strlen(env_value) + ft_strlen(suffix) + 1;
 	expanded_value = malloc(total_len);
 	if (!expanded_value)
 		return (NULL);
 	ft_strlcpy(expanded_value, value, prefix_len + 1);
 	ft_strlcat(expanded_value, env_value, total_len);
-	ft_strlcat(expanded_value, var_name, total_len);
+	ft_strlcat(expanded_value, suffix, total_len);
 	return (expanded_value);
 }
 
