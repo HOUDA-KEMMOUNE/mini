@@ -25,10 +25,10 @@ void	fill_heredoc_file(int fd, char *delimiter)
 		{
 			if (isatty(STDIN_FILENO))
 				ft_putstr_fd("minishell: warning: here-document \
-					delimited by end-of-file (wanted `", 2);
+delimited by end-of-file (wanted `", 2);
 			else
 				ft_putstr_fd("bash: warning: here-document at line 1 \
-					delimited by end-of-file (wanted `", 2);
+delimited by end-of-file (wanted `", 2);
 			ft_putstr_fd(delimiter, 2);
 			ft_putstr_fd("')\n", 2);
 			return ;
