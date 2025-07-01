@@ -20,12 +20,6 @@ static int	open_output_file(t_token *redir_token, char *filename)
 		fd = open(filename, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	else
 		fd = open(filename, O_CREAT | O_WRONLY | O_APPEND, 0644);
-	if (fd == -1)
-	{
-		ft_putstr_fd("minishell: ", STDERR_FILENO);
-		perror(filename);
-		return (-1);
-	}
 	return (fd);
 }
 
@@ -41,7 +35,12 @@ int	process_output_redirection(t_token **token_tmp,
 	{
 		fd = open_output_file(redir_token, (*token_tmp)->value);
 		if (fd == -1)
+		{
+			ft_putstr_fd("minishell: ", STDERR_FILENO);
+			perror((*token_tmp)->value);
+			*exit_status_func() = 1;
 			return (-1);
+		}
 		if (command->fd_out != STDOUT_FILENO)
 			close(command->fd_out);
 		command->fd_out = fd;
@@ -58,11 +57,7 @@ int	process_input_redirection(t_token **token_tmp, t_token_exc *command)
 	{
 		fd = open((*token_tmp)->value, O_RDONLY);
 		if (fd == -1)
-		{
-			ft_putstr_fd("minishell: ", STDERR_FILENO);
-			perror((*token_tmp)->value);
 			return (-1);
-		}
 		if (command->fd_in != STDIN_FILENO)
 			close(command->fd_in);
 		command->fd_in = fd;
@@ -82,7 +77,12 @@ int	process_redirection_token(t_token **token_tmp,
 	{
 		fd = open_file_with_error_check(&redir_token, token_tmp);
 		if (fd == -1)
+		{
+			ft_putstr_fd("minishell: ", STDERR_FILENO);
+			perror((*token_tmp)->value);
+			*exit_status_func() = 1;
 			return (-1);
+		}
 		if ((*command)->fd_out != STDOUT_FILENO)
 			close((*command)->fd_out);
 		(*command)->fd_out = fd;

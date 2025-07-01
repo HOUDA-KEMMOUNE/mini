@@ -23,8 +23,6 @@ int	handle_empty_input(char **line)
 {
 	if (**line == '\0')
 	{
-		ft_putstr_fd("Command not found\n", 2);
-		*exit_status_func() = 127;
 		free(*line);
 		return (1);
 	}

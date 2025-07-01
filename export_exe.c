@@ -80,22 +80,7 @@ int	export_internal(t_token *tokens, t_env **env_list)
 	return (0);
 }
 
-// t_env	*export(t_token *tokens, t_env *env_list)
-// {
-// 	export_internal(tokens, &env_list);
-// 	return (env_list);
-// }
-
-// int	export_wrapper(t_token *tokens, t_env **env_list)
-// {
-// 	t_env *new_head = export(tokens, *env_list); // pass current head
-// 	if (new_head != *env_list)
-// 		*env_list = new_head; // update the caller's pointer
-// 	return (0);
-// }
-
 int	export_builtin_adapter(t_token *tokens, t_env **env_list)
 {
-	export_internal(tokens, env_list);
-	return (0);
+	return (export_internal(tokens, env_list));
 }

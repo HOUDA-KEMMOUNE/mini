@@ -60,10 +60,28 @@ const char	*expand_normal_var(const char *dollar, \
 	char	*env_value;
 
 	var_name = extract_var_name(dollar + 1, &var_len);
+	if (var_len == 0)
+	{
+		*result = ft_strjoin_free(*result, "$");
+		free(var_name);
+		return (dollar + 1);
+	}
 	env_value = get_env_value(env_list, var_name);
 	if (!env_value)
 		env_value = "";
 	*result = ft_strjoin_free(*result, env_value);
 	free(var_name);
 	return (dollar + 1 + var_len);
+}
+
+char	*extract_var_name(const char *var_start, size_t *var_len_ptr)
+{
+	size_t	var_len;
+
+	var_len = 0;
+	while (var_start[var_len] && (ft_isalnum(var_start[var_len])
+			|| var_start[var_len] == '_'))
+		var_len++;
+	*var_len_ptr = var_len;
+	return (ft_substr(var_start, 0, var_len));
 }

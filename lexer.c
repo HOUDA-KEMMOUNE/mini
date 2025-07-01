@@ -38,13 +38,7 @@ void	add_token(t_token **head, char *value, t_token_type type, char quote)
 
 int	word_case(char *input, int *i, t_token **token_list)
 {
-	if (input[*i] == '"' || input[*i] == '\'')
-		return (handle_quoted_word(input, i, token_list));
-	else
-	{
-		handle_regular_word(input, i, token_list);
-		return (0);
-	}
+	return (handle_concatenated_word(input, i, token_list));
 }
 
 void	add_type(t_token **token_list)

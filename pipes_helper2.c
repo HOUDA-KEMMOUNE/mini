@@ -12,8 +12,7 @@
 
 #include "minishell.h"
 
-void	execute_pipeline_command(t_token_exc *cmd, char **envp,
-		t_env **env_list)
+void	execute_pipeline_command(t_token_exc *cmd, t_pipeline_context *ctx)
 {
 	if (!cmd)
 		exit(1);
@@ -24,9 +23,29 @@ void	execute_pipeline_command(t_token_exc *cmd, char **envp,
 	}
 	setup_file_descriptors(cmd);
 	if (is_builtin(&cmd) == 0)
-		execute_builtin(cmd, env_list);
+		execute_builtin(cmd, ctx->env_list);
 	else
-		execute_external(cmd, envp);
+		execute_external(cmd, ctx->envp);
+}
+
+void	execute_pipeline_command_with_tokens(t_token_exc *cmd,
+		t_pipeline_context *ctx)
+{
+	if (!cmd)
+		exit(1);
+	if (!cmd->cmd)
+	{
+		setup_file_descriptors(cmd);
+		exit(0);
+	}
+	if (check_individual_command_redirections(ctx->tokens, cmd,
+			ctx->cmd_index) == -1)
+		exit(1);
+	setup_file_descriptors(cmd);
+	if (is_builtin(&cmd) == 0)
+		execute_builtin(cmd, ctx->env_list);
+	else
+		execute_external(cmd, ctx->envp);
 }
 
 void	close_all_pipes(int pipe_fds[][2], int pipe_count)
@@ -79,25 +98,4 @@ void	setup_child_pipes(t_token_exc *cmd, int pipe_fds[][2],
 		else
 			cmd->fd_out = pipe_fds[cmd_index][1];
 	}
-}
-
-int	handle_fork_error(int pipe_fds[][2], int count, pid_t pids[], int i)
-{
-	int	j;
-
-	perror("fork");
-	close_all_pipes(pipe_fds, count - 1);
-	j = 0;
-	while (j < i)
-	{
-		kill(pids[j], SIGTERM);
-		j++;
-	}
-	j = 0;
-	while (j < i)
-	{
-		waitpid(pids[j], NULL, 0);
-		j++;
-	}
-	return (0);
 }

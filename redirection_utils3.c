@@ -24,34 +24,18 @@ int	open_file_with_error_check(t_token **redir_token, t_token **token_tmp)
 		fd = open((*token_tmp)->value, O_CREAT | O_WRONLY | O_APPEND, 0644);
 	else
 		return (-1);
-	if (fd == -1)
-	{
-		ft_putstr_fd("minishell: ", STDERR_FILENO);
-		perror((*token_tmp)->value);
-		return (-1);
-	}
 	return (fd);
 }
 
-int	check_redirections(t_token **token, t_token_exc **command)
+static int	handle_redirection_error(t_token *token_tmp)
 {
-	t_token	*token_tmp;
-	int		redir;
-
-	if (!token || !(*token) || !command || !(*command))
-		return (0);
-	token_tmp = (*token);
-	redir = 0;
-	while (token_tmp)
+	if (token_tmp)
 	{
-		if (token_tmp->type == REDIR_OUT || token_tmp->type == APPEND)
-			redir++;
-		token_tmp = token_tmp->next;
+		ft_putstr_fd("minishell: ", STDERR_FILENO);
+		perror(token_tmp->value);
 	}
-	if (redir == 0)
-		return (0);
-	else
-		return (change_redout(token, command));
+	*exit_status_func() = 1;
+	return (-1);
 }
 
 int	apply_redirections_to_command(t_token *cmd_tokens, t_token_exc *command)
@@ -71,7 +55,7 @@ int	apply_redirections_to_command(t_token *cmd_tokens, t_token_exc *command)
 		else if (token_tmp->type == REDIR_IN)
 		{
 			if (process_input_redirection(&token_tmp, command) == -1)
-				return (-1);
+				return (handle_redirection_error(token_tmp));
 		}
 		if (token_tmp)
 			token_tmp = token_tmp->next;

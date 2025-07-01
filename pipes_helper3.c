@@ -73,3 +73,24 @@ int	check_pipe(t_token **token)
 	}
 	return (1);
 }
+
+int	handle_fork_error(int pipe_fds[][2], int count, pid_t pids[], int i)
+{
+	int	j;
+
+	perror("fork");
+	close_all_pipes(pipe_fds, count - 1);
+	j = 0;
+	while (j < i)
+	{
+		kill(pids[j], SIGTERM);
+		j++;
+	}
+	j = 0;
+	while (j < i)
+	{
+		waitpid(pids[j], NULL, 0);
+		j++;
+	}
+	return (0);
+}

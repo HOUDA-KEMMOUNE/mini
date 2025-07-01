@@ -21,8 +21,10 @@ int	process_operators(char *input, int *i, t_token **token_list)
 		(*i)++;
 	}
 	else
+	{
 		handle_single_operator(input, i, token_list);
-	(*i)++;
+		(*i)++;
+	}
 	return (0);
 }
 

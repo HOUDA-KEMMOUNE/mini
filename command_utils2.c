@@ -21,6 +21,7 @@ void	process_input_line(char *line, t_shell_data *data)
 		return ;
 	add_type(&data->tokens);
 	data->tokens = expander(data->tokens, data->env_list);
+	data->tokens = process_quotes(data->tokens);
 	data->tokens_exec = tokens_exc_handler(data->tokens);
 }
 

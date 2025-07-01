@@ -31,6 +31,7 @@ static int	handle_output_redir_range(t_token **token_tmp, t_token *end,
 		{
 			ft_putstr_fd("minishell: ", STDERR_FILENO);
 			perror((*token_tmp)->value);
+			*exit_status_func() = 1;
 			return (-1);
 		}
 		if (command->fd_out != STDOUT_FILENO)
@@ -53,6 +54,7 @@ static int	handle_input_redir_range(t_token **token_tmp, t_token *end,
 		{
 			ft_putstr_fd("minishell: ", STDERR_FILENO);
 			perror((*token_tmp)->value);
+			*exit_status_func() = 1;
 			return (-1);
 		}
 		if (command->fd_in != STDIN_FILENO)

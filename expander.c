@@ -105,6 +105,8 @@ char	*expand_variable(char *value, t_env *env_list)
 		return (ft_strdup(value));
 	var_name = dollar + 1;
 	key = extract_var_name(var_name, &var_len);
+	if (var_len == 0)
+		return (ft_strdup(value));
 	env_value = get_env_value(env_list, key);
 	if (!env_value)
 		env_value = "";

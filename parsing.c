@@ -63,7 +63,4 @@ void	parsing(char *input, t_token **token,
 	if (!input || !token)
 		return ;
 	check_first_token(token);
-	ft_export(token);
-	ft_unset(token);
-	ft_exit(token);
 }

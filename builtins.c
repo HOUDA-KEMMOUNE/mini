@@ -21,6 +21,7 @@ static t_built	*init_builtins(void)
 	{"unset", unset},
 	{"env", env_builtin},
 	{"echo", echo_builtin},
+	{"exit", exit_builtin},
 	{NULL, NULL}
 	};
 

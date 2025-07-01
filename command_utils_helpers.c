@@ -72,7 +72,9 @@ int	process_redirection_tokens(t_shell_data *data)
 	{
 		if (count_cmd(&data->tokens_exec) <= 1)
 			tokens_exc_redio(data->tokens, &data->tokens_exec);
-		check_pipeline_redirections(&data->tokens, &data->tokens_exec);
+		if (check_pipeline_redirections(&data->tokens, \
+			&data->tokens_exec) == -1)
+			return (0);
 	}
 	return (1);
 }

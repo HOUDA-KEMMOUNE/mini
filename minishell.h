@@ -104,6 +104,15 @@ typedef struct s_shell_data
 	t_token_exc	*tokens_exec;
 }						t_shell_data;
 
+typedef struct s_pipeline_context
+{
+	t_token		*tokens;
+	t_token_exc	*tokens_exec;
+	char		**envp;
+	t_env		**env_list;
+	int			cmd_index;
+}						t_pipeline_context;
+
 // typedef struct s_echo
 // {
 // 	int					fd;
@@ -126,6 +135,8 @@ int						*exit_status_func(void);
 int						handle_quoted_word(char *input, int *i,
 							t_token **token_list);
 void					handle_regular_word(char *input, int *i,
+							t_token **token_list);
+int						handle_concatenated_word(char *input, int *i,
 							t_token **token_list);
 void					handle_double_operator(char *input, int *i,
 							t_token **token_list);
@@ -175,22 +186,21 @@ int						check_first_cmd(t_token_exc *token_list);
 // void					ft_data_init(t_echo **echo_struct);
 void					ft_cd(t_token **token, t_env *env_list);
 void					ft_ls(t_token **token, t_env *env_list);
-void					ft_export(t_token **token);
-void					ft_unset(t_token **token);
 int						is_notforbidden_char(char c, int is_first);
 int						check_commande(char *input);
 void					ft_count(char *s, int *count);
 void					ft_count_dotes(t_token **token);
 void					ft_env(t_token **token, t_env *env_list);
-void					ft_exit(t_token **token);
 
 /*-------------------expander-------------------*/
 t_token					*expander(t_token *token_list, t_env *env_list);
 t_token					*echo_expander(t_token *token_list, t_env *env_list,
 							int fd);
-char					*expand_variable(char *value, t_env *env_list);
 char					*expand_all_variables(const char *value, \
 						t_env *env_list);
+
+/*-------------------quote processor-------------------*/
+t_token					*process_quotes(t_token *token_list);
 
 /*-------------------execution-------------------*/
 t_env					*create_env_list(char **envp);
@@ -223,6 +233,9 @@ int						cmp_env(t_env *a, t_env *b);
 
 /*-------------------env-------------------*/
 int						env_builtin(t_token *tokens, t_env **env_list);
+
+/*-------------------exit-------------------*/
+int						exit_builtin(t_token *tokens, t_env **env_list);
 
 /*-------------------unset-------------------*/
 int						unset(t_token *tokens, t_env **env_list);
@@ -335,7 +348,9 @@ int						pipes(t_token **token, t_token_exc **command, \
 int						check_pipe(t_token **token);
 int						count_cmd(t_token_exc **command);
 void					execute_pipeline_command(t_token_exc *cmd, \
-						char **envp, t_env **env_list);
+						t_pipeline_context *ctx);
+void					execute_pipeline_command_with_tokens(t_token_exc *cmd, \
+						t_pipeline_context *ctx);
 void					close_all_pipes(int pipe_fds[][2], int pipe_count);
 void					close_unused_pipes(int pipe_fds[][2], \
 						int pipe_count, int cmd_index);
@@ -343,8 +358,10 @@ void					setup_child_pipes(t_token_exc *cmd, \
 						int pipe_fds[][2], int cmd_index, int pipe_count);
 int						wait_for_children(pid_t pids[], int count);
 int						create_pipes(int pipe_fds[][2], int count);
-int						execute_pipeline(int pipe_fds[][2], pid_t pids[], \
-						t_token_exc *cmd_current, int count);
+int						execute_pipeline(t_pipeline_context *ctx, \
+						int pipe_fds[][2], pid_t pids[], int count);
+int						execute_pipeline_fork(t_pipeline_context *ctx, \
+						int pipe_fds[][2], pid_t pids[], int count);
 int						handle_fork_error(int pipe_fds[][2], int count, \
 						pid_t pids[], int i);
 void					setup_file_descriptors(t_token_exc *cmd);
@@ -369,6 +386,8 @@ int						process_output_redirection(t_token **token_tmp,
 							t_token_exc *command);
 int						process_input_redirection(t_token **token_tmp,
 							t_token_exc *command);
+int						check_individual_command_redirections(t_token *tokens, \
+						t_token_exc *cmd, int cmd_index);
 
 /*------------SC helpers---------------*/
 void					simple_cmd_parent(t_token_exc **token_cmd,

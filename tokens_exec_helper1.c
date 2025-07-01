@@ -47,12 +47,6 @@ int	open_file_by_type(char *filename, int type)
 		fd = open(filename, O_RDONLY);
 	else
 		return (-1);
-	if (fd < 0)
-	{
-		ft_putstr_fd("minishell: ", STDERR_FILENO);
-		perror(filename);
-		return (-1);
-	}
 	return (fd);
 }
 

@@ -33,9 +33,11 @@ static void	expand_token_if_needed(t_token *curr, t_env *env_list)
 {
 	char	*expanded;
 
+	if (curr->quote == '\'')
+		return ;
 	if ((curr->quote == 0 || curr->quote == '"') && ft_strchr(curr->value, '$'))
 	{
-		expanded = expand_variable(curr->value, env_list);
+		expanded = expand_all_variables(curr->value, env_list);
 		free(curr->value);
 		curr->value = expanded;
 	}

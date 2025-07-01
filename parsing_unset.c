@@ -71,9 +71,6 @@ static void	check_var_first_char(t_token **token, int *i)
 	}
 	else
 	{
-		ft_putstr_fd("unset: not an identifier: ", 1);
-		ft_putstr_fd(var, 1);
-		ft_putstr_fd("\n", 1);
 		return ;
 	}
 }
@@ -90,14 +87,10 @@ static void	check_var(t_token **token)
 	{
 		if (var[i] == '=')
 		{
-			ft_putstr_fd("unset: `=': not a valid identifier\n", 1);
 			return ;
 		}
-		else if (is_notforbidden_char(var[i], 1) == 0)
+		else if (is_notforbidden_char(var[i], 0) == 0)
 		{
-			ft_putstr_fd("unset: not an identifier: ", 1);
-			ft_putstr_fd(var, 1);
-			ft_putstr_fd("\n", 1);
 			return ;
 		}
 		i++;

@@ -26,7 +26,7 @@ int	handle_eof_input(char *line, t_shell_data *data)
 		ft_putstr_fd("exit\n", 1);
 		minishell_cleanup(data->env_list, data->tokens,
 			data->tokens_exec);
-		exit(0);
+		exit(*exit_status_func());
 	}
 	return (0);
 }
