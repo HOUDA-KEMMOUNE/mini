@@ -30,7 +30,8 @@ void	assign_token_type(t_token **token_list, t_meta_char *arr)
 	flag = 0;
 	while (i < 5)
 	{
-		if (strcmp((*token_list)->value, arr[i].value) == 0)
+		if (ft_strncmp((*token_list)->value, arr[i].value, \
+		ft_strlen(arr[i].value) + 1) == 0)
 		{
 			flag = 1;
 			(*token_list)->type = arr[i].type;

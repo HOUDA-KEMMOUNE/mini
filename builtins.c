@@ -38,7 +38,8 @@ int	run_builtin(char *cmd, t_token *tokens, t_env **env_list)
 	i = 0;
 	while (builtins[i].cmd)
 	{
-		if (strcmp(cmd, builtins[i].cmd) == 0)
+		if (ft_strncmp(cmd, builtins[i].cmd, \
+			ft_strlen(builtins[i].cmd) + 1) == 0)
 		{
 			result = builtins[i].ptr(tokens, env_list);
 			*exit_status_func() = result;

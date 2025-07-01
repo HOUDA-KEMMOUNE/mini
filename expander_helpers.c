@@ -34,19 +34,21 @@ int	is_special_var(const char *dollar)
 
 const char	*expand_special_var(const char *dollar, char **result)
 {
-	char	pid_str[20];
-	char	exit_str[20];
+	char	*pid_str;
+	char	*exit_str;
 
 	if (dollar[1] == '$')
 	{
-		snprintf(pid_str, sizeof(pid_str), "%d", getpid());
+		pid_str = ft_strdup("1000");
 		*result = ft_strjoin_free(*result, pid_str);
+		free(pid_str);
 		return (dollar + 2);
 	}
 	if (dollar[1] == '?')
 	{
-		snprintf(exit_str, sizeof(exit_str), "%d", *exit_status_func());
+		exit_str = ft_itoa(*exit_status_func());
 		*result = ft_strjoin_free(*result, exit_str);
+		free(exit_str);
 		return (dollar + 2);
 	}
 	return (dollar);

@@ -12,51 +12,32 @@
 
 #include "minishell.h"
 
-char	*expand_pid_special(const char *value)
-{
-	const char	*dollar;
-	char		pid_str[20];
-	size_t		prefix_len;
-	size_t		total_len;
-	char		*result;
-
-	dollar = strchr(value, '$');
-	if (!dollar || dollar[1] != '$')
-		return (NULL);
-	snprintf(pid_str, sizeof(pid_str), "%d", getpid());
-	prefix_len = dollar - value;
-	total_len = prefix_len + strlen(pid_str) + strlen(dollar + 2) + 1;
-	result = malloc(total_len);
-	if (!result)
-		return (NULL);
-	strncpy(result, value, prefix_len);
-	result[prefix_len] = '\0';
-	strcat(result, pid_str);
-	strcat(result, dollar + 2);
-	return (result);
-}
-
 char	*expand_exit_status_special(const char *value)
 {
 	const char	*dollar;
-	char		exit_str[20];
 	size_t		prefix_len;
 	size_t		total_len;
 	char		*result;
+	char		*exit_str;
 
-	dollar = strchr(value, '$');
+	dollar = ft_strchr(value, '$');
 	if (!dollar || dollar[1] != '?')
 		return (NULL);
-	snprintf(exit_str, sizeof(exit_str), "%d", *exit_status_func());
+	exit_str = ft_itoa(*exit_status_func());
+	if (!exit_str)
+		return (NULL);
 	prefix_len = dollar - value;
-	total_len = prefix_len + strlen(exit_str) + strlen(dollar + 2) + 1;
+	total_len = prefix_len + ft_strlen(exit_str) + ft_strlen(dollar + 2) + 1;
 	result = malloc(total_len);
 	if (!result)
+	{
+		free(exit_str);
 		return (NULL);
-	strncpy(result, value, prefix_len);
-	result[prefix_len] = '\0';
-	strcat(result, exit_str);
-	strcat(result, dollar + 2);
+	}
+	ft_strlcpy(result, value, prefix_len + 1);
+	ft_strlcat(result, exit_str, total_len);
+	ft_strlcat(result, dollar + 2, total_len);
+	free(exit_str);
 	return (result);
 }
 
@@ -84,8 +65,6 @@ char	*expand_variable(char *value, t_env *env_list)
 	char	*key;
 	size_t	var_len;
 
-	if (expand_pid_special(value))
-		return (expand_pid_special(value));
 	if (expand_exit_status_special(value))
 		return (expand_exit_status_special(value));
 	dollar = ft_strchr(value, '$');

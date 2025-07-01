@@ -21,7 +21,7 @@ void	unset_env_var(t_env **env, const char *name)
 	prev = NULL;
 	while (curr)
 	{
-		if (strcmp(curr->key, name) == 0)
+		if (ft_strncmp(curr->key, name, ft_strlen(curr->key) + 1) == 0)
 		{
 			if (prev)
 				prev->next = curr->next;

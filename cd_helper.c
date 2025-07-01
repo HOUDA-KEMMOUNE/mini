@@ -99,7 +99,7 @@ int	cd(t_token *tokens, t_env **env_list)
 	}
 	if (tokens->next->next)
 		return (print_cd_error("cd", 1), 1);
-	if (strcmp(tokens->next->value, "-") == 0)
+	if (ft_strncmp(tokens->next->value, "-", 2) == 0)
 		return (handle_cd_dash(env_list));
 	path = determine_path(tokens, *env_list, &to_free);
 	if (!path)

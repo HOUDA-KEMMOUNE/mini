@@ -85,12 +85,12 @@ char	*expand_tilde(const char *path, t_env *env_list)
 	home = get_env_value(env_list, "HOME");
 	if (!home)
 		return (NULL);
-	home_len = strlen(home);
-	path_len = strlen(path);
+	home_len = ft_strlen(home);
+	path_len = ft_strlen(path);
 	expanded_path = malloc(home_len + path_len);
 	if (!expanded_path)
 		return (NULL);
-	strcpy(expanded_path, home);
-	strcat(expanded_path, path + 1);
+	ft_strlcpy(expanded_path, home, home_len + path_len);
+	ft_strlcat(expanded_path, path + 1, home_len + path_len);
 	return (expanded_path);
 }
