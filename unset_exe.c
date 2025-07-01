@@ -12,25 +12,6 @@
 
 #include "minishell.h"
 
-int	is_notforbidden_char(char c, int is_first)
-{
-	if (is_first)
-	{
-		if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c == '_'))
-			return (1);
-		else
-			return (0);
-	}
-	else
-	{
-		if ((c >= '0' && c <= '9') || (c >= 'a' && c <= 'z') || (c >= 'A'
-				&& c <= 'Z') || (c == '_'))
-			return (1);
-		else
-			return (0);
-	}
-}
-
 void	unset_env_var(t_env **env, const char *name)
 {
 	t_env	*curr;

@@ -32,7 +32,8 @@ static int	handle_redirection_error(t_token *token_tmp)
 	if (token_tmp)
 	{
 		ft_putstr_fd("minishell: ", STDERR_FILENO);
-		perror(token_tmp->value);
+		ft_putstr_fd(token_tmp->value, STDERR_FILENO);
+		ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
 	}
 	*exit_status_func() = 1;
 	return (-1);

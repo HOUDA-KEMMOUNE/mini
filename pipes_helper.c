@@ -99,8 +99,7 @@ void	execute_external(t_token_exc *cmd, char **envp)
 {
 	if (cmd->cmd_path)
 		execve(cmd->cmd_path, cmd->args, envp);
-	else if (cmd->cmd)
+	else if (cmd->cmd && ft_strchr(cmd->cmd, '/'))
 		execve(cmd->cmd, cmd->args, envp);
-	perror("execve failed");
 	exit(127);
 }

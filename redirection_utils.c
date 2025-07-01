@@ -30,7 +30,8 @@ static int	handle_output_redir_range(t_token **token_tmp, t_token *end,
 		if (fd == -1)
 		{
 			ft_putstr_fd("minishell: ", STDERR_FILENO);
-			perror((*token_tmp)->value);
+			ft_putstr_fd((*token_tmp)->value, STDERR_FILENO);
+			ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
 			*exit_status_func() = 1;
 			return (-1);
 		}
@@ -53,7 +54,8 @@ static int	handle_input_redir_range(t_token **token_tmp, t_token *end,
 		if (fd == -1)
 		{
 			ft_putstr_fd("minishell: ", STDERR_FILENO);
-			perror((*token_tmp)->value);
+			ft_putstr_fd((*token_tmp)->value, STDERR_FILENO);
+			ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
 			*exit_status_func() = 1;
 			return (-1);
 		}

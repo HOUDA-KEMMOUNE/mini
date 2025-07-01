@@ -30,8 +30,8 @@ void	simple_cmd_child(t_token_exc **token_cmd, char **envp)
 			close(fd);
 		}
 	}
-	execve((*token_cmd)->cmd_path, (*token_cmd)->args, envp);
-	perror("execve failed");
+	if ((*token_cmd)->cmd_path)
+		execve((*token_cmd)->cmd_path, (*token_cmd)->args, envp);
 	free_env_array(envp);
 	exit(127);
 }

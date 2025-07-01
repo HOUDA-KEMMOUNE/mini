@@ -60,18 +60,6 @@ char	*expand_exit_status_special(const char *value)
 	return (result);
 }
 
-char	*extract_var_name(const char *var_start, size_t *var_len_ptr)
-{
-	size_t	var_len;
-
-	var_len = 0;
-	while (var_start[var_len] && (ft_isalnum(var_start[var_len])
-			|| var_start[var_len] == '_'))
-		var_len++;
-	*var_len_ptr = var_len;
-	return (ft_substr(var_start, 0, var_len));
-}
-
 char	*build_expanded_string(const char *value, size_t prefix_len,
 		const char *env_value, const char *suffix)
 {

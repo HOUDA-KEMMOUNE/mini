@@ -36,6 +36,8 @@ int	check_empty_commands(t_shell_data *data)
 
 int	execute_commands(t_shell_data *data)
 {
+	if (data->tokens_exec && data->tokens_exec->count_heredoc == 0)
+		heredoc(&data->tokens, &data->tokens_exec);
 	if (pipes(&data->tokens, &data->tokens_exec, data->env_list))
 		return (0);
 	if (is_builtin(&data->tokens_exec) == 1)

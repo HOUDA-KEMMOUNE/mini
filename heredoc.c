@@ -12,27 +12,52 @@
 
 #include "minishell.h"
 
+static void	handle_eof_warning(char *delimiter)
+{
+	if (isatty(STDIN_FILENO))
+		ft_putstr_fd("minishell: warning: here-document \
+delimited by end-of-file (wanted `", 2);
+	else
+		ft_putstr_fd("bash: warning: here-document at line 1 \
+delimited by end-of-file (wanted `", 2);
+	ft_putstr_fd(delimiter, 2);
+	ft_putstr_fd("')\n", 2);
+}
+
+static void	trim_line_endings(char *line)
+{
+	int	len;
+
+	if (line)
+	{
+		len = ft_strlen(line);
+		while (len > 0 && (line[len - 1] == '\n' || line[len - 1] == '\r'))
+		{
+			line[len - 1] = '\0';
+			len--;
+		}
+	}
+}
+
 void	fill_heredoc_file(int fd, char *delimiter)
 {
 	char	*line;
 	t_env	*env_list;
+	char	*prompt;
 
 	env_list = *env_func();
+	prompt = "> ";
+	if (!isatty(STDIN_FILENO))
+		prompt = "";
 	while (1)
 	{
-		line = readline("> ");
+		line = readline(prompt);
 		if (!line)
 		{
-			if (isatty(STDIN_FILENO))
-				ft_putstr_fd("minishell: warning: here-document \
-delimited by end-of-file (wanted `", 2);
-			else
-				ft_putstr_fd("bash: warning: here-document at line 1 \
-delimited by end-of-file (wanted `", 2);
-			ft_putstr_fd(delimiter, 2);
-			ft_putstr_fd("')\n", 2);
+			handle_eof_warning(delimiter);
 			return ;
 		}
+		trim_line_endings(line);
 		if (ft_strcmp(line, delimiter) == 0)
 		{
 			free(line);

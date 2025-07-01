@@ -39,11 +39,15 @@ void	run_shell_loop(t_shell_data *data)
 	{
 		signal(SIGINT, handler_sigint);
 		signal(SIGQUIT, SIG_IGN);
-		line = readline("\033[1;32mminishell>\033[0m ");
+		if (isatty(STDIN_FILENO))
+			line = readline("\033[1;32mminishell>\033[0m ");
+		else
+			line = readline("");
 		handle_eof_input(line, data);
 		if (handle_empty_input(&line))
 			continue ;
-		add_history(line);
+		if (isatty(STDIN_FILENO))
+			add_history(line);
 		if (process_command_line(line, data))
 			continue ;
 	}
