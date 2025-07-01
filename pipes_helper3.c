@@ -67,7 +67,7 @@ int	check_pipe(t_token **token)
 				return (-1);
 			}
 		}
-		else if (ft_strncmp(token_tmp->value, "||", 1) == 0)
+		else if (ft_strncmp(token_tmp->value, "||", 2) == 0)
 			return (-1);
 		token_tmp = token_tmp->next;
 	}

@@ -71,19 +71,24 @@ char	*expand_all_variables(const char *value, t_env *env_list)
 	char		*result;
 	const char	*start;
 	const char	*dollar;
+	char		*temp;
 
 	result = ft_strdup("");
 	start = value;
 	dollar = ft_strchr(start, '$');
 	while (dollar)
 	{
-		result = ft_strjoin_free(result, ft_substr(start, 0, dollar - start));
+		temp = ft_substr(start, 0, dollar - start);
+		result = ft_strjoin_free(result, temp);
+		free(temp);
 		if (is_special_var(dollar))
 			start = expand_special_var(dollar, &result);
 		else
 			start = expand_normal_var(dollar, &result, env_list);
 		dollar = ft_strchr(start, '$');
 	}
-	result = ft_strjoin_free(result, ft_strdup(start));
+	temp = ft_strdup(start);
+	result = ft_strjoin_free(result, temp);
+	free(temp);
 	return (result);
 }

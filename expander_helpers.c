@@ -29,21 +29,13 @@ char	*ft_strjoin_free(char *s1, const char *s2)
 
 int	is_special_var(const char *dollar)
 {
-	return (dollar[1] == '$' || dollar[1] == '?');
+	return (dollar[1] == '?');
 }
 
 const char	*expand_special_var(const char *dollar, char **result)
 {
-	char	*pid_str;
 	char	*exit_str;
 
-	if (dollar[1] == '$')
-	{
-		pid_str = ft_strdup("1000");
-		*result = ft_strjoin_free(*result, pid_str);
-		free(pid_str);
-		return (dollar + 2);
-	}
 	if (dollar[1] == '?')
 	{
 		exit_str = ft_itoa(*exit_status_func());
