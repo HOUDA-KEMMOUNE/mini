@@ -14,6 +14,8 @@
 
 int	is_builtin(t_token_exc **token_list)
 {
+	if (!token_list || !(*token_list) || !(*token_list)->cmd)
+		return (1);
 	if ((ft_strncmp((*token_list)->cmd, "echo", 4) == 0)
 		|| (ft_strncmp((*token_list)->cmd, "cd", 2) == 0)
 		|| (ft_strncmp((*token_list)->cmd, "pwd", 4) == 0)
@@ -30,6 +32,8 @@ int	check_first_cmd(t_token_exc *token_list)
 {
 	char	*s;
 
+	if (!token_list || !token_list->cmd)
+		return (0);
 	s = token_list->cmd;
 	if (ft_strncmp(s, ">", 1) == 0 || ft_strncmp(s, ">>", 2) == 0
 		|| ft_strncmp(s, "<", 1) == 0 || ft_strncmp(s, "<<", 2) == 0

@@ -15,8 +15,13 @@
 void	execute_pipeline_command(t_token_exc *cmd, char **envp,
 		t_env **env_list)
 {
-	if (!cmd || !cmd->cmd)
+	if (!cmd)
 		exit(1);
+	if (!cmd->cmd)
+	{
+		setup_file_descriptors(cmd);
+		exit(0);
+	}
 	setup_file_descriptors(cmd);
 	if (is_builtin(&cmd) == 0)
 		execute_builtin(cmd, env_list);

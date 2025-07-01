@@ -74,31 +74,23 @@ int	ft_isspace(int c)
 	return (c == ' ' || c == '\n' || c == '\r' || c == '\t');
 }
 
-int	cd(t_token *tokens, t_env **env_list)
+char	*expand_tilde(const char *path, t_env *env_list)
 {
-	char	*path;
-	char	*to_free;
 	char	*home;
-	int		result;
+	char	*expanded_path;
+	size_t	home_len;
+	size_t	path_len;
 
-	to_free = NULL;
-	if (!tokens)
-		return (0);
-	if (!tokens->next)
-	{
-		home = get_env_value(*env_list, "HOME");
-		if (!home)
-			return (print_cd_error("HOME not set", 5), 1);
-		return (handle_basic_cd(home, env_list));
-	}
-	if (tokens->next->next)
-		return (print_cd_error("cd", 1), 1);
-	if (strcmp(tokens->next->value, "-") == 0)
-		return (handle_cd_dash(env_list));
-	path = determine_path(tokens, *env_list, &to_free);
-	if (!path)
-		return (1);
-	result = handle_basic_cd(path, env_list);
-	free(to_free);
-	return (result);
+	expanded_path = NULL;
+	home = get_env_value(env_list, "HOME");
+	if (!home)
+		return (NULL);
+	home_len = strlen(home);
+	path_len = strlen(path);
+	expanded_path = malloc(home_len + path_len);
+	if (!expanded_path)
+		return (NULL);
+	strcpy(expanded_path, home);
+	strcat(expanded_path, path + 1);
+	return (expanded_path);
 }

@@ -396,6 +396,14 @@ int						handle_command_execution(t_shell_data *data,
 							char *line);
 int						process_command_line(char *line, t_shell_data *data);
 
+/*------------command processing helpers---------------*/
+int						check_empty_commands(t_shell_data *data);
+int						execute_commands(t_shell_data *data);
+int						handle_heredoc_tokens(t_shell_data *data);
+int						process_redirection_tokens(t_shell_data *data);
+int						check_empty_command_loop(t_token_exc *current,
+							char **line, t_shell_data *data);
+
 /*------------shell loop---------------*/
 void					init_environment(char **envp, t_env **env_list);
 int						handle_eof_input(char *line, t_shell_data *data);

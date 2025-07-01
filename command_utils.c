@@ -20,45 +20,34 @@ int	handle_command_execution(t_shell_data *data, char *line)
 	if (count_cmd(&data->tokens_exec) <= 1)
 		tokens_exc_redio(data->tokens, &data->tokens_exec);
 	check_pipeline_redirections(&data->tokens, &data->tokens_exec);
-	heredoc(&data->tokens, &data->tokens_exec);
-	if (pipes(&data->tokens, &data->tokens_exec, data->env_list))
+	if (!check_empty_commands(data))
 		return (0);
-	if (is_builtin(&data->tokens_exec) == 1)
-	{
-		path(&data->tokens_exec);
-		if (data->tokens_exec->cmd_path)
-			simple_cmd(data->tokens, &data->tokens_exec);
-		return (0);
-	}
-	return (execute_builtin_with_redirection(data));
+	return (execute_commands(data));
 }
 
 static int	handle_null_command(t_shell_data *data, char **line)
 {
+	t_token_exc	*current;
+
 	if (data->tokens_exec && data->tokens_exec->cmd == NULL && data->tokens)
 	{
 		if (data->tokens->type == HEREDOC)
-			heredoc(&data->tokens, &data->tokens_exec);
+		{
+			if (!handle_heredoc_tokens(data))
+				return (0);
+		}
 		else
 		{
-			if (se_redirections(&data->tokens) > 0)
-			{
-				if (count_cmd(&data->tokens_exec) <= 1)
-					tokens_exc_redio(data->tokens, &data->tokens_exec);
-				check_pipeline_redirections(&data->tokens, &data->tokens_exec);
-			}
+			process_redirection_tokens(data);
 		}
 		cleanup_resources(line, &data->tokens, &data->tokens_exec);
 		return (1);
 	}
-	if (data->tokens_exec == NULL || data->tokens_exec->cmd == NULL
-		|| data->tokens_exec->cmd[0] == '\0')
+	current = data->tokens_exec;
+	if (check_empty_command_loop(current, line, data))
+		return (1);
+	if (data->tokens_exec == NULL || data->tokens_exec->cmd == NULL)
 	{
-		if (data->tokens_exec && data->tokens_exec->cmd && data->tokens_exec->cmd[0] == '\0')
-		{
-			ft_putstr_fd("minishell: : command not found\n", 2);
-			*exit_status_func() = 127;
-		}
 		cleanup_resources(line, &data->tokens, &data->tokens_exec);
 		return (1);
 	}

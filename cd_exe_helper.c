@@ -26,18 +26,11 @@ int	is_whitespace_only(const char *str)
 	return (1);
 }
 
-int	handle_cd_dash(t_env **env_list)
+static int	cd_dash_setup_env(t_env **env_list)
 {
-	char		cwd[4096];
-	char		*oldpwd;
-	char		*current_pwd;
-	struct stat	st;
+	char	cwd[4096];
+	char	*current_pwd;
 
-	oldpwd = get_env_value(*env_list, "OLDPWD");
-	if (!oldpwd || !*oldpwd)
-		return (print_cd_error("OLDPWD not set", 5), 1);
-	write(1, oldpwd, ft_strlen(oldpwd));
-	write(1, "\n", 1);
 	if (getcwd(cwd, sizeof(cwd)))
 		update_env(*env_list, "OLDPWD", cwd);
 	else
@@ -46,6 +39,14 @@ int	handle_cd_dash(t_env **env_list)
 		if (current_pwd)
 			update_env(*env_list, "OLDPWD", current_pwd);
 	}
+	return (0);
+}
+
+static int	cd_dash_change_dir(const char *oldpwd, t_env **env_list)
+{
+	char		cwd[4096];
+	struct stat	st;
+
 	if (chdir(oldpwd) != 0)
 	{
 		if (access(oldpwd, F_OK) != 0)
@@ -61,79 +62,15 @@ int	handle_cd_dash(t_env **env_list)
 	return (0);
 }
 
-char	*expand_tilde(const char *path, t_env *env_list)
+int	handle_cd_dash(t_env **env_list)
 {
-	char	*home;
-	char	*expanded_path;
-	size_t	home_len;
-	size_t	path_len;
+	char	*oldpwd;
 
-	expanded_path = NULL;
-	home = get_env_value(env_list, "HOME");
-	if (!home)
-		return (NULL);
-	home_len = strlen(home);
-	path_len = strlen(path);
-	expanded_path = malloc(home_len + path_len);
-	if (!expanded_path)
-		return (NULL);
-	strcpy(expanded_path, home);
-	strcat(expanded_path, path + 1);
-	return (expanded_path);
-}
-
-int	handle_basic_cd(const char *path, t_env **env_list)
-{
-	char		cwd[4096];
-	char		*old_pwd;
-	struct stat	st;
-
-	if (getcwd(cwd, sizeof(cwd)))
-		update_env(*env_list, "OLDPWD", cwd);
-	else
-	{
-		old_pwd = get_env_value(*env_list, "PWD");
-		if (old_pwd)
-			update_env(*env_list, "OLDPWD", old_pwd);
-	}
-	if (chdir(path) != 0)
-	{
-		if (access(path, F_OK) != 0)
-			return (print_cd_error(path, 2), 1);
-		if (access(path, X_OK) != 0)
-			return (print_cd_error(path, 3), 1);
-		if (stat(path, &st) == 0 && !S_ISDIR(st.st_mode))
-			return (print_cd_error(path, 4), 1);
-		return (print_cd_error(path, 6), 1);
-	}
-	if (getcwd(cwd, sizeof(cwd)))
-		update_env(*env_list, "PWD", cwd);
-	return (0);
-}
-
-char	*determine_path(t_token *tokens, t_env *env_list, char **to_free)
-{
-	char	*path;
-
-	path = tokens->next->value;
-	if (is_whitespace_only(path))
-	{
-		path = get_env_value(env_list, "HOME");
-		if (!path)
-		{
-			print_cd_error("HOME not set", 5);
-			return (NULL);
-		}
-	}
-	if (path[0] == '~')
-	{
-		*to_free = expand_tilde(path, env_list);
-		if (!*to_free)
-		{
-			print_cd_error("HOME not set", 5);
-			return (NULL);
-		}
-		path = *to_free;
-	}
-	return (path);
+	oldpwd = get_env_value(*env_list, "OLDPWD");
+	if (!oldpwd || !*oldpwd)
+		return (print_cd_error("OLDPWD not set", 5), 1);
+	write(1, oldpwd, ft_strlen(oldpwd));
+	write(1, "\n", 1);
+	cd_dash_setup_env(env_list);
+	return (cd_dash_change_dir(oldpwd, env_list));
 }
