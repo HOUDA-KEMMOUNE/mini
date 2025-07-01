@@ -54,6 +54,11 @@ static int	handle_null_command(t_shell_data *data, char **line)
 	if (data->tokens_exec == NULL || data->tokens_exec->cmd == NULL
 		|| data->tokens_exec->cmd[0] == '\0')
 	{
+		if (data->tokens_exec && data->tokens_exec->cmd && data->tokens_exec->cmd[0] == '\0')
+		{
+			ft_putstr_fd("minishell: : command not found\n", 2);
+			*exit_status_func() = 127;
+		}
 		cleanup_resources(line, &data->tokens, &data->tokens_exec);
 		return (1);
 	}
