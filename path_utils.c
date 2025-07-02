@@ -52,7 +52,7 @@ void	print_cmd_error(const char *cmd)
 	if (!cmd || cmd[0] == 0)
 		return ;
 	if (stat(cmd, &st) == 0 && S_ISDIR(st.st_mode))
-		printf("%s: Is a directory\n", cmd);
+		printf("minishell: %s: Is a directory\n", cmd);
 	else
-		printf("%s: command not found\n", cmd);
+		printf("minishell: %s: command not found\n", cmd);
 }

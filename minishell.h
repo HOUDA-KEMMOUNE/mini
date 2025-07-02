@@ -15,7 +15,6 @@
 
 # include <stdio.h>
 # include <stdlib.h>
-// #include <limits.h>
 # include "./libft/libft.h"
 # include <fcntl.h>
 # include <limits.h>
@@ -27,13 +26,6 @@
 # include <sys/wait.h>
 # include <termios.h>
 # include <unistd.h>
-// #include "./get_next_line/get_next_line.h"
-
-# ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 10
-# endif
-
-// #include <readline/history.h>
 
 typedef enum e_token_type
 {
@@ -64,7 +56,6 @@ typedef struct s_token
 	struct s_token		*next;
 }						t_token;
 
-// to call builtins
 typedef int	(*t_builtin_ptr)(t_token *, t_env **);
 typedef struct s_built
 {
@@ -78,7 +69,6 @@ typedef struct s_meta_char
 	t_token_type		type;
 }						t_meta_char;
 
-// 3la 9bal redirections o dak tkharbi9
 typedef struct s_token_exc
 {
 	char				*value;
@@ -92,7 +82,6 @@ typedef struct s_token_exc
 	int					count_cmd;
 	int					fd_in;
 	int					fd_out;
-	// t_token_type		type;
 	struct s_token_exc	*next;
 }						t_token_exc;
 
@@ -104,6 +93,15 @@ typedef struct s_shell_data
 	t_token_exc	*tokens_exec;
 }						t_shell_data;
 
+/*------------token processing parameters---------------*/
+typedef struct s_token_process
+{
+	char	**args_tmp;
+	int		*i;
+	int		count_args;
+	int		*flag;
+}	t_token_process;
+
 typedef struct s_pipeline_context
 {
 	t_token		*tokens;
@@ -113,21 +111,6 @@ typedef struct s_pipeline_context
 	int			cmd_index;
 }						t_pipeline_context;
 
-// typedef struct s_echo
-// {
-// 	int					fd;
-// 	char				*file;
-// 	char				*input;
-// 	char				**msg;
-// }						t_echo;
-
-// to call builtins
-// typedef struct s_built
-// {
-//     char *cmd;
-//     int (*ptr)(t_token *tokens, t_env *env);
-// } t_built;
-// globel env
 t_env					**env_func(void);
 int						*exit_status_func(void);
 
@@ -183,7 +166,6 @@ void					parsing(char *input, t_token **token,
 							t_env *env_list);
 int						se_redirections(t_token **token);
 int						check_first_cmd(t_token_exc *token_list);
-// void					ft_data_init(t_echo **echo_struct);
 void					ft_cd(t_token **token, t_env *env_list);
 void					ft_ls(t_token **token, t_env *env_list);
 int						is_notforbidden_char(char c, int is_first);
@@ -208,8 +190,6 @@ char					*get_env_value(t_env *env, char *key);
 void					get_env(t_env *env_list);
 void					ft_pwd(t_token **token);
 t_token_exc				*tokens_exc_handler(t_token *token);
-// void					echo(t_token **token, t_echo **echo_struct,
-// 							t_env *env_list);
 
 /*-------------------echo helpers-------------------*/
 void					echo(t_token **token, t_token_exc **command);
@@ -257,12 +237,6 @@ void					handler_sigint(int sig_num);
 void					handler_sigint_child(int sig_num);
 void					sig_quit_handler(int sig_num);
 
-/*----------------get_next_line-----------------*/
-char					*get_next_line(int fd);
-char					*rest_char(char *line);
-char					*get_line(char *buffer, char *rest, int fd);
-// int		ft_signals(void);
-
 /*----------------builtins-----------------*/
 int						run_builtin(char *cmd, t_token *tokens,
 							t_env **env_list);
@@ -288,8 +262,6 @@ int						handle_basic_cd(const char *path, t_env **env_list);
 char					*expand_tilde(const char *path, t_env *env_list);
 int						handle_cd_dash(t_env **env_list);
 int						is_whitespace_only(const char *str);
-
-// void    pwd(t_token **token);
 
 /*----------------pwd-----------------*/
 int						pwd(t_token *tokens, t_env **env_list);
@@ -323,7 +295,6 @@ char					*find_path(void);
 void					simple_cmd(t_token *token, t_token_exc **token_cmd);
 void					check_fd(t_token_exc **token_cmd);
 char					**env_to_array(t_env *env_list);
-// void	env_to_array_helper(t_env *env_list);
 int						env_size(t_env *env_list);
 void					free_split_path(char **splited_path);
 int						set_cmd_path(char **splited_path,
@@ -432,16 +403,6 @@ void					run_shell_loop(t_shell_data *data);
 int						open_file_by_type(char *filename, int type);
 void					assign_fd_to_token(t_token_exc **token_list,
 							int fd, int type);
-
-/*------------token processing parameters---------------*/
-typedef struct s_token_process
-{
-	char	**args_tmp;
-	int		*i;
-	int		count_args;
-	int		*flag;
-}	t_token_process;
-
 void					process_token_type(t_token **token,
 							t_token_process *proc);
 

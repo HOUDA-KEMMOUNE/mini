@@ -24,21 +24,6 @@ delimited by end-of-file (wanted `", 2);
 	ft_putstr_fd("')\n", 2);
 }
 
-static void	trim_line_endings(char *line)
-{
-	int	len;
-
-	if (line)
-	{
-		len = ft_strlen(line);
-		while (len > 0 && (line[len - 1] == '\n' || line[len - 1] == '\r'))
-		{
-			line[len - 1] = '\0';
-			len--;
-		}
-	}
-}
-
 void	fill_heredoc_file(int fd, char *delimiter)
 {
 	char	*line;
@@ -57,7 +42,6 @@ void	fill_heredoc_file(int fd, char *delimiter)
 			handle_eof_warning(delimiter);
 			return ;
 		}
-		trim_line_endings(line);
 		if (ft_strcmp(line, delimiter) == 0)
 		{
 			free(line);
