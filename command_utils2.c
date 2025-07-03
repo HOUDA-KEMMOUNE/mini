@@ -37,7 +37,7 @@ int	execute_builtin_with_redirection(t_shell_data *data)
 		dup2(data->tokens_exec->fd_out, STDOUT_FILENO);
 		close(data->tokens_exec->fd_out);
 	}
-	result = run_builtin(data->tokens_exec->cmd, data->tokens, &data->env_list);
+	result = run_builtin(data->tokens_exec->cmd, data->tokens, env_func());
 	if (original_stdout != -1)
 	{
 		dup2(original_stdout, STDOUT_FILENO);

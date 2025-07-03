@@ -23,6 +23,7 @@ char	*find_path(void)
 	{
 		if (ft_strcmp(env->key, "PATH") == 0)
 		{
+			printf("%s\n", env->key);
 			tmp = env->value;
 			break ;
 		}
@@ -52,7 +53,7 @@ static int	resolve_command_path(t_token_exc **token_list, char **splited_path)
 	(*token_list)->cmd_path = NULL;
 	if ((*token_list)->cmd && ft_strchr((*token_list)->cmd, '/'))
 	{
-		if (access((*token_list)->cmd, F_OK) == 0)
+		if (access((*token_list)->cmd, F_OK | X_OK) == 0)
 		{
 			(*token_list)->cmd_path = ft_strdup((*token_list)->cmd);
 			flag = 1;
