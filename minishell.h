@@ -317,6 +317,7 @@ void					create_heredoc_files(t_token_exc *command_tmp);
 int						pipes(t_token **token, t_token_exc **command, \
 						t_env *env_list);
 int						check_pipe(t_token **token);
+int						se_redirections_pipe(t_token **token);
 int						count_cmd(t_token_exc **command);
 void					execute_pipeline_command(t_token_exc *cmd, \
 						t_pipeline_context *ctx);
@@ -343,6 +344,7 @@ void					execute_external(t_token_exc *cmd, char **envp);
 
 /*------------redirections---------------*/
 int						change_redout(t_token **token, t_token_exc **command);
+int						se_redirections_helper(t_token **token);
 int						check_redirections(t_token **token, \
 						t_token_exc **command);
 int						check_pipeline_redirections(t_token **token, \

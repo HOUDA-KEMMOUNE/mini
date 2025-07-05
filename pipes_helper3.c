@@ -54,6 +54,8 @@ int	check_pipe(t_token **token)
 
 	if (!token || !(*token))
 		return (0);
+	if (se_redirections_pipe(token) == -1)
+		return (-1);
 	token_tmp = (*token);
 	while (token_tmp)
 	{
@@ -63,7 +65,7 @@ int	check_pipe(t_token **token)
 			if (ft_strncmp(token_tmp->value, "|", 1) == 0)
 			{
 				ft_putstr_fd("minishell: syntax error \
-				near unexpected token `|'\n", 1);
+near unexpected token `|'\n", 1);
 				return (-1);
 			}
 		}
