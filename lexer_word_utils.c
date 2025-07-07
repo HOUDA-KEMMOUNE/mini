@@ -27,19 +27,6 @@ char	*extract_quoted_content(char *input, int *i, char quote)
 	return (content);
 }
 
-char	*extract_unquoted_content(char *input, int *i)
-{
-	int		start;
-	char	*content;
-
-	start = *i;
-	while (input[*i] && input[*i] != ' ' && input[*i] != '\t'
-		&& is_word_char(input[*i]))
-		(*i)++;
-	content = ft_substr(input, start, *i - start);
-	return (content);
-}
-
 static void	add_quote_to_word(char **word, char current_quote)
 {
 	char	quote_str[2];

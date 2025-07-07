@@ -51,6 +51,19 @@ int	handle_concatenated_word(char *input, int *i, t_token **token_list)
 	return (0);
 }
 
+char	*extract_unquoted_content(char *input, int *i)
+{
+	int		start;
+	char	*content;
+
+	start = *i;
+	while (input[*i] && input[*i] != ' ' && input[*i] != '\t'
+		&& is_word_char(input[*i]))
+		(*i)++;
+	content = ft_substr(input, start, *i - start);
+	return (content);
+}
+
 int	is_not_delimiter(char c)
 {
 	return (c != '|' && c != '>' && c != '<');
