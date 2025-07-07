@@ -29,13 +29,50 @@ static int	should_skip_expansion(t_token *prev, t_token *curr)
 	return (0);
 }
 
+char	*expand_quote_aware(const char *value, t_env *env_list)
+{
+	char	*result;
+	int		i;
+	char	current_quote;
+	int		start;
+
+	result = ft_strdup("");
+	i = 0;
+	while (value[i])
+	{
+		if (value[i] == '\'' || value[i] == '"')
+		{
+			current_quote = value[i];
+			i++;
+			start = i;
+			while (value[i] && value[i] != current_quote)
+				i++;
+			result = handle_quoted_content(value, start, i - start, \
+					current_quote, result, env_list);
+			if (value[i] == current_quote)
+				i++;
+		}
+		else
+			result = handle_unquoted_content(value, &i, result, env_list);
+	}
+	return (result);
+}
+
 static void	expand_token_if_needed(t_token *curr, t_env *env_list)
 {
 	char	*expanded;
 
-	if (curr->quote == '\'')
+	if (curr->quote == 0 && (ft_strchr(curr->value, '\'')
+			|| ft_strchr(curr->value, '"')))
+	{
+		expanded = expand_quote_aware(curr->value, env_list);
+		free(curr->value);
+		curr->value = expanded;
+	}
+	else if (curr->quote == '\'')
 		return ;
-	if ((curr->quote == 0 || curr->quote == '"') && ft_strchr(curr->value, '$'))
+	else if ((curr->quote == 0 || curr->quote == '"')
+		&& ft_strchr(curr->value, '$'))
 	{
 		expanded = expand_all_variables(curr->value, env_list);
 		free(curr->value);
@@ -64,31 +101,4 @@ t_token	*expander(t_token *token_list, t_env *env_list)
 		curr = curr->next;
 	}
 	return (token_list);
-}
-
-char	*expand_all_variables(const char *value, t_env *env_list)
-{
-	char		*result;
-	const char	*start;
-	const char	*dollar;
-	char		*temp;
-
-	result = ft_strdup("");
-	start = value;
-	dollar = ft_strchr(start, '$');
-	while (dollar)
-	{
-		temp = ft_substr(start, 0, dollar - start);
-		result = ft_strjoin_free(result, temp);
-		free(temp);
-		if (is_special_var(dollar))
-			start = expand_special_var(dollar, &result);
-		else
-			start = expand_normal_var(dollar, &result, env_list);
-		dollar = ft_strchr(start, '$');
-	}
-	temp = ft_strdup(start);
-	result = ft_strjoin_free(result, temp);
-	free(temp);
-	return (result);
 }

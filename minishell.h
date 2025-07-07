@@ -121,6 +121,18 @@ void					handle_regular_word(char *input, int *i,
 							t_token **token_list);
 int						handle_concatenated_word(char *input, int *i,
 							t_token **token_list);
+/*-------------------lexer word utils-------------------*/
+int						is_not_delimiter(char c);
+int						is_word_char(char c);
+char					*extract_quoted_content(char *input, int *i,
+							char quote);
+char					*extract_unquoted_content(char *input, int *i);
+void					scan_quote_types(char *input, int *i,
+							int *has_single, int *has_double);
+char					get_quote_strategy(int has_single, int has_double,
+							int *preserve);
+char					*process_word_part(char *input, int *i,
+							char **word, int preserve_quotes);
 void					handle_double_operator(char *input, int *i,
 							t_token **token_list);
 void					handle_single_operator(char *input, int *i,
@@ -180,6 +192,12 @@ t_token					*echo_expander(t_token *token_list, t_env *env_list,
 							int fd);
 char					*expand_all_variables(const char *value, \
 						t_env *env_list);
+char					*expand_quote_aware(const char *value, t_env *env_list);
+char					*handle_quoted_content(const char *value, int start,
+							int len, char current_quote, char *result,
+							t_env *env_list);
+char					*handle_unquoted_content(const char *value, int *i,
+							char *result, t_env *env_list);
 
 /*-------------------quote processor-------------------*/
 t_token					*process_quotes(t_token *token_list);
