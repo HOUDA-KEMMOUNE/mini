@@ -131,6 +131,8 @@ void					scan_quote_types(char *input, int *i,
 							int *has_single, int *has_double);
 char					get_quote_strategy(int has_single, int has_double,
 							int *preserve);
+char					*handle_quoted_part(char *input, int *i, char **word,
+							int preserve_quotes);
 char					*process_word_part(char *input, int *i,
 							char **word, int preserve_quotes);
 void					handle_double_operator(char *input, int *i,
@@ -193,9 +195,10 @@ t_token					*echo_expander(t_token *token_list, t_env *env_list,
 char					*expand_all_variables(const char *value, \
 						t_env *env_list);
 char					*expand_quote_aware(const char *value, t_env *env_list);
+char					*process_quoted_segment(char current_quote,
+							char *segment, t_env *env_list);
 char					*handle_quoted_content(const char *value, int start,
-							int len, char current_quote, char *result,
-							t_env *env_list);
+							int len, char current_quote);
 char					*handle_unquoted_content(const char *value, int *i,
 							char *result, t_env *env_list);
 
@@ -248,7 +251,6 @@ void					add_token_exc_to_list(t_token_exc **token_list,
 int						check_echo_flag(char *s);
 void					add_token_exc_to_list(t_token_exc **token_list,
 							t_token_exc *new);
-int						check_echo_flag(char *s);
 
 /*-------------------signals-------------------*/
 void					handler_sigint(int sig_num);

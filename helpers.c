@@ -53,15 +53,16 @@ void	get_env(t_env *env_list)
 {
 	t_env	*tmp;
 
-	tmp = env_list;
+	(void)env_list;
+	tmp = *env_func();
 	while (tmp)
 	{
 		if (tmp->value)
 		{
-			ft_putstr_fd(tmp->key, 1);
-			ft_putstr_fd("=", 1);
-			ft_putstr_fd(tmp->value, 1);
-			ft_putstr_fd("\n", 1);
+			write(1, tmp->key, ft_strlen(tmp->key));
+			write(1, "=", 1);
+			write(1, tmp->value, ft_strlen(tmp->value));
+			write(1, "\n", 1);
 		}
 		tmp = tmp->next;
 	}

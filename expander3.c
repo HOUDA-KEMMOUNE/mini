@@ -12,7 +12,8 @@
 
 #include "minishell.h"
 
-static char	*process_quoted_segment(char current_quote, char *segment, t_env *env_list)
+char	*process_quoted_segment(char current_quote,
+		char *segment, t_env *env_list)
 {
 	char	*expanded_segment;
 	char	*result;
@@ -49,18 +50,11 @@ static char	*process_unquoted_segment(char *segment, t_env *env_list)
 	return (result);
 }
 
-char	*handle_quoted_content(const char *value, int start, int len,
-		char current_quote, char *result, t_env *env_list)
+char	*handle_quoted_content(const char *value, int start,
+		int len, char current_quote)
 {
-	char	*segment;
-	char	*processed;
-
-	segment = ft_substr(value, start, len);
-	processed = process_quoted_segment(current_quote, segment, env_list);
-	result = ft_strjoin_free(result, processed);
-	free(segment);
-	free(processed);
-	return (result);
+	(void)current_quote;
+	return (ft_substr(value, start, len));
 }
 
 char	*handle_unquoted_content(const char *value, int *i,

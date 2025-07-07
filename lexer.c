@@ -79,3 +79,22 @@ t_token	*lexer(char *input)
 	}
 	return (token_list);
 }
+
+void	scan_quote_types(char *input, int *i, int *has_single, int *has_double)
+{
+	int	start_pos;
+
+	start_pos = *i;
+	*has_single = 0;
+	*has_double = 0;
+	while (input[*i] && input[*i] != ' ' && input[*i] != '\t'
+		&& is_not_delimiter(input[*i]))
+	{
+		if (input[*i] == '\'')
+			*has_single = 1;
+		else if (input[*i] == '"')
+			*has_double = 1;
+		(*i)++;
+	}
+	*i = start_pos;
+}

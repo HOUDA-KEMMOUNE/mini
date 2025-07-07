@@ -29,35 +29,6 @@ static int	should_skip_expansion(t_token *prev, t_token *curr)
 	return (0);
 }
 
-char	*expand_quote_aware(const char *value, t_env *env_list)
-{
-	char	*result;
-	int		i;
-	char	current_quote;
-	int		start;
-
-	result = ft_strdup("");
-	i = 0;
-	while (value[i])
-	{
-		if (value[i] == '\'' || value[i] == '"')
-		{
-			current_quote = value[i];
-			i++;
-			start = i;
-			while (value[i] && value[i] != current_quote)
-				i++;
-			result = handle_quoted_content(value, start, i - start, \
-					current_quote, result, env_list);
-			if (value[i] == current_quote)
-				i++;
-		}
-		else
-			result = handle_unquoted_content(value, &i, result, env_list);
-	}
-	return (result);
-}
-
 static void	expand_token_if_needed(t_token *curr, t_env *env_list)
 {
 	char	*expanded;

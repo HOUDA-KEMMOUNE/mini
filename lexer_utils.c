@@ -61,3 +61,27 @@ void	handle_single_operator(char *input, int *i, t_token **token_list)
 {
 	char_to_str(input[*i], 0, token_list);
 }
+
+char	get_quote_strategy(int has_single, int has_double, int *preserve)
+{
+	if (has_single && has_double)
+	{
+		*preserve = 1;
+		return (0);
+	}
+	else if (has_single && !has_double)
+	{
+		*preserve = 0;
+		return ('\'');
+	}
+	else if (has_double && !has_single)
+	{
+		*preserve = 0;
+		return ('"');
+	}
+	else
+	{
+		*preserve = 0;
+		return (0);
+	}
+}

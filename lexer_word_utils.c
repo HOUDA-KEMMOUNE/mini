@@ -12,16 +12,6 @@
 
 #include "minishell.h"
 
-int	is_not_delimiter(char c)
-{
-	return (c != '|' && c != '>' && c != '<');
-}
-
-int	is_word_char(char c)
-{
-	return (c != '|' && c != '>' && c != '<' && c != '"' && c != '\'');
-}
-
 char	*extract_quoted_content(char *input, int *i, char quote)
 {
 	int		start;
@@ -50,80 +40,56 @@ char	*extract_unquoted_content(char *input, int *i)
 	return (content);
 }
 
-void	scan_quote_types(char *input, int *i, int *has_single, int *has_double)
+static void	add_quote_to_word(char **word, char current_quote)
 {
-	int	start_pos;
+	char	quote_str[2];
 
-	start_pos = *i;
-	*has_single = 0;
-	*has_double = 0;
-	while (input[*i] && input[*i] != ' ' && input[*i] != '\t'
-		&& is_not_delimiter(input[*i]))
-	{
-		if (input[*i] == '\'')
-			*has_single = 1;
-		else if (input[*i] == '"')
-			*has_double = 1;
-		(*i)++;
-	}
-	*i = start_pos;
+	quote_str[0] = current_quote;
+	quote_str[1] = '\0';
+	*word = ft_strjoin_free(*word, quote_str);
 }
 
-char	*process_word_part(char *input, int *i, char **word, int preserve_quotes)
+static char	*wrap_with_quotes(char *part, char current_quote)
 {
-	char	*part;
-	char	current_quote;
 	char	*quoted_part;
 	char	quote_str[2];
 
-	if (input[*i] == '"' || input[*i] == '\'')
+	quote_str[0] = current_quote;
+	quote_str[1] = '\0';
+	quoted_part = ft_strjoin(part, quote_str);
+	free(part);
+	return (quoted_part);
+}
+
+char	*handle_quoted_part(char *input, int *i, char **word,
+			int preserve_quotes)
+{
+	char	current_quote;
+	char	*part;
+
+	current_quote = input[*i];
+	if (!is_quote_closed(input, current_quote, *i + 1))
 	{
-		current_quote = input[*i];
-		if (!is_quote_closed(input, current_quote, *i + 1))
-		{
-			print_error("Unclosed quote");
-			free(*word);
-			return (NULL);
-		}
-		if (preserve_quotes)
-		{
-			quote_str[0] = current_quote;
-			quote_str[1] = '\0';
-			*word = ft_strjoin_free(*word, quote_str);
-		}
-		part = extract_quoted_content(input, i, current_quote);
-		if (preserve_quotes)
-		{
-			quoted_part = ft_strjoin(part, quote_str);
-			free(part);
-			part = quoted_part;
-		}
+		print_error("Unclosed quote");
+		free(*word);
+		return (NULL);
 	}
-	else
-		part = extract_unquoted_content(input, i);
+	if (preserve_quotes)
+		add_quote_to_word(word, current_quote);
+	part = extract_quoted_content(input, i, current_quote);
+	if (preserve_quotes)
+		part = wrap_with_quotes(part, current_quote);
 	return (part);
 }
 
-char	get_quote_strategy(int has_single, int has_double, int *preserve)
+char	*process_word_part(char *input, int *i,
+		char **word, int preserve_quotes)
 {
-	if (has_single && has_double)
-	{
-		*preserve = 1;
-		return (0);
-	}
-	else if (has_single && !has_double)
-	{
-		*preserve = 0;
-		return ('\'');
-	}
-	else if (has_double && !has_single)
-	{
-		*preserve = 0;
-		return ('"');
-	}
+	char	*part;
+
+	if (input[*i] == '"' || input[*i] == '\'')
+		part = handle_quoted_part(input, i, word, preserve_quotes);
 	else
-	{
-		*preserve = 0;
-		return (0);
-	}
+		part = extract_unquoted_content(input, i);
+	return (part);
 }

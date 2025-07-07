@@ -81,3 +81,43 @@ char	*expand_variable(char *value, t_env *env_list)
 	return (build_expanded_string(value, dollar - value, \
 			env_value, var_name + var_len));
 }
+
+static char	*process_quoted_section(const char *value, int *i,
+			char *result, t_env *env_list)
+{
+	char	current_quote;
+	int		start;
+	char	*segment;
+	char	*processed;
+
+	current_quote = value[*i];
+	(*i)++;
+	start = *i;
+	while (value[*i] && value[*i] != current_quote)
+		(*i)++;
+	segment = handle_quoted_content(value, start, *i - start, current_quote);
+	processed = process_quoted_segment(current_quote, segment, env_list);
+	result = ft_strjoin_free(result, processed);
+	free(segment);
+	free(processed);
+	if (value[*i] == current_quote)
+		(*i)++;
+	return (result);
+}
+
+char	*expand_quote_aware(const char *value, t_env *env_list)
+{
+	char	*result;
+	int		i;
+
+	result = ft_strdup("");
+	i = 0;
+	while (value[i])
+	{
+		if (value[i] == '\'' || value[i] == '"')
+			result = process_quoted_section(value, &i, result, env_list);
+		else
+			result = handle_unquoted_content(value, &i, result, env_list);
+	}
+	return (result);
+}

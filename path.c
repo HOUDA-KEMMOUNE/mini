@@ -23,7 +23,6 @@ char	*find_path(void)
 	{
 		if (ft_strcmp(env->key, "PATH") == 0)
 		{
-			printf("%s\n", env->key);
 			tmp = env->value;
 			break ;
 		}
